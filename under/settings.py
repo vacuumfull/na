@@ -54,7 +54,7 @@ ROOT_URLCONF = 'under.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,4 +131,5 @@ STATICFILES_DIRS = [
     ('css', 'static/css'),
     ('js', 'static/js'),
     ('images', 'static/images'),
+    ('fonts', 'static/fonts'),
 ]
