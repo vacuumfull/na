@@ -1,3 +1,4 @@
+"""Admin models from Places app"""
 from django.contrib import admin
 
 from place.models import Place
@@ -5,4 +6,4 @@ from place.models import Place
 
 @admin.register(Place)
 class AdminPlace(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}
+    pass
