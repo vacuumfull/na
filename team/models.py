@@ -1,11 +1,10 @@
 """Models for team app"""
 import os
-from random import randint
 from uuid import uuid4
 
 from django.db import models
 from django.contrib.auth.models import User
-from uuslug import slugify
+from uuslug import uuslug
 
 
 def logo_path(_instance, filename):
@@ -29,9 +28,8 @@ class Team(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(
-                '{}-{}'.format(randint(1000, 9999), self.name))
+        """Override save method from generate slug field"""
+        self.slug = uuslug(self.name, instance=self)
         super().save(*args, **kwargs)
 
     def __str__(self):
