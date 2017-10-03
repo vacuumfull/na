@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from team.models import Team
+
+
+@admin.register(Team)
+class AdminTeam(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}

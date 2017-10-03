@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'team'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,6 @@ STATICFILES_DIRS = [
     ('images', 'static/images'),
     ('fonts', 'static/fonts'),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
+MEDIA_URL = '/media/'
