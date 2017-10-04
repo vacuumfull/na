@@ -3,6 +3,8 @@ import os
 from uuid import uuid4
 
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 from uuslug import uuslug
 
@@ -23,14 +25,9 @@ class Team(models.Model):
                              verbose_name='Логотип')
     member = models.ManyToManyField(User, verbose_name='Участники')
     published = models.BooleanField(default=False, verbose_name='Активны')
-    slug = models.SlugField(max_length=200, blank=True, null=True)
+    slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        """Override save method from generate slug field"""
-        self.slug = uuslug(self.name, instance=self)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -39,3 +36,9 @@ class Team(models.Model):
         ordering = ['name', 'created_at']
         verbose_name = 'Коллектив'
         verbose_name_plural = 'Коллективы'
+
+
+@receiver(pre_save, sender=Team)
+def created_slug(sender, instance, **_):
+    """Generate custom slug before save object"""
+    instance.slug = uuslug(instance.name, instance=instance)

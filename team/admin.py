@@ -6,4 +6,8 @@ from team.models import Team
 
 @admin.register(Team)
 class AdminTeam(admin.ModelAdmin):
-    pass
+    fields = ('name', 'logo', 'description', 'member', 'published')
+    list_display = ('name', 'published', 'slug')
+    list_editable = ('published',)
+    list_filter = ('published',)
+    search_fields = ('title',)
