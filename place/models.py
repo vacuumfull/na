@@ -3,6 +3,8 @@ import os
 from uuid import uuid4
 
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from uuslug import uuslug
 
 
@@ -21,14 +23,9 @@ class Place(models.Model):
     description = models.TextField(blank=True, null=True,
                                    verbose_name='Описание')
     published = models.BooleanField(default=False, verbose_name='Активно')
-    slug = models.SlugField(max_length=200, blank=True, null=True)
+    slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        """Override save method from generate slug field"""
-        self.slug = uuslug(self.title, instance=self)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -37,3 +34,9 @@ class Place(models.Model):
         ordering = ['title', 'created_at']
         verbose_name = 'Место'
         verbose_name_plural = 'Места'
+
+
+@receiver(pre_save, sender=Place)
+def created_slug(sender, instance, **_):
+    """Generate custom slug before save object"""
+    instance.slug = uuslug(instance.title, instance=instance)
