@@ -6,4 +6,8 @@ from event.models import Event
 
 @admin.register(Event)
 class AdminEvent(admin.ModelAdmin):
-    pass
+    fields = ('title', 'date', 'price', 'image', 'description', 'published')
+    list_display = ('title', 'price', 'published', 'date')
+    list_editable = ('published',)
+    list_filter = ('published', 'date', 'price')
+    search_fields = ('title',)
