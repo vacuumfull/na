@@ -6,4 +6,8 @@ from place.models import Place
 
 @admin.register(Place)
 class AdminPlace(admin.ModelAdmin):
-    pass
+    fields = ('title', 'address', 'logo', 'description', 'published')
+    list_display = ('title', 'address', 'published')
+    list_editable = ('published',)
+    list_filter = ('published',)
+    search_fields = ('title', 'address')
