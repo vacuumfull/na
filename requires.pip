@@ -1,2 +1,5 @@
-Django=1.11
-django-uuslug=1.1.8
+Django == 1.11.6
+django-uuslug == 1.1.8
+
+psycopg2
+pillow

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'team',
+    'band',
     'place',
     'event',
     'blog',
@@ -81,7 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'under',
-        'USER': 'unde',
+        'USER': 'under',
         'PASSWORD': 'under',
         'HOST': 'localhost',
         'PORT': '5432',

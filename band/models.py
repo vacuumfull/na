@@ -1,30 +1,40 @@
-"""Models for team app"""
+"""Models for Bands app."""
 import os
 from uuid import uuid4
 
+from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
 from uuslug import uuslug
 
 
-def logo_path(_instance, filename):
-    """Custom path and name to logo file"""
-    file_path = os.path.join('team_logo', str(uuid4()))
+def image_path(_instance, filename):
+    """Path and name to logo file."""
+    file_path = os.path.join('band_images', str(uuid4()))
     ext = filename.split('.')[-1]
     return '{}.{}'.format(file_path, ext)
 
 
-class Team(models.Model):
-    """Teams model"""
+class Band(models.Model):
+    """Bands model."""
+
     name = models.CharField(max_length=200, verbose_name='Название')
     description = models.TextField(blank=True, null=True,
                                    verbose_name='Описание')
-    logo = models.ImageField(upload_to=logo_path,
-                             verbose_name='Логотип')
-    member = models.ManyToManyField(User, verbose_name='Участники')
-    published = models.BooleanField(default=False, verbose_name='Активны')
+    image = models.ImageField(upload_to=image_path, verbose_name='Логотип')
+
+    owner = models.ForeignKey(User, related_name='owner',
+                              verbose_name='Организатор')
+    members = models.ManyToManyField(User, related_name='members',
+                                     verbose_name='Участники')
+
+    socials = JSONField(blank=True, null=True,
+                        verbose_name='Социальные ссылки')
+    # tags = models.ManyToManyField(verbose_name='Тэги')
+
+    published = models.BooleanField(default=True, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,7 +48,7 @@ class Team(models.Model):
         verbose_name_plural = 'Коллективы'
 
 
-@receiver(pre_save, sender=Team)
+@receiver(pre_save, sender=Band)
 def created_slug(sender, instance, **_):
     """Generate custom slug before save object"""
     instance.slug = uuslug(instance.name, instance=instance)

@@ -1,12 +1,12 @@
 """Admin models from Teams app"""
 from django.contrib import admin
 
-from team.models import Team
+from band.models import Band
 
 
-@admin.register(Team)
+@admin.register(Band)
 class AdminTeam(admin.ModelAdmin):
-    fields = ('name', 'logo', 'description', 'member', 'published')
+    fields = ('name', 'description', 'image', 'owner', 'members', 'published')
     list_display = ('name', 'published', 'slug')
     list_editable = ('published',)
     list_filter = ('published',)
