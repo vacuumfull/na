@@ -6,8 +6,10 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-
 from uuslug import uuslug
+
+from event.models import Event
+from place.models import Place
 
 
 def image_path(_instance, filename):
@@ -27,8 +29,10 @@ class Blog(models.Model):
                               verbose_name='Титульное изображение')
 
     author = models.ForeignKey(User, verbose_name='Автор')
-    # event = models.ForeignKey(Event, verbose_name='Событие')
-    # place = models.ForeignKey(Place, verbose_name='Место')
+    event = models.ForeignKey(Event, blank=True, null=True,
+                              verbose_name='Событие')
+    place = models.ForeignKey(Place, blank=True, null=True,
+                              verbose_name='Место')
     # tags = models.ManyToManyField(verbose_name='Тэги')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
 
