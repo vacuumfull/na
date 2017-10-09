@@ -33,11 +33,11 @@ class Place(models.Model):
     icon = models.ImageField(upload_to=icon_path, verbose_name='Иконка')
 
     owner = models.ForeignKey(
-        User, related_name='manager',
+        User, related_name='place_owner',
         blank=True, null=True,
         verbose_name='Владелец')
     musicians = models.ManyToManyField(
-        User, related_name='musicians',
+        User, related_name='place_musicians',
         blank=True,
         verbose_name='Музыканты заведения')
     socials = JSONField(blank=True, null=True,
