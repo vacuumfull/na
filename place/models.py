@@ -42,6 +42,8 @@ class Place(models.Model):
         verbose_name='Музыканты заведения')
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
+    # tags = models.ManyToManyField(verbose_name='Тэги')
+    # ratings = models.ManyToManyField(verbose_name='Рейтинг')
 
     published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
