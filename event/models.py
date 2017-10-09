@@ -9,6 +9,9 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from uuslug import uuslug
 
+from band.models import Band
+from place.models import Location
+
 
 def image_path(_instance, filename):
     """Path and name to image file."""
@@ -29,10 +32,20 @@ class Event(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2,
                                 blank=True, null=True, verbose_name='Цена')
 
-    owner = models.ForeignKey(User, verbose_name='Организатор')
-    # bands = models.ManyToManyField(verbose_name='Команды')
-    # musicians = models.ManyToManyField(verbose_name='Музыканты')
-    # locations = models.ManyToManyField(verbose_name='Место проведения')
+    owner = models.ForeignKey(
+        User, related_name='event_owner',
+        verbose_name='Организатор')
+    bands = models.ManyToManyField(
+        Band, related_name='event_bands',
+        blank=True,
+        verbose_name='Команды')
+    musicians = models.ManyToManyField(
+        User, related_name='event_musicians',
+        blank=True,
+        verbose_name='Музыканты')
+    locations = models.ManyToManyField(
+        Location, related_name='event_location',
+        verbose_name='Место проведения')
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
