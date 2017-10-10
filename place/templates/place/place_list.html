@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Места</h3>
+
+    <div class="col s12">
+        <div class="row">
+            {% for place in places %}
+                {% include "place/place_card.html" %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
