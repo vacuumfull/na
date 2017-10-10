@@ -1,0 +1,40 @@
+<div class="col s12 m4 l3">
+    <div class="__post_block">
+        <div class="card __border_subgray">
+            <div class="card-image">
+                <div class="card-image __preview_img">
+                    <div class="__img_inner">
+                        <img src="{{ place.image.url }}">
+                    </div>
+                </div>
+            </div>
+            <div class="card-content __title_block __relative  activator ">
+                <span class="card-title __font_exo">
+                    {{ place.title }}
+                    <i class="fa fa-info-circle fa-lg right __open_more_icon" aria-hidden="true"></i>
+                </span>
+            </div>
+            <div class="card-reveal  __relative">
+                <span class="card-title __font_exo">
+                    {{ place.title }}
+                    <i class="fa fa-times-circle-o right __close_more_icon" aria-hidden="true"></i>
+                </span>
+                <p>
+                    {{ place.description }}
+                </p>
+            </div>
+            <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
+                <span class="yellow-text text-accent-2">
+                    <i class="fa fa-star __circle_border_darkblue " aria-hidden="true"></i>
+                </span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span class=" blue-grey-text text-darken-4 right">5/10</span>
+            </div>
+            <div class="card-action">
+                <a title="Читать о месте" href="{% url 'place:view' place.slug %}" class="__more_link __font_exo blue-grey-text text-darken-4">
+                    {% include "enter_arrow.html" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

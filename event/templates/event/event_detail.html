@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col s12">
+        <div class="head_block __margin-top_xxl">
+            <img class="responsive-img" src="{{ event.image.url }}">
+        </div>
+        <div class="article">
+            <h1 class="__margin-top_xl __margin-bottom_xl">Событие</h1>
+            <span id="hidden-id" class="__hidden">2</span>
+            <p>
+                <span>Организатор: </span>
+                <strong id="getter-name">{{ event.owner.username }}</strong>
+            </p>
+            <p>
+                <span>Место: </span><br>
+                {% for location in event.locations.all %}
+                    <strong>{{ location.address }}</strong><br>
+                {% endfor %}
+            </p>
+            <p><span>Цена: </span><strong>100</strong></p>
+            <span>Дата: </span><strong>20.10.2017 </strong>
+            <p>
+                <span>Тэги:&nbsp;&nbsp;</span>
+                <strong>#hfp&nbsp;</strong>
+                <strong>#dfdgfd&nbsp;</strong>
+                <strong>#ghfghf&nbsp;</strong>
+            </p>
+            <p>
+                <span>Коллективы: &nbsp;</span><br>
+                {% for band in event.bands.all %}
+                    <a href="#">{{ band.name }}</a><br>
+                {% endfor %}
+                {% for musician in event.musicians.all %}
+                    <a href="#">{{ musician.username }}</a><br>
+                {% endfor %}
+            </p>
+            <article class="__margin-top_xl">
+                <p>{{ event.description }}</p>
+            </article>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

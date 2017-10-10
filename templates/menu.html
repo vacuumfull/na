@@ -1,11 +1,11 @@
 <li>
-    <a class="__uppercase" href="#">
+    <a class="__uppercase" href="{% url 'event:index' %}">
         <i class="fa fa-calendar fa-lg left" aria-hidden="true"></i>
         События
     </a>
 </li>
 <li>
-    <a class="__uppercase" href="#">
+    <a class="__uppercase" href="{% url 'place:index' %}">
         <i class="fa fa-map-marker fa-lg left" aria-hidden="true"></i>
         Места
     </a>
@@ -16,15 +16,17 @@
         Посты
     </a>
 </li>
-<li>
-    <a class="__uppercase" href="#">
+<li class="__margin-right_xxl">
+    <a class="__uppercase" href="{% url 'band:index' %}">
         <i class="fa fa-users fa-lg left" aria-hidden="true"></i>
         Коллективы
     </a>
 </li>
+{% comment "MUsic link" %}
 <li class="__margin-right_xxl">
     <a class="__uppercase" href="#">
         <i class="fa fa-music fa-lg left" aria-hidden="true"></i>
         Музыка
     </a>
 </li>
+{% endcomment %}

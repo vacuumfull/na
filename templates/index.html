@@ -2,9 +2,45 @@
 
 {% block content %}
 
-<center>
-    <h1>Under construction</h1>
-    <i class="fa fa-spinner fa-5x fa-pulse"></i>
-</center>
+<div class="row">
+    <div class="col s12">
+        <div class="row">
+            <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">происходящее</h3>
+            <div class="row">
+                {% for event in events %}
+                    {% include "event/event_card.html" %}
+                {% empty %}
+                    <h4>Ничего не происходит</h4>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <h3 class="center __margin-top_l __margin-bottom_xxl __padding-bottom_m  __uppercase">Последние посты</h3>
+        <div class="row">
+            {% for blog in blogs %}
+                {% include "blog/blog_card.html" %}
+            {% empty %}
+                <h4>Посты отсуствуют</h4>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <h3 class="center __margin-top_l __margin-bottom_xxl __padding-bottom_m  __uppercase">Места</h3>
+        <div class="row">
+            {% for place in places %}
+                {% include "place/place_card.html" %}
+            {% empty %}
+                <h4>Посты отсуствуют</h4>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
