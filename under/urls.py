@@ -18,6 +18,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.static import serve
 
+import band.urls
 import blog.urls
 import event.urls
 import place.urls
@@ -25,6 +26,7 @@ from under.views import IndexView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^bands/', include(band.urls)),
     url(r'^blogs/', include(blog.urls)),
     url(r'^events/', include(event.urls)),
     url(r'^places/', include(place.urls)),
