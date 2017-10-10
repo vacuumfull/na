@@ -1,3 +1,10 @@
-from django.shortcuts import render
+"""Places with locations view."""
+from django.views.generic.detail import DetailView
 
-# Create your views here.
+from place.models import Place
+
+
+class PlaceView(DetailView):
+    """Detail view places."""
+
+    model = Place

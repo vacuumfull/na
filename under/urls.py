@@ -19,11 +19,13 @@ from django.contrib import admin
 from django.views.static import serve
 
 import blog.urls
+import place.urls
 from under.views import IndexView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^blogs/', include(blog.urls)),
+    url(r'^places/', include(place.urls)),
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^media/(?P<path>.*)$', serve,
         {'document_root': settings.MEDIA_ROOT}),
