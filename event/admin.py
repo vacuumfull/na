@@ -12,7 +12,7 @@ class AdminEvent(admin.ModelAdmin):
                        'image', 'published')}),
         ('Содержание', {'fields': ('locations', 'bands', 'musicians')}),
     )
-        
+
     list_display = ('title', 'price', 'published', 'date')
     list_editable = ('published',)
     list_filter = ('published', 'date', 'price')
