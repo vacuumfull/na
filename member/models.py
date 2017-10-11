@@ -28,9 +28,14 @@ class UserSettings(models.Model):
     """User settings model."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    alert_comment = models.BooleanField(default=False)
-    alert_place = models.BooleanField(default=False)
-    alert_blog = models.BooleanField(default=False)
-    alert_rating = models.BooleanField(default=False)
-    alert_link = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
+    alert_comment = models.BooleanField(
+        default=False, verbose_name='Уведомлять об ответах на комментарии')
+    alert_blog = models.BooleanField(
+        default=False, verbose_name='Уведомлять о новых коментарии к постам')
+    alert_rating = models.BooleanField(
+        default=False, verbose_name='Уведомлять об оценках записей')
+    alert_link = models.BooleanField(
+        default=False,
+        verbose_name='Уведомлять при прикреплении к месту или событию')
+    deleted = models.BooleanField(
+        default=False, verbose_name='Пользователь удален')
