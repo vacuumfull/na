@@ -7,8 +7,12 @@
                 <img src="{% static 'images/logo_white.jpg' %}" class="responsive-img">
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                {% include "menu.html" %}
-                {% include "auth_menu.html" %}
+                {% include "menu/base.html" %}
+                {% if request.user.is_authenticated %}
+                    {% include "menu/user.html" %}
+                {% else %}
+                    {% include "menu/auth.html" %}
+                {%endif %}
             </ul>
         </div>
     </nav>

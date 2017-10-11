@@ -15,24 +15,27 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import include, url
+from django.contrib.auth.views import LoginView, logout
 from django.contrib import admin
 from django.views.static import serve
 
 import band.urls
 import blog.urls
 import event.urls
-import member.urls
 import place.urls
 from under.views import IndexView
 
 urlpatterns = [
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
+    url(r'^media/(?P<path>.*)$', serve,
+        {'document_root': settings.MEDIA_ROOT}),
+
     url(r'^admin/', admin.site.urls),
     url(r'^bands/', include(band.urls)),
     url(r'^blogs/', include(blog.urls)),
     url(r'^events/', include(event.urls)),
-    url(r'^user/', include(member.urls)),
     url(r'^places/', include(place.urls)),
+
     url(r'^$', IndexView.as_view(), name='index'),
-    url(r'^media/(?P<path>.*)$', serve,
-        {'document_root': settings.MEDIA_ROOT}),
 ]
