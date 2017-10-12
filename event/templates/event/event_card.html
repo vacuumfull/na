@@ -9,13 +9,13 @@
             <div class="card-content __title_block __relative  activator ">
                 <span class="card-title __font_exo">
                     {{ event.title }}
-                    <i class="fa fa-info-circle fa-lg right __open_more_icon" aria-hidden="true"></i>
+                    <i class="material-icons right __open_more_icon">gamepad</i>
                 </span>
             </div>
             <div class="card-reveal  __relative">
                 <span class="card-title __font_exo">
                     {{ event.title }}
-                    <i class="fa fa-times-circle-o right __close_more_icon" aria-hidden="true"></i>
+                    <i class="material-icons right __close_more_icon">close</i>
                 </span>
                 <p>{{ event.description }}</p>
             </div>
@@ -23,7 +23,7 @@
                 <div class="__font_exo __semi_bold">
                     <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
                         <span class="red-text text-darken-4">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <i class="material-icons">location_on</i>
                         </span>
                         <a href="{% url 'place:view' event.locations.all.0.place.slug %}">
                             <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
                         <span class="red-text text-darken-4">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            <i class="material-icons">alarm</i>
                         </span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="  grey-text text-darken-3 right">{{ event.date|date:'d.m.Y H:i' }}</span>

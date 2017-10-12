@@ -11,13 +11,13 @@
             <div class="card-content __title_block __relative  activator ">
                 <span class="card-title __font_exo">
                     {{ blog.title }}
-                    <i class="fa fa-info-circle fa-lg right __open_more_icon" aria-hidden="true"></i>
+                    <i class="material-icons right __open_more_icon">gamepad</i>
                 </span>
             </div>
             <div class="card-reveal  __relative">
                 <span class="card-title __font_exo">
                     {{ blog.title }}
-                    <i class="fa fa-times-circle-o right __close_more_icon" aria-hidden="true"></i>
+                    <i class="material-icons right __close_more_icon">close</i>
                 </span>
                 <p>{{ blog.annotation }}</p>
             </div>
@@ -25,9 +25,15 @@
                 <div class="__font_exo __semi_bold">
                     <div class="  __margin-top_xs __padding-left_8 __padding-right_s">
                         <span title="Автор" class=" teal-text text-darken-4">
-                            <i class="fa fa-user-circle __author_icon_size" aria-hidden="true"></i>
+                            <i class="material-icons __author_icon_size">account_circle</i>
                         </span>
                         <span class=" grey-text text-darken-3 right">{{ blog.author.username }}</span>
+                    </div>
+                    <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
+                        <span class="yellow-text text-accent-2">
+                            <i class="material-icons __circle_border">star</i>
+                        </span>
+                        <span class="grey-text text-darken-3 right">8/10</span>
                     </div>
                 </div>
             </div>
