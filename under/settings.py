@@ -25,7 +25,7 @@ SECRET_KEY = '^=rp1@ickz8$p$%ap&3_9gd=8dv0dyfmmdzu9hbcq_dq0x4$by'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '172.16.0.205']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'member',
     'band',
     'place',
     'event',
@@ -125,6 +126,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_URL = '/login/'
 
 
 # Static files (CSS, JavaScript, Images)
