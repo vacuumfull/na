@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.utils import timezone
 from uuslug import uuslug
 
 from band.models import Band
@@ -18,6 +19,16 @@ def image_path(_instance, filename):
     file_path = os.path.join('event_images', str(uuid4()))
     ext = filename.split('.')[-1]
     return '{}.{}'.format(file_path, ext)
+
+
+class EventManager(models.Manager):
+    """Blog manager."""
+
+    def upcoming(self):
+        """Last published blog."""
+        result = Event.objects.filter(
+            published=True, date__gte=timezone.now())[:4]
+        return result
 
 
 class Event(models.Model):
@@ -56,6 +67,8 @@ class Event(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = EventManager()
 
     def __str__(self):
         return '{} ({})'.format(self.title, self.date)

@@ -24,8 +24,18 @@ def icon_path(_instance, filename):
     return '{}.{}'.format(file_path, ext)
 
 
+class PlaceManager(models.Manager):
+    """Blog manager."""
+
+    def last_published(self):
+        """Last published blog."""
+        result = Place.objects.filter(published=True)[:4]
+        return result
+
+
 class Place(models.Model):
     """Places model."""
+
     title = models.CharField(max_length=200, verbose_name='Название')
     description = models.TextField(blank=True, null=True,
                                    verbose_name='Описание')
@@ -49,6 +59,8 @@ class Place(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = PlaceManager()
 
     def __str__(self):
         return self.title

@@ -19,8 +19,18 @@ def image_path(_instance, filename):
     return '{}.{}'.format(file_path, ext)
 
 
+class BlogManager(models.Manager):
+    """Blog manager."""
+
+    def last_published(self):
+        """Last published blog."""
+        result = Blog.objects.filter(published=True)[:4]
+        return result
+
+
 class Blog(models.Model):
     """Blogs model."""
+
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     annotation = models.TextField(verbose_name='Аннотация')
     content = models.TextField(blank=True, null=True,
@@ -40,6 +50,8 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = BlogManager()
 
     def __str__(self):
         return self.title
