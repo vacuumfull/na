@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row __padding-top_xxl __padding-bottom_xxl">
+    <div class="col s8 offset-s2">
+        <div class="panel panel-default">
+            <div class="panel-heading __margin-bottom_xl ">
+                <h3>Регистрация пользователя</h3>
+            </div>
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <p class="errornote">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+
+            <div class="panel-body  __padding-bottom_m">
+                <form id="signup-form" action="" method="POST" class="form-horizontal" role="form">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.username.errors }}
+                    {{ form.username.label_tag }}
+                    <div class="col-md-6">
+                        {{ form.username }}
+                    </div>
+                    {{ form.username.help_text }}
+                </div>
+                <div class="form-group">
+                    {{ form.password1.errors }}
+                    {{ form.password1.label_tag }}
+                    <div class="col-md-6">
+                        {{ form.password1 }}
+                    </div>
+                    {{ form.password1.help_text|safe }}
+                </div>
+                <div class="form-group">
+                    {{ form.password2.errors }}
+                    {{ form.password2.label_tag }}
+                    <div class="col-md-6">
+                        {{ form.password2 }}
+                    </div>
+                    {{ form.password2.help_text }}
+                </div>
+                <div class="form-group">
+                    <div class="col-md-8 col-md-offset-4">
+                        <input name="next" value="/" type="hidden">
+                        <input type="submit" class="btn btn-primary" value="Зарегистрироваться">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
