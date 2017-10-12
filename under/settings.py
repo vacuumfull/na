@@ -135,10 +135,8 @@ LOGIN_URL = '/login/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    ('css', 'static/css'),
-    ('js', 'static/js'),
     ('images', 'static/images'),
-    ('fonts', 'static/fonts'),
+    ('dist', 'static/dist'),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
