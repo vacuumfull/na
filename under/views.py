@@ -6,11 +6,13 @@ from place.models import Place
 
 
 class IndexView(TemplateView):
+    """Index page."""
+
     template_name = 'index.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['blogs'] = Blog.objects.last_blog()
-        context['events'] = Event.objects.all()[:4]
+        context['events'] = Event.objects.last_blog()
         context['places'] = Place.objects.last_blog()
         return context
