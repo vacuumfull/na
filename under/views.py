@@ -12,7 +12,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['blogs'] = Blog.objects.last_blog()
-        context['events'] = Event.objects.last_blog()
-        context['places'] = Place.objects.last_blog()
+        context['blogs'] = Blog.objects.last_published()
+        context['events'] = Event.objects.upcoming()
+        context['places'] = Place.objects.last_published()
         return context

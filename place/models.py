@@ -27,7 +27,7 @@ def icon_path(_instance, filename):
 class PlaceManager(models.Manager):
     """Blog manager."""
 
-    def last_blog(self):
+    def last_published(self):
         """Last published blog."""
         result = Place.objects.filter(published=True)[:4]
         return result

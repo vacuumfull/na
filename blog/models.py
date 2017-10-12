@@ -22,7 +22,7 @@ def image_path(_instance, filename):
 class BlogManager(models.Manager):
     """Blog manager."""
 
-    def last_blog(self):
+    def last_published(self):
         """Last published blog."""
         result = Blog.objects.filter(published=True)[:4]
         return result
