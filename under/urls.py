@@ -21,6 +21,7 @@ from django.views.static import serve
 import band.urls
 import blog.urls
 import event.urls
+import flatten.urls
 import member.urls
 import place.urls
 from under.views import IndexView
@@ -34,6 +35,7 @@ urlpatterns = [
     url(r'^blogs/', include(blog.urls)),
     url(r'^events/', include(event.urls)),
     url(r'^places/', include(place.urls)),
+    url(r'^page/', include(flatten.urls)),
 
     url(r'^', include(member.urls)),
     url(r'^$', IndexView.as_view(), name='index'),

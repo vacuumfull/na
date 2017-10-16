@@ -21,7 +21,7 @@
         <h5 class="white-text">Основное</h5>
         <ul>
             <li><a class="grey-text text-lighten-3" href="#">Карта мест</a></li>
-            <li><a class="grey-text text-lighten-3" href="#">Правила</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'flatten:rules' %}">Правила</a></li>
             <li>&nbsp;</li>
         </ul>
     </div>
@@ -40,8 +40,8 @@
     <div class="__footer_block">
         <h5 class="white-text">О проекте</h5>
         <ul>
-            <li><a class="grey-text text-lighten-3" href="#">Контакты</a></li>
-            <li><a class="grey-text text-lighten-3" href="#">Благодарности</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'flatten:contacts' %}">Контакты</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'flatten:thanks' %}">Благодарности</a></li>
         </ul>
     </div>
 </div>

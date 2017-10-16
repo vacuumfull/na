@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'band',
     'place',
     'event',
+    'flatten',
     'blog',
 ]
 
