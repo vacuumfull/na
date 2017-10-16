@@ -1,13 +1,14 @@
+{% loadstaticfiles %}
 <!--left menu-->
 <div id="left-menu">
     <ul id="slide-out" class="side-nav">
         <li><div class="userView">
             <div class="background">
-                <img class="responsive-img" src="/images/system/logo_inner.jpg">
+                <img class="responsive-img" src="/static/images/logo_inner.jpg">
             </div>
             <a href="#!user">
 
-                <img v-if="avatar === ''" class="circle" src="/images/system/fresh_no_avatar.png">
+                <img v-if="avatar === ''" class="circle" src="/static/images/fresh_no_avatar.png">
 
                 <img v-if="avatar !== ''" class="circle" :src="avatar">
 
@@ -167,14 +168,9 @@
         <li><div class="divider"></div></li>
         <li><a href="/settings" title="Мои настройки"> <i class="material-icons">perm_data_setting</i> Настройки</a></li>
         <li>
-            <a title="Выход" href="/logout"
-               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+            <a title="Выход" href="/logout/">
                 <i class="material-icons">exit_to_app</i>Выход
             </a>
-            <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                <input type="hidden" name="_token" :value="field">
-            </form>
         </li>
     </ul>
     <!--left menu-->
