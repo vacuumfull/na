@@ -26,6 +26,7 @@
         <left-menu name="Петр Петрович" email="blabla@ya.ru" role="5" avatar="null" ></left-menu>
     </div>
     {% include "footer.html" %}
-    <script src="{% static 'dist/common.entry.js' %}"></script>
-
+    
+    {% block js %}
+    {% endblock js %}
 </body>

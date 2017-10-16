@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="row">
+<div id="inner" class="row">
     <div class="col s12">
         <div class="head_block __margin-top_xl">
             <img class="responsive-img" src="{{ blog.image.url }}">
@@ -33,3 +33,10 @@
 {% include "rating.html" %}
 
 {% endblock content %}
+
+
+{% block js %}
+
+<script src="/static/dist/inner.entry.js"></script>
+
+{% endblock js %}
