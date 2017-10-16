@@ -2,4 +2,9 @@
     name="{{ user.first_name }} {{ user.last_name }}"
     email="{{ user.email }}"
     role="5"
-    avatar="{{ user.userextend.avatar.url }}" ></left-menu>
+    {% if user.userextend.avatar %}
+        avatar="{{ user.userextend.avatar.url }}"
+    {% else %}
+        avatar="null"
+    {% endif %}>
+</left-menu>
