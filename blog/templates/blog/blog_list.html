@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Бложеги</h3>
 
-    <div class="col s12">
-        <div class="row">
-            {% for blog in blogs %}
-                {% include "blog/blog_card.html" %}
-            {% endfor %}
+<div class="container">
+    <div class="row">
+        <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Бложеги</h3>
+        <div class="col s12">
+            <div class="row">
+                {% for blog in blogs %}
+                    {% include "blog/blog_card.html" %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    </div>        
 </div>
-
+    
 {% endblock content %}
 
 
