@@ -3,32 +3,35 @@
 {% block content %}
 
 <div id="inner">
-    <div class="row">
-        <div class="col s12">
-            <div class="head_block __margin-top_xl">
-                <img class="responsive-img" src="{{ band.image.url }}">
-            </div>
-            <div class="article __margin-bottom_l">
-                <h1>{{ band.title }}</h1>
-                <span id="hidden-id" class="__hidden">{{ band.id }}</span>
-                <p>
-                    <span>Представитель: </span>
-                    <strong id="getter-name">{{ band.owner.username }}</strong>
-                </p>
-                <article class="__margin-top_xl">
-                    {{ band.description }}
-                </article>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="head_block __margin-top_xl">
+                    <img class="responsive-img" src="{{ band.image.url }}">
+                </div>
+                <div class="article __margin-bottom_l">
+                    <h1>{{ band.title }}</h1>
+                    <span id="hidden-id" class="__hidden">{{ band.id }}</span>
+                    <p>
+                        <span>Представитель: </span>
+                        <strong id="getter-name">{{ band.owner.username }}</strong>
+                    </p>
+                    <article class="__margin-top_xl">
+                        {{ band.description }}
+                    </article>
+                </div>
             </div>
         </div>
+        {% if user.is_authenticated %}
+            <hr>
+            <comment-component is-login="true" type="place"></comment-component>
+        {% else %}
+            <hr>
+            <comment-component is-login="false" type="place"></comment-component>
+        {% endif %}
     </div>
-    {% if user.is_authenticated %}
-        <hr>
-        <comment-component is-login="true" type="place"></comment-component>
-    {% else %}
-        <hr>
-        <comment-component is-login="false" type="place"></comment-component>
-    {% endif %}
 </div>
+
 {% endblock content %}
 
 

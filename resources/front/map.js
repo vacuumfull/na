@@ -3,12 +3,9 @@ import $ from 'jquery';
 import GoogleMapsLoader from 'google-maps';
 import Dialog from './components/DialogComponent';
 import LeftMenu from './components/LeftMenuComponent';
-import '../assets/css/cosmetic.css';
-import '../assets/css/materialize.min.css';
-import '../assets/css/style.css';
 
 new Vue({
-    el: '#places_map',
+    el: '#index',
     components: {
         'dialog-component': Dialog,
         'left-menu': LeftMenu
@@ -17,10 +14,16 @@ new Vue({
         places: []
     },
     created(){
-        this.getPlaces()
+        GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q'
+        GoogleMapsLoader.load((google) => {
+            new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 59.93961241484262, lng: 30.321905688476562},
+                zoom: 12
+            })
+        })
     },
     mounted(){
-        GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q'
+       
     },
     methods: {
         getPlaces(){
