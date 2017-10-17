@@ -2,6 +2,7 @@
 import os
 from uuid import uuid4
 
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -33,8 +34,8 @@ class Blog(models.Model):
 
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     annotation = models.TextField(verbose_name='Аннотация')
-    content = models.TextField(blank=True, null=True,
-                               verbose_name='Содержание')
+    content = RichTextField(blank=True, null=True,
+                            verbose_name='Содержание')
     image = models.ImageField(upload_to=image_path,
                               verbose_name='Титульное изображение')
 
