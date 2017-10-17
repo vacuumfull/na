@@ -42,8 +42,6 @@ const Dialog = Vue.extend({
         });
 
         this.getUsers();
-        console.log('hello')
-        console.log(this.showGetterName)
         this.$on('message', function(msg){
             console.log(msg)
             let authors = [];
@@ -94,7 +92,7 @@ const Dialog = Vue.extend({
         openDialog(){
             $('#dialog_window').modal();
             $('#dialog_window').modal('open');
-            console.log(this.userRole)
+    
         },
         openMessages(id, author){
             let self = this,

@@ -19,11 +19,13 @@ table.__left > thead> tr > th.__left{
 
 body nav .button-collapse{
     margin: 0px;
-
 }
 #mobile{
     display: none;
     cursor: pointer;
+}
+#map{
+    height: 676px;
 }
 
 .wrapper .article > p {
