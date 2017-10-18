@@ -13,6 +13,13 @@ class IndexList(ListView):
     queryset = Blog.objects.published()
     context_object_name = 'blogs'
 
+    def get_queryset(self):
+        """Filter queryset if choise one rubric."""
+        query = super().get_queryset()
+        if 'rubric' in self.kwargs:
+            query = query.filter(rubric=self.kwargs['rubric'])
+        return query
+
 
 class BlogView(DetailView):
     """Blog view class."""
@@ -24,7 +31,8 @@ class BlogCreate(CreateView):
     """Create blog post."""
 
     model = Blog
-    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    fields = [
+        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):
@@ -38,5 +46,6 @@ class BlogUpdate(UpdateView):
     """Update blog post."""
 
     model = Blog
-    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    fields = [
+        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')

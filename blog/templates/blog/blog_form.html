@@ -20,7 +20,14 @@
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                    <div class="file-field input-field col s5">
+                                    <div class="input-field col s5">
+                                        {{ form.rubric.errors }}
+                                        {{ form.rubric }}
+                                        {{ form.rubric.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="file-field input-field col s12">
                                         {{ form.image.errors }}
                                         <div class="btn">
                                             <span>{{ form.image.label }}</span>
