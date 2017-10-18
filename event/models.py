@@ -24,10 +24,15 @@ def image_path(_instance, filename):
 class EventManager(models.Manager):
     """Blog manager."""
 
+    def last_published(self):
+        """Last published upcoming events."""
+        result = Event.objects.upcoming()[:4]
+        return result
+
     def upcoming(self):
-        """Last published blog."""
+        """Upcoming events."""
         result = Event.objects.filter(
-            published=True, date__gte=timezone.now())[:4]
+            published=True, date__gte=timezone.now())
         return result
 
 

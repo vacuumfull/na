@@ -10,7 +10,7 @@ from event.models import Event
 class EventList(ListView):
     """Index list for events."""
 
-    model = Event
+    queryset = Event.objects.upcoming()
     context_object_name = 'events'
 
 
