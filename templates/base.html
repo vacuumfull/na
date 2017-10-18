@@ -19,8 +19,11 @@
             {% block content %}
             {% endblock content %}
         </div>
-        {% include "menu/left_function.html" %}
-        {% include "vue/main.html" %}
+        
+        {% if user.is_authenticated  %}
+            {% include "menu/left_menu.html" %}
+            {% include "menu/left_function.html" %}
+        {% endif %}
     </div>
 
     {% include "footer.html" %}

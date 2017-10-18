@@ -33157,147 +33157,8 @@ module.exports = "<a v-on:click=\"dialog\" title=\"Сообщения\" href=\"#
 module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if=\"userRole > 1 \" id=\"dialog_window\" class=\"modal __modal __advanced\">\n        <div class=\"modal-content\">\n            <h4 v-if=\"!showGetterName\" class=\"black-text\">Диалоговое окно</h4>\n            <h4 v-if=\"showGetterName\" class=\"black-text\">Диалог c {{ selectedGetter }}</h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s4 __border_right\">\n                        <div v-if=\"showSenders\" class=\"senders\">\n                            <div class=\"collection\">\n                                <a v-on:click=\"openMessages(author.id, author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"author in authors\">{{ author.name }}<span class=\"badge right new \">{{ author.count }}</span></a>\n                            </div>\n                        </div>\n                        <div v-if=\"!showSenders\" class=\"__filtered\" >\n                            <div class=\"__filter __filtered __margin-bottom_m\">\n                           <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_admins\" type=\"checkbox\" v-model=\"filterAdmin\" v-on:change=\"getUsers\">\n                                <label for=\"filter_admins\">админы</label>\n                           </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_orgs\" type=\"checkbox\" v-model=\"filterOrganizer\" v-on:change=\"getUsers\">\n                                <label for=\"filter_orgs\">орги</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_users\" type=\"checkbox\" v-model=\"filterUser\" v-on:change=\"getUsers\">\n                                <label for=\"filter_users\">юзеры</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_artists\" type=\"checkbox\" v-model=\"filterArtist\" v-on:change=\"getUsers\">\n                                <label for=\"filter_artists\">музыканты</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_deputy\" type=\"checkbox\" v-model=\"filterDeputy\" v-on:change=\"getUsers\">\n                                <label for=\"filter_deputy\">представители</label>\n                            </span>\n                            </div>\n                            <div class=\"collection __usersfield\" :class=\"{ __overflow_y: showScroll }\">\n                                <a v-for=\"user in users\" :id=\"user.id\" class=\"collection-item\" v-on:click=\"selectGetter(user.name)\">\n                                    {{ user.name }}\n                                    <span class=\"__rolename\">{{ user.rolename }}</span>\n                                    <span v-if=\"selectAll\" class=\"__absolute __all_icon\"> <i class=\"material-icons dp48\">bubble_chart</i></span>\n                                </a>\n                            </div>\n                            <div class=\"__filtered\">\n                             <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"select_all\" type=\"checkbox\" v-model=\"selectAll\" v-on:change=\"setForAll\">\n                                <label for=\"select_all\">выбрать всех</label>\n                            </span>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"col s8\">\n                        <p class=\"__message black-text __margin-top_xs __margin-bottom_xs\" v-for=\"message in activeMessages\">\n                            <span class=\"blue-text text-darken-5\" >{{ message.time }}</span>: <span v-html=\"message.content\"></span>\n                        </p>\n                        <div id=\"img-field\" class=\"__message_img\">\n\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"__dialog-field col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n                <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !showGetterName}\">\n                    &nbsp;&nbsp;Отправить\n                    <i class=\"material-icons right dp48\">send</i>\n                </a>\n                <div v-if=\"showGetterName\" class=\"file-field input-field right\">\n                    <div class=\"btn-large __download_btn\">\n                        <span>Добавить изображение</span>\n                        <i class=\"material-icons right dp48\">photo</i>\n                        <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                    </div>\n                </div>\n            </div>\n        </div>\n        <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n\n    <div v-if=\"userRole == 1\" id=\"dialog_window\" class=\"modal __modal\">\n        <div class=\"modal-content\">\n            <h4 v-if=\"!showGetterName\" class=\"black-text\">Диалоговое окно</h4>\n            <h4 v-if=\"showGetterName\" class=\"black-text\">Диалог c {{ selectedGetter }}</h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s4 __border_right\">\n                        <div v-if=\"showSenders\" class=\"senders\">\n                            <div class=\"collection\">\n                                <a v-on:click=\"openMessages(author.id, author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"author in authors\">{{ author.name }}<span class=\"badge right new \">{{ author.count }}</span></a>\n                            </div>\n                        </div>\n                        <div v-if=\"!showSenders\" >\n                            <div class=\"collection __usersfield\" :class=\"{ __overflow_y: showScroll }\">\n                                <a v-for=\"user in users\" :id=\"user.id\" class=\"collection-item\" v-on:click=\"selectGetter(user.name)\">{{ user.name }}</a>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"col s8\">\n                        <p class=\"__message black-text __margin-top_xs __margin-bottom_xs\" v-for=\"message in activeMessages\"><span class=\"blue-text text-darken-5\" >{{ message.time }}</span>: {{ message.content }}</p>\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"__dialog-field col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n            </div>\n\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !showGetterName}\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n        </div>\n        <div class=\"modal-footer\">\n            <a  v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n        </div>\n    </div>\n    <messages v-on:dialog=\"openDialog\"></messages>\n</li>\n\n"
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _materializeCss = __webpack_require__(2);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _leftMenu = __webpack_require__(12);
-
-var _leftMenu2 = _interopRequireDefault(_leftMenu);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LeftMenu = _vue2.default.extend({
-    template: _leftMenu2.default,
-    props: ['avatar', 'name', 'email', 'role'],
-    data: function data() {
-        return {
-            getter: {
-                id: "",
-                name: ""
-            },
-            message: "",
-            users: [],
-            showAvatar: false,
-            getMessage: false,
-            showUsersField: false,
-            showScroll: false,
-            field: ""
-        };
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
-        (0, _jquery2.default)(".button-collapse").sideNav();
-    },
-    created: function created() {
-        _jquery2.default.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        this.field = (0, _jquery2.default)('meta[name="csrf-token"]').attr('content');
-    },
-
-    methods: {
-        openField: function openField() {
-            this.showUsersField = true;
-        },
-        getUsers: function getUsers() {
-            var uri = "/user/users",
-                self = this;
-
-            _jquery2.default.get(uri).done(function (data) {
-                self.users = data.response;
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        selectGetter: function selectGetter(event) {
-            var self = this,
-                name = event.target.innerText,
-                id = event.target.id,
-                label = document.querySelectorAll(".user-search label")[0];
-
-            self.getter.id = id;
-            self.getter.name = name;
-            self.users = [];
-            label.className = " active";
-            (0, _jquery2.default)('#left_message_window').modal('open');
-        },
-        sendMessage: function sendMessage() {
-            var self = this,
-                author = document.getElementById("username").innerText,
-                uri = "/messages/create";
-
-            _jquery2.default.post(uri, {
-                author: author,
-                getter: self.getter.name,
-                content: self.message
-            }).done(function (data) {
-                self.successAction("Cообщение отправлено!");
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        checkHeight: function checkHeight(classname) {
-            var field = document.querySelectorAll(classname)[0];
-            var height = field.offsetHeight;
-            return height;
-        },
-        search: function search(event) {
-            var uri = "/user/search",
-                self = this,
-                keyword = event.target.value,
-                height = self.checkHeight(".__select_users");
-
-            if (height > 298) {
-                self.showScroll = true;
-            }
-
-            if (keyword.length > 2) {
-                self.users = [];
-                _jquery2.default.get(uri, {
-                    keyword: keyword
-                }).done(function (data) {
-                    self.users = data.response;
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            }
-        }
-    }
-});
-
-exports.default = LeftMenu;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = "<!--left menu-->\n<div id=\"left-menu\">\n    <ul id=\"slide-out\" class=\"side-nav\">\n        <li><div class=\"userView\">\n            <div class=\"background\">\n                <img class=\"responsive-img\" src=\"/static/images/logo_inner.jpg\">\n            </div>\n            <a href=\"#!user\">\n\n                <img v-if=\"avatar === ''\" class=\"circle\" src=\"/static/images/fresh_no_avatar.png\">\n\n                <img v-if=\"avatar !== ''\" class=\"circle\" :src=\"avatar\">\n\n            </a>\n            <a href=\"#!name\"><span class=\"white-text name\">{{ name }}</span></a>\n            <a href=\"#!email\"><span class=\"white-text email\">{{ email }}</span></a>\n        </div>\n        </li>\n        <li v-on:click=\"openField\" ><a class=\"waves-effect\" href=\"#!\"><i class=\"material-icons\">chat</i>Cообщение</a></li>\n        <li v-if=\"showUsersField\" class=\"__padding-left_xl __padding-right_xl\">\n            <div class=\"input-group\">\n                <div class=\"input-field user-search\">\n                    <input type=\"text\" v-on:click=\"getUsers\" v-on:keyup=\"search($event)\" v-model=\"getter.name\">\n                    <label>кому</label>\n                </div>\n            </div>\n            <ul class=\"__select_users\" :class=\"{ __overflow_y: showScroll }\">\n                <li v-for=\"user in users\"><a :id=\"user.id\" href=\"#!\" v-on:click=\"selectGetter($event)\">@{{ user.name }}</a></li>\n            </ul>\n        </li>\n        <li v-if=\"showUsersField\"><div class=\"divider\"></div></li>\n\n        <template v-if=\"role == 5\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"events\">\n                    <i class=\"material-icons\">event</i>\n                    События\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"albums\">\n                    <i class=\"material-icons\">library_music</i>\n                    Плейлисты\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a href=\"/admin/rubric/index\">\n                    <i class=\"material-icons\">format_list_numbered</i>\n                    Рубрики\n                </a>\n            </li>\n            <li>\n                <a href=\"/admin/comment/list\">\n                    <i class=\"material-icons\">question_answer</i>\n                    Комментарии\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 4\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"events\">\n                    <i class=\"material-icons\">event</i>\n                    События\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 3\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 2\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"albums\">\n                    <i class=\"material-icons\">library_music</i>\n                    Плейлисты\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i></a>\n            </li>\n        </template>\n        <template v-if=\"role == 1\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n\n        <li><div class=\"divider\"></div></li>\n        <li><a href=\"/settings\" title=\"Мои настройки\"> <i class=\"material-icons\">perm_data_setting</i> Настройки</a></li>\n        <li>\n            <a title=\"Выход\" href=\"/logout/\">\n                <i class=\"material-icons\">exit_to_app</i>Выход\n            </a>\n        </li>\n    </ul>\n    <!--left menu-->\n\n    <div id=\"left_message_window\" class=\"modal\">\n        <div class=\"modal-content\">\n            <h4>Диалог с <span class=\"purple-text text-darken-4\">{{getter.name}}</span></h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s12\">\n\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n            </div>\n\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n        </div>\n        <div class=\"modal-footer\">\n            <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n        </div>\n    </div>\n</div>\n"
-
-/***/ }),
+/* 11 */,
+/* 12 */,
 /* 13 */,
 /* 14 */,
 /* 15 */,
@@ -33311,13 +33172,13 @@ var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 var _DialogComponent = __webpack_require__(3);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
-
-var _LeftMenuComponent = __webpack_require__(11);
-
-var _LeftMenuComponent2 = _interopRequireDefault(_LeftMenuComponent);
 
 __webpack_require__(17);
 
@@ -33330,9 +33191,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 new _vue2.default({
     el: '#index',
     components: {
-        'dialog-component': _DialogComponent2.default,
-        'left-menu': _LeftMenuComponent2.default
+        'dialog-component': _DialogComponent2.default
     },
+    mounted: function mounted() {
+        console.log('hello');
+        (0, _jquery2.default)('#left_message_window').modal();
+        (0, _jquery2.default)(".button-collapse").sideNav();
+    },
+
     methods: {
         link: function link(string) {
             window.location = window.location.origin + string;

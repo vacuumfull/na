@@ -1,0 +1,80 @@
+<!--left menu-->
+<div id="left-menu">
+    <ul id="slide-out" class="side-nav">
+        <li><div class="userView">
+            <div class="background">
+                <img class="responsive-img" src="/static/images/logo_inner.jpg">
+            </div>
+            <a href="#!user">
+                <img  class="circle" src="/static/images/fresh_no_avatar.png">
+            </a>
+            <a href="#!name"><span class="white-text name">{{ user.name }}</span></a>
+            <a href="#!email"><span class="white-text email">{{ email }}</span></a>
+        </div>
+        </li>
+        <li><a class="waves-effect" href="#!"><i class="material-icons">chat</i>Cообщение</a></li>
+        <li  class="__padding-left_xl __padding-right_xl">
+            <div class="input-group">
+                <div class="input-field user-search">
+                    <input type="text">
+                    <label>кому</label>
+                </div>
+            </div>
+        </li>
+        <li ><div class="divider"></div></li>
+        <li>
+            <a class="dropdown-button waves-effect" href="#!" data-activates="posts">
+                <i class="material-icons">description</i>
+                Записи
+                <i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-button waves-effect" href="#!" data-activates="events">
+                <i class="material-icons">event</i>
+                События
+                <i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-button waves-effect" href="#!" data-activates="places">
+                <i class="material-icons">store_mall_directory</i>
+                Места
+                <i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-button waves-effect" href="#!" data-activates="collectives">
+                <i class="material-icons">people</i>
+                Коллективы
+                <i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-button waves-effect" href="#!" data-activates="albums">
+                <i class="material-icons">library_music</i>
+                Плейлисты
+                <i class="material-icons right">arrow_drop_down</i>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/rubric/index">
+                <i class="material-icons">format_list_numbered</i>
+                Рубрики
+            </a>
+        </li>
+        <li>
+            <a href="/admin/comment/list">
+                <i class="material-icons">question_answer</i>
+                Комментарии
+            </a>
+        </li>
+        <li><div class="divider"></div></li>
+        <li><a href="/settings" title="Мои настройки"> <i class="material-icons">perm_data_setting</i> Настройки</a></li>
+        <li>
+            <a title="Выход" href="/logout/">
+                <i class="material-icons">exit_to_app</i>Выход
+            </a>
+        </li>
+    </ul>
+</div>

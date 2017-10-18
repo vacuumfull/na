@@ -2,13 +2,11 @@ import Vue from 'vue';
 import $ from 'jquery';
 import GoogleMapsLoader from 'google-maps';
 import Dialog from './components/DialogComponent';
-import LeftMenu from './components/LeftMenuComponent';
 
 new Vue({
     el: '#index',
     components: {
         'dialog-component': Dialog,
-        'left-menu': LeftMenu
     },
     data: {
         places: []
@@ -23,7 +21,8 @@ new Vue({
         })
     },
     mounted(){
-       
+        $('#left_message_window').modal();
+        $(".button-collapse").sideNav();
     },
     methods: {
         getPlaces(){
