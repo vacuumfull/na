@@ -3,3 +3,7 @@ __pycache__/
 /upload/
 /dist/
 /node_modules/
+.gitignore
+/under/settings.pyc
+/under/settings.py
+/src/

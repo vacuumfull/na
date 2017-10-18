@@ -11,7 +11,8 @@ const config = {
         main: './resources/front/main',
         common: './resources/front/common',
         inner: './resources/front/inner',
-        map: './resources/front/map'
+        map: './resources/front/map',
+        adminPost: './resources/front/admin-post'
     },
     output: {
         path: path.join(__dirname, "static/dist"),

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33971,7 +33971,18 @@ module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if
 /* 14 */,
 /* 15 */,
 /* 16 */,
-/* 17 */
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33989,12 +34000,6 @@ var _DialogComponent = __webpack_require__(3);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
-__webpack_require__(18);
-
-__webpack_require__(19);
-
-__webpack_require__(20);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
@@ -34003,34 +34008,12 @@ new _vue2.default({
         'dialog-component': _DialogComponent2.default
     },
     mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
-        (0, _jquery2.default)(".button-collapse").sideNav();
+        (0, _jquery2.default)('select').material_select();
+        (0, _jquery2.default)('.tooltipped').tooltip({ delay: 50 });
     },
 
-    methods: {
-        link: function link(string) {
-            window.location = window.location.origin + string;
-        }
-    }
+    methods: {}
 });
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
