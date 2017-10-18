@@ -81,4 +81,5 @@ class Blog(models.Model):
 @receiver(pre_save, sender=Blog)
 def created_slug(sender, instance, **_):
     """Generate custom slug before save object."""
-    instance.slug = uuslug(instance.title, instance=instance)
+    if instance.pk is None:
+        instance.slug = uuslug(instance.title, instance=instance)
