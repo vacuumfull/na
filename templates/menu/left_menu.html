@@ -1,12 +1,13 @@
+{% load staticfiles %}
 <!--left menu-->
 <div id="left-menu">
     <ul id="slide-out" class="side-nav">
         <li><div class="userView">
             <div class="background">
-                <img class="responsive-img" src="/static/images/logo_inner.jpg">
+                <img class="responsive-img" src="{% static 'images/logo_inner.jpg' %}">
             </div>
             <a href="#!user">
-                <img  class="circle" src="/static/images/fresh_no_avatar.png">
+                <img  class="circle" src="{% static 'images/fresh_no_avatar.png' %}">
             </a>
             <a href="#!name"><span class="white-text name">{{ user.name }}</span></a>
             <a href="#!email"><span class="white-text email">{{ email }}</span></a>
@@ -70,9 +71,9 @@
             </a>
         </li>
         <li><div class="divider"></div></li>
-        <li><a href="/settings" title="Мои настройки"> <i class="material-icons">perm_data_setting</i> Настройки</a></li>
+        <li><a href="#settings" title="Мои настройки"> <i class="material-icons">perm_data_setting</i> Настройки</a></li>
         <li>
-            <a title="Выход" href="/logout/">
+            <a title="Выход" href="{% url 'logout' %}">
                 <i class="material-icons">exit_to_app</i>Выход
             </a>
         </li>
