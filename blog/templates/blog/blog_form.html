@@ -4,7 +4,8 @@
 
 <div id="posts_page" class="container">
     <h4 class="center __margin-top_xxl">Добавить пост</h4>
-    <form class="row" enctype="multipart/form-data">
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
         <div class="col s12">
             <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
                 <div class="row">

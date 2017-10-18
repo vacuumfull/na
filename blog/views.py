@@ -1,4 +1,5 @@
 """Blog view."""
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -24,6 +25,13 @@ class BlogCreate(CreateView):
 
     model = Blog
     fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    success_url = reverse_lazy('blog:index')
+
+    def form_valid(self, form):
+        """Add user info to form."""
+        instance = form.save(commit=False)
+        instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class BlogUpdate(UpdateView):
