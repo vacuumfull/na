@@ -25,7 +25,12 @@ class BlogManager(models.Manager):
 
     def last_published(self):
         """Last published blog."""
-        result = Blog.objects.filter(published=True)[:4]
+        result = Blog.objects.published()[:4]
+        return result
+
+    def published(self):
+        """All published post."""
+        result = Blog.objects.filter(published=True)
         return result
 
 

@@ -10,7 +10,7 @@ from blog.models import Blog
 class IndexList(ListView):
     """Index list for blogs."""
 
-    model = Blog
+    queryset = Blog.objects.published()
     context_object_name = 'blogs'
 
 
