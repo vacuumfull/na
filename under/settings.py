@@ -138,6 +138,8 @@ LOGIN_URL = '/login/'
 STATIC_URL = '/static/'
 # STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
+    ('ckeditor', 'static/ckeditor'),
+    ('js', 'static/js'),
     ('images', 'static/images'),
     ('dist', 'static/dist'),
 ]

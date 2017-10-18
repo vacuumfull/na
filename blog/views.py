@@ -23,7 +23,7 @@ class BlogCreate(CreateView):
     """Create blog post."""
 
     model = Blog
-    fields = ['annotation', 'content']
+    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
 
 
 class BlogUpdate(UpdateView):
