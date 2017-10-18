@@ -11,6 +11,7 @@
                 </div>
                 <div class="article">
                     <h1>{{ blog.title }}</h1>
+                    <!-- TODO: Этому здесь не место -->
                     <span id="hidden-id" class="__hidden">{{ blog.id }}</span>
                     {% comment "Тут должны быть ТЭГИ"%}
                     <p class="__margin-bottom_xs __margin-top_xs">
@@ -23,11 +24,14 @@
                         <p>{{ blog.content|safe }}</p>
                     </article>
                     <p class="__margin-bottom_xs __margin-top_xs">
-                        <span>Опубликован: </span><strong>{{ blog.created_at|date }}</strong>
+                        <span>Опубликован: </span>
+                        <strong>{{ blog.created_at|date }}</strong>
                     </p>
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Автор: </span>
-                        <a href="#"><strong id="getter-name">{{ blog.author.username }}</strong></a>
+                        <a href="#">
+                            <strong id="getter-name">{{ blog.author.username }}</strong>
+                        </a>
                     </p>
                 </div>
             </div>

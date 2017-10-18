@@ -3,16 +3,20 @@
 {% block content %}
 
 <div class="container">
+    {% regroup blogs by rubric as rubric_list %}
+
+    {% for rubric, blog_list in rubric_list %}
     <div class="row">
-        <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Бложеги</h3>
+        <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">{{ rubric }}</h3>
         <div class="col s12">
             <div class="row">
-                {% for blog in blogs %}
+                {% for blog in blog_list %}
                     {% include "blog/blog_card.html" %}
                 {% endfor %}
             </div>
         </div>
-    </div>        
+    </div>
+    {% endfor %}
 </div>
     
 {% endblock content %}

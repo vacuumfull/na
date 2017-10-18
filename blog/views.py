@@ -24,7 +24,8 @@ class BlogCreate(CreateView):
     """Create blog post."""
 
     model = Blog
-    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    fields = [
+        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):
@@ -38,5 +39,6 @@ class BlogUpdate(UpdateView):
     """Update blog post."""
 
     model = Blog
-    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    fields = [
+        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')

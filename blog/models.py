@@ -13,6 +13,13 @@ from event.models import Event
 from place.models import Place
 
 
+RUBRICS_LIST = (
+    ('imho', 'Личное мнение'),
+    ('festivals', 'Фестивали'),
+    ('music', 'Музыка'),
+)
+
+
 def image_path(_instance, filename):
     """Path and name to image file."""
     file_path = os.path.join('blog_images', str(uuid4()))
@@ -31,6 +38,7 @@ class BlogManager(models.Manager):
     def published(self):
         """All published post."""
         result = Blog.objects.filter(published=True)
+        result.order_by('rubric', 'created_at', 'title')
         return result
 
 
@@ -38,6 +46,8 @@ class Blog(models.Model):
     """Blogs model."""
 
     title = models.CharField(max_length=200, verbose_name='Заголовок')
+    rubric = models.CharField(max_length=32, choices=RUBRICS_LIST,
+                              default='imho', verbose_name='Рубрика')
     annotation = models.TextField(verbose_name='Аннотация')
     content = RichTextField(blank=True, null=True,
                             verbose_name='Содержание')
