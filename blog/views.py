@@ -38,3 +38,5 @@ class BlogUpdate(UpdateView):
     """Update blog post."""
 
     model = Blog
+    fields = ['title', 'image', 'annotation', 'content', 'event', 'place']
+    success_url = reverse_lazy('blog:index')
