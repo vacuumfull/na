@@ -24,10 +24,15 @@ def image_path(_instance, filename):
 class EventManager(models.Manager):
     """Blog manager."""
 
+    def last_published(self):
+        """Last published upcoming events."""
+        result = Event.objects.upcoming()[:4]
+        return result
+
     def upcoming(self):
-        """Last published blog."""
+        """Upcoming events."""
         result = Event.objects.filter(
-            published=True, date__gte=timezone.now())[:4]
+            published=True, date__gte=timezone.now())
         return result
 
 
@@ -63,7 +68,7 @@ class Event(models.Model):
     # tags = models.ManyToManyField(verbose_name='Тэги')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
 
-    published = models.BooleanField(default=True, verbose_name='Активно')
+    published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

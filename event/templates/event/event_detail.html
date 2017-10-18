@@ -19,11 +19,19 @@
                     <p>
                         <span>Место: </span><br>
                         {% for location in event.locations.all %}
-                            <strong>{{ location.address }}</strong><br>
+                            <a href="{% url 'place:view' location.place.slug %}">
+                                <strong>{{ location.address }}</strong><br>
+                            </a>
                         {% endfor %}
                     </p>
-                    <p><span>Цена: </span><strong>100</strong></p>
-                    <span>Дата: </span><strong>20.10.2017 </strong>
+                    <p>
+                        <span>Цена: </span>
+                        <strong>{{ event.price }} р.</strong>
+                    </p>
+                    <p>
+                        <span>Дата: </span>
+                        <strong>{{ event.date|date:'H:i d.m.Y'}}</strong>
+                    </p>
                     <p>
                         <span>Тэги:&nbsp;&nbsp;</span>
                         <strong>#hfp&nbsp;</strong>
@@ -33,10 +41,10 @@
                     <p>
                         <span>Коллективы: &nbsp;</span><br>
                         {% for band in event.bands.all %}
-                            <a href="#">{{ band.name }}</a><br>
+                            <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a><br>
                         {% endfor %}
                         {% for musician in event.musicians.all %}
-                            <a href="#">{{ musician.username }}</a><br>
+                            <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
                         {% endfor %}
                     </p>
                     <article class="__margin-top_xl">
