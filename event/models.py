@@ -68,7 +68,7 @@ class Event(models.Model):
     # tags = models.ManyToManyField(verbose_name='Тэги')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
 
-    published = models.BooleanField(default=True, verbose_name='Активно')
+    published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
