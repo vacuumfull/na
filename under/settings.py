@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
     'member',
     'band',
     'place',
@@ -135,7 +136,10 @@ LOGIN_URL = '/login/'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = 'static'
 STATICFILES_DIRS = [
+    ('ckeditor', 'static/ckeditor'),
+    ('js', 'static/js'),
     ('images', 'static/images'),
     ('dist', 'static/dist'),
 ]

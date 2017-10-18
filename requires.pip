@@ -1,5 +1,6 @@
 Django == 1.11.6
 django-uuslug == 1.1.8
+django-ckeditor
 
 psycopg2
 pillow

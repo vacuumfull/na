@@ -20,7 +20,7 @@
                     {% endcomment %}
                     <article class="__margin-bottom_xl __margin-top_xl">
                         <p>{{ blog.annotation }}</p>
-                        <p>{{ blog.content }}</p>
+                        <p>{{ blog.content|safe }}</p>
                     </article>
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Опубликован: </span><strong>{{ blog.created_at|date }}</strong>
