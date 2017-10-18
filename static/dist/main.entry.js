@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -20078,6 +20078,249 @@ return Vue$3;
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _MessagesComponent = __webpack_require__(8);
+
+var _MessagesComponent2 = _interopRequireDefault(_MessagesComponent);
+
+var _materializeCss = __webpack_require__(3);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+var _dialog = __webpack_require__(10);
+
+var _dialog2 = _interopRequireDefault(_dialog);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Dialog = _vue2.default.extend({
+    template: _dialog2.default,
+    components: {
+        messages: _MessagesComponent2.default
+    },
+    props: ['user-role', 'is-login'],
+    data: function data() {
+        return {
+            message: "",
+            activeMessages: [],
+            users: [],
+            authors: {
+                name: "",
+                count: 0,
+                messages: []
+            },
+            senders: {},
+            selectedGetter: "",
+            showSenders: false,
+            showGetterName: false,
+            showScroll: false,
+            filterAdmin: true,
+            filterOrganizer: true,
+            filterArtist: true,
+            filterDeputy: true,
+            filterUser: true,
+            selectAll: false
+        };
+    },
+
+    created: function created() {
+        _jquery2.default.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        this.getUsers();
+        this.$on('message', function (msg) {
+            console.log(msg);
+            var authors = [];
+            if (msg.length != undefined) {
+                this.senders = msg;
+                this.senders.forEach(function (item, i, arr) {
+                    var name = item.author;
+                    var count = 0;
+                    var messages = [];
+                    for (var j = 0; j < arr.length; j++) {
+                        if (item.author.indexOf(arr[j].author) == 0) {
+                            var inner = {
+                                content: arr[j].content,
+                                time: arr[j].created_at
+                            };
+                            messages.push(inner);
+                            count += 1;
+                        }
+                    }
+                    var author = {
+                        id: i,
+                        name: name,
+                        count: count,
+                        messages: messages
+                    };
+                    authors.push(author);
+                });
+                for (var i in authors) {
+                    for (var j = 0; j < authors.length; j++) {
+                        if (authors[i] != undefined) {
+                            if (authors[i].name.indexOf(authors[j].name) == 0 && i != j) {
+                                authors.splice(j, 1);
+                            }
+                        }
+                    }
+                }
+                this.authors = authors;
+
+                this.authors.forEach(function (item, i) {
+                    item.id = i;
+                });
+                this.showSenders = true;
+            }
+        });
+    },
+    methods: {
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal();
+            (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        openMessages: function openMessages(id, author) {
+            var self = this,
+                uri = '/messages/read';
+            self.activeMessages = self.authors[id].messages;
+            self.selectedGetter = author;
+            self.showGetterName = true;
+            _jquery2.default.post(uri, {
+                author: author
+            }).done(function (data) {
+                if (data.response > 0) {
+                    self.$emit('read');
+                }
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        successAction: function successAction(message) {
+            _materializeCss2.default.toast(message, 4000);
+        },
+        checkHeight: function checkHeight(classname) {
+            var field = document.querySelectorAll(classname)[0];
+            var height = field.offsetHeight;
+            return height;
+        },
+        getUsers: function getUsers() {
+            var uri = "/user/users/advanced",
+                self = this;
+
+            _jquery2.default.get(uri, {
+                filterAdmin: self.filterAdmin,
+                filterOrganizer: self.filterOrganizer,
+                filterDeputy: self.filterDeputy,
+                filterArtist: self.filterArtist,
+                filterUser: self.filterUser
+            }).done(function (data) {
+                self.users = data.response;
+                var height = self.checkHeight(".__usersfield");
+                if (height > 298) {
+                    self.showScroll = true;
+                }
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+
+        selectGetter: function selectGetter(name) {
+            var self = this;
+            self.selectedGetter = name;
+            self.showGetterName = true;
+            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
+        },
+        setForAll: function setForAll() {
+            if (this.selectAll === true) {
+                this.showGetterName = true;
+                this.selectedGetter = 'все';
+                document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
+            } else {
+                this.showGetterName = false;
+            }
+        },
+        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
+            var filesSelected = event.target.files;
+            if (filesSelected.length > 0) {
+                var fileToLoad = filesSelected[0];
+                var fileReader = new FileReader();
+
+                fileReader.onload = function (fileLoadedEvent) {
+                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
+                    var newImage = document.createElement('img');
+                    newImage.src = srcData;
+                    newImage.className = "responsive-img";
+                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
+                };
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        },
+        sendMessage: function sendMessage() {
+            var self = this,
+                author = document.getElementById("username").innerText;
+
+            if (self.selectAll === true) {
+                var uri = "/messages/massive",
+                    users = [];
+
+                self.users.forEach(function (item) {
+                    users.push(item.name);
+                });
+                _jquery2.default.post(uri, {
+                    author: author,
+                    getter: JSON.stringify(users),
+                    content: self.message + document.getElementById("img-field").innerHTML
+                }).done(function (data) {
+                    self.message = "";
+                    document.querySelectorAll(".__dialog-field label")[0].className = "";
+                    self.successAction("Успешно отправлено!");
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            } else {
+
+                var _uri = "/messages/create";
+                _jquery2.default.post(_uri, {
+                    author: author,
+                    getter: self.selectedGetter,
+                    content: self.message + document.getElementById("img-field").innerHTML
+                }).done(function (data) {
+                    self.message = "";
+                    document.querySelectorAll(".__dialog-field label")[0].className = "";
+                    self.successAction("Успешно отправлено!");
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        closeModal: function closeModal() {
+            (0, _jquery2.default)('#dialog_window').modal('close');
+        }
+    }
+});
+
+exports.default = Dialog;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery, $, __webpack_provided_window_dot_jQuery, module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Materialize v0.100.2 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
@@ -30112,249 +30355,6 @@ if (Vel) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0), __webpack_require__(0), __webpack_require__(5)(module)))
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _MessagesComponent = __webpack_require__(8);
-
-var _MessagesComponent2 = _interopRequireDefault(_MessagesComponent);
-
-var _materializeCss = __webpack_require__(2);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _dialog = __webpack_require__(10);
-
-var _dialog2 = _interopRequireDefault(_dialog);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Dialog = _vue2.default.extend({
-    template: _dialog2.default,
-    components: {
-        messages: _MessagesComponent2.default
-    },
-    props: ['user-role', 'is-login'],
-    data: function data() {
-        return {
-            message: "",
-            activeMessages: [],
-            users: [],
-            authors: {
-                name: "",
-                count: 0,
-                messages: []
-            },
-            senders: {},
-            selectedGetter: "",
-            showSenders: false,
-            showGetterName: false,
-            showScroll: false,
-            filterAdmin: true,
-            filterOrganizer: true,
-            filterArtist: true,
-            filterDeputy: true,
-            filterUser: true,
-            selectAll: false
-        };
-    },
-
-    created: function created() {
-        _jquery2.default.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        this.getUsers();
-        this.$on('message', function (msg) {
-            console.log(msg);
-            var authors = [];
-            if (msg.length != undefined) {
-                this.senders = msg;
-                this.senders.forEach(function (item, i, arr) {
-                    var name = item.author;
-                    var count = 0;
-                    var messages = [];
-                    for (var j = 0; j < arr.length; j++) {
-                        if (item.author.indexOf(arr[j].author) == 0) {
-                            var inner = {
-                                content: arr[j].content,
-                                time: arr[j].created_at
-                            };
-                            messages.push(inner);
-                            count += 1;
-                        }
-                    }
-                    var author = {
-                        id: i,
-                        name: name,
-                        count: count,
-                        messages: messages
-                    };
-                    authors.push(author);
-                });
-                for (var i in authors) {
-                    for (var j = 0; j < authors.length; j++) {
-                        if (authors[i] != undefined) {
-                            if (authors[i].name.indexOf(authors[j].name) == 0 && i != j) {
-                                authors.splice(j, 1);
-                            }
-                        }
-                    }
-                }
-                this.authors = authors;
-
-                this.authors.forEach(function (item, i) {
-                    item.id = i;
-                });
-                this.showSenders = true;
-            }
-        });
-    },
-    methods: {
-        openDialog: function openDialog() {
-            (0, _jquery2.default)('#dialog_window').modal();
-            (0, _jquery2.default)('#dialog_window').modal('open');
-        },
-        openMessages: function openMessages(id, author) {
-            var self = this,
-                uri = '/messages/read';
-            self.activeMessages = self.authors[id].messages;
-            self.selectedGetter = author;
-            self.showGetterName = true;
-            _jquery2.default.post(uri, {
-                author: author
-            }).done(function (data) {
-                if (data.response > 0) {
-                    self.$emit('read');
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        checkHeight: function checkHeight(classname) {
-            var field = document.querySelectorAll(classname)[0];
-            var height = field.offsetHeight;
-            return height;
-        },
-        getUsers: function getUsers() {
-            var uri = "/user/users/advanced",
-                self = this;
-
-            _jquery2.default.get(uri, {
-                filterAdmin: self.filterAdmin,
-                filterOrganizer: self.filterOrganizer,
-                filterDeputy: self.filterDeputy,
-                filterArtist: self.filterArtist,
-                filterUser: self.filterUser
-            }).done(function (data) {
-                self.users = data.response;
-                var height = self.checkHeight(".__usersfield");
-                if (height > 298) {
-                    self.showScroll = true;
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-
-        selectGetter: function selectGetter(name) {
-            var self = this;
-            self.selectedGetter = name;
-            self.showGetterName = true;
-            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-        },
-        setForAll: function setForAll() {
-            if (this.selectAll === true) {
-                this.showGetterName = true;
-                this.selectedGetter = 'все';
-                document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-            } else {
-                this.showGetterName = false;
-            }
-        },
-        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
-            var filesSelected = event.target.files;
-            if (filesSelected.length > 0) {
-                var fileToLoad = filesSelected[0];
-                var fileReader = new FileReader();
-
-                fileReader.onload = function (fileLoadedEvent) {
-                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
-                    var newImage = document.createElement('img');
-                    newImage.src = srcData;
-                    newImage.className = "responsive-img";
-                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
-                };
-                fileReader.readAsDataURL(fileToLoad);
-            }
-        },
-        sendMessage: function sendMessage() {
-            var self = this,
-                author = document.getElementById("username").innerText;
-
-            if (self.selectAll === true) {
-                var uri = "/messages/massive",
-                    users = [];
-
-                self.users.forEach(function (item) {
-                    users.push(item.name);
-                });
-                _jquery2.default.post(uri, {
-                    author: author,
-                    getter: JSON.stringify(users),
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            } else {
-
-                var _uri = "/messages/create";
-                _jquery2.default.post(_uri, {
-                    author: author,
-                    getter: self.selectedGetter,
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            }
-        },
-        closeModal: function closeModal() {
-            (0, _jquery2.default)('#dialog_window').modal('close');
-        }
-    }
-});
-
-exports.default = Dialog;
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
@@ -33091,7 +33091,7 @@ var _messages = __webpack_require__(9);
 
 var _messages2 = _interopRequireDefault(_messages);
 
-var _DialogComponent = __webpack_require__(3);
+var _DialogComponent = __webpack_require__(2);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
@@ -33163,10 +33163,6 @@ module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _vue = __webpack_require__(1);
 
 var _vue2 = _interopRequireDefault(_vue);
@@ -33175,150 +33171,13 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _materializeCss = __webpack_require__(2);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _leftMenu = __webpack_require__(12);
-
-var _leftMenu2 = _interopRequireDefault(_leftMenu);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LeftMenu = _vue2.default.extend({
-    template: _leftMenu2.default,
-    props: ['avatar', 'name', 'email', 'role'],
-    data: function data() {
-        return {
-            getter: {
-                id: "",
-                name: ""
-            },
-            message: "",
-            users: [],
-            showAvatar: false,
-            getMessage: false,
-            showUsersField: false,
-            showScroll: false,
-            field: ""
-        };
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
-        (0, _jquery2.default)(".button-collapse").sideNav();
-    },
-    created: function created() {
-        _jquery2.default.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        this.field = (0, _jquery2.default)('meta[name="csrf-token"]').attr('content');
-    },
-
-    methods: {
-        openField: function openField() {
-            this.showUsersField = true;
-        },
-        getUsers: function getUsers() {
-            var uri = "/user/users",
-                self = this;
-
-            _jquery2.default.get(uri).done(function (data) {
-                self.users = data.response;
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        selectGetter: function selectGetter(event) {
-            var self = this,
-                name = event.target.innerText,
-                id = event.target.id,
-                label = document.querySelectorAll(".user-search label")[0];
-
-            self.getter.id = id;
-            self.getter.name = name;
-            self.users = [];
-            label.className = " active";
-            (0, _jquery2.default)('#left_message_window').modal('open');
-        },
-        sendMessage: function sendMessage() {
-            var self = this,
-                author = document.getElementById("username").innerText,
-                uri = "/messages/create";
-
-            _jquery2.default.post(uri, {
-                author: author,
-                getter: self.getter.name,
-                content: self.message
-            }).done(function (data) {
-                self.successAction("Cообщение отправлено!");
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        checkHeight: function checkHeight(classname) {
-            var field = document.querySelectorAll(classname)[0];
-            var height = field.offsetHeight;
-            return height;
-        },
-        search: function search(event) {
-            var uri = "/user/search",
-                self = this,
-                keyword = event.target.value,
-                height = self.checkHeight(".__select_users");
-
-            if (height > 298) {
-                self.showScroll = true;
-            }
-
-            if (keyword.length > 2) {
-                self.users = [];
-                _jquery2.default.get(uri, {
-                    keyword: keyword
-                }).done(function (data) {
-                    self.users = data.response;
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            }
-        }
-    }
-});
-
-exports.default = LeftMenu;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = "<!--left menu-->\n<div id=\"left-menu\">\n    <ul id=\"slide-out\" class=\"side-nav\">\n        <li><div class=\"userView\">\n            <div class=\"background\">\n                <img class=\"responsive-img\" src=\"/static/images/logo_inner.jpg\">\n            </div>\n            <a href=\"#!user\">\n\n                <img v-if=\"avatar === ''\" class=\"circle\" src=\"/static/images/fresh_no_avatar.png\">\n\n                <img v-if=\"avatar !== ''\" class=\"circle\" :src=\"avatar\">\n\n            </a>\n            <a href=\"#!name\"><span class=\"white-text name\">{{ name }}</span></a>\n            <a href=\"#!email\"><span class=\"white-text email\">{{ email }}</span></a>\n        </div>\n        </li>\n        <li v-on:click=\"openField\" ><a class=\"waves-effect\" href=\"#!\"><i class=\"material-icons\">chat</i>Cообщение</a></li>\n        <li v-if=\"showUsersField\" class=\"__padding-left_xl __padding-right_xl\">\n            <div class=\"input-group\">\n                <div class=\"input-field user-search\">\n                    <input type=\"text\" v-on:click=\"getUsers\" v-on:keyup=\"search($event)\" v-model=\"getter.name\">\n                    <label>кому</label>\n                </div>\n            </div>\n            <ul class=\"__select_users\" :class=\"{ __overflow_y: showScroll }\">\n                <li v-for=\"user in users\"><a :id=\"user.id\" href=\"#!\" v-on:click=\"selectGetter($event)\">@{{ user.name }}</a></li>\n            </ul>\n        </li>\n        <li v-if=\"showUsersField\"><div class=\"divider\"></div></li>\n\n        <template v-if=\"role == 5\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"events\">\n                    <i class=\"material-icons\">event</i>\n                    События\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"albums\">\n                    <i class=\"material-icons\">library_music</i>\n                    Плейлисты\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a href=\"/admin/rubric/index\">\n                    <i class=\"material-icons\">format_list_numbered</i>\n                    Рубрики\n                </a>\n            </li>\n            <li>\n                <a href=\"/admin/comment/list\">\n                    <i class=\"material-icons\">question_answer</i>\n                    Комментарии\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 4\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"events\">\n                    <i class=\"material-icons\">event</i>\n                    События\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 3\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"places\">\n                    <i class=\"material-icons\">store_mall_directory</i>\n                    Места\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n        <template v-if=\"role == 2\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"albums\">\n                    <i class=\"material-icons\">library_music</i>\n                    Плейлисты\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"collectives\">\n                    <i class=\"material-icons\">people</i>\n                    Коллективы\n                    <i class=\"material-icons right\">arrow_drop_down</i></a>\n            </li>\n        </template>\n        <template v-if=\"role == 1\">\n            <li>\n                <a class=\"dropdown-button waves-effect\" href=\"#!\" data-activates=\"posts\">\n                    <i class=\"material-icons\">description</i>\n                    Записи\n                    <i class=\"material-icons right\">arrow_drop_down</i>\n                </a>\n            </li>\n        </template>\n\n        <li><div class=\"divider\"></div></li>\n        <li><a href=\"/settings\" title=\"Мои настройки\"> <i class=\"material-icons\">perm_data_setting</i> Настройки</a></li>\n        <li>\n            <a title=\"Выход\" href=\"/logout/\">\n                <i class=\"material-icons\">exit_to_app</i>Выход\n            </a>\n        </li>\n    </ul>\n    <!--left menu-->\n\n    <div id=\"left_message_window\" class=\"modal\">\n        <div class=\"modal-content\">\n            <h4>Диалог с <span class=\"purple-text text-darken-4\">{{getter.name}}</span></h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s12\">\n\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n            </div>\n\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n        </div>\n        <div class=\"modal-footer\">\n            <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n        </div>\n    </div>\n</div>\n"
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _SearchComponent = __webpack_require__(14);
+var _SearchComponent = __webpack_require__(12);
 
 var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
-var _DialogComponent = __webpack_require__(3);
+var _DialogComponent = __webpack_require__(2);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
-
-var _LeftMenuComponent = __webpack_require__(11);
-
-var _LeftMenuComponent2 = _interopRequireDefault(_LeftMenuComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33326,9 +33185,13 @@ new _vue2.default({
     el: '#index',
     components: {
         'search-component': _SearchComponent2.default,
-        'dialog-component': _DialogComponent2.default,
-        'left-menu': _LeftMenuComponent2.default
+        'dialog-component': _DialogComponent2.default
     },
+    mounted: function mounted() {
+        (0, _jquery2.default)('#left_message_window').modal();
+        (0, _jquery2.default)(".button-collapse").sideNav();
+    },
+
     methods: {
         link: function link(string) {
             window.location = window.location.origin + string;
@@ -33337,7 +33200,7 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33355,11 +33218,11 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _materializeCss = __webpack_require__(2);
+var _materializeCss = __webpack_require__(3);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _search = __webpack_require__(15);
+var _search = __webpack_require__(13);
 
 var _search2 = _interopRequireDefault(_search);
 
@@ -33450,7 +33313,7 @@ var Search = _vue2.default.extend({
 exports.default = Search;
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = "<section id=\"search-block\">\n    <div id=\"search\" v-bind:class=\"{ __open: showField }\" class=\"grey darken-4\">\n        <a v-on:click=\"showField = !showField; getTags();\"><i class=\"material-icons\">search</i></a>\n    </div>\n    <div class=\"searchfield\" v-bind:class=\"{ __open: showField }\">\n        <div v-on:click=\"showField = !showField\" class=\"__close_circle\">\n            <i class=\"material-icons\">close</i>\n        </div>\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col s6\">\n                    <div class=\"row __padding-top_xxl __margin-top_xl\">\n                        <div class=\"input-field col s11\">\n                            <input id=\"search-tag\" type=\"text\" v-model=\"keyword\" v-on:keyup.enter=\"search(keyword)\">\n                            <label v-bind:class=\"{ active: isFilled }\" class=\"white-text\">Введите ключевое слово или выберите тэг </label>\n                        </div>\n                        <div class=\"input-field col s1\">\n                            <i class=\"material-icons prefix white-text __input_search_icon\" v-on:click=\"search(keyword)\">search</i>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s6\">\n                    <h4 class=\"center white-text\">Облако тэгов</h4>\n                    <div class=\"center\">\n                        <span v-bind:style=\"{ fontSize: tagFont + tag + 'px'  }\" v-on:click=\"setKeyword(key)\" v-for=\"(tag, key) in tags\" class=\"white-text __search-tag\">#@{{ key }}&nbsp;&nbsp;</span>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div v-if=\"showPosts||showEvents||showPlaces\" class=\"container\">\n        <div class=\"row\">\n            <div v-if=\"showEvents\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">происходящее</h3>\n                <div class=\"row\">\n\n                    <div v-for=\"event in events\" class=\"col s12 m4 l3\">\n                        <div class=\"__event_block\">\n                            <div class=\"card __border_subgray\">\n                                <div class=\"card-image __preview_img\">\n                                    <div class=\"__img_inner\">\n                                        <img :src=\"event.image\">\n                                    </div>\n                                </div>\n                                <div v-bind:class=\"{activator: event.content != undefined}\" class=\"card-content __title_block __relative \">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{event.title}}\n                                             <i v-if=\"event.content != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n                                <div class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{ event.title }}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <div v-html=\"event.content\">\n                                    </div>\n                                </div>\n                                <div class=\"__block_more_info\">\n                                    <div class=\"__font_exo __semi_bold\">\n                                        <div v-if=\"event.place != undefined\" class=\" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"red-text text-darken-4\"><i class=\"material-icons\">location_on</i></span>\n                                            <span class=\" grey-text text-darken-3 right\">@{{ event.place  }}</span>\n\n                                        </div>\n                                        <div class=\"__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"red-text text-darken-4\"><i class=\"material-icons\">alarm</i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"  grey-text text-darken-3 right\">@{{ event.date_formatted    }}</span>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div v-if=\"event.link != undefined\" class=\"card-action\" v-on:click=\"link(event.link)\">\n                                    <a title=\"Узнать больше о событии\" class=\"__more_link __font_exo red-text text-accent-4\" :href=\"event.link\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n\n                </div>\n            </div>\n\n            <div v-if=\"showPosts\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">посты</h3>\n                <div class=\"row\">\n                    <div v-for=\"post in posts\" class=\"col s12 m4 l3\">\n                        <div class=\"__post_block\">\n                            <div class=\"card __border_subgray\">\n                                <div class=\"card-image __preview_img\">\n                                    <div class=\"__img_inner\">\n                                        <img :src=\"post.image\">\n                                    </div>\n                                </div>\n                                <div v-bind:class=\"{activator: post.introtext != undefined}\" class=\"card-content __title_block __relative \">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{post.title}}\n                                             <i v-if=\"post.introtext != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n                                <div v-if=\"post.introtext != undefined\" class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{ post.title }}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <div v-html=\"post.introtext\">\n                                    </div>\n                                </div>\n                                <div class=\" __padding-top_xs __rubric_preview_block __padding-left_s __padding-right_s \">\n                                    <span title=\"Рубрика\" class=\" teal-text text-darken-4\"><i class=\"material-icons __rubric_icon_size\">format_list_bulleted</i></span>\n                                    <span class=\"__rubric_size right __semi_bold __font_exo grey-text text-darken-3\">@{{ post.rubric_name }}</span>\n                                </div>\n                                <div class=\"__block_more_info\">\n                                    <div class=\"__font_exo __semi_bold\">\n                                        <div class=\"  __margin-top_xs __padding-left_8 __padding-right_s\">\n                                            <span title=\"Автор\" class=\" teal-text text-darken-4\"><i class=\"material-icons __author_icon_size\">account_circle</i></span>\n                                            <span class=\" grey-text text-darken-3 right\"> @{{ post.author }}</span>\n                                        </div>\n                                        <div v-if=\"post.mark != 0\" class=\"__margin-bottom_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"yellow-text text-accent-2\"><i class=\"material-icons __circle_border\">star</i></span>\n                                            &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"grey-text text-darken-3 right\">@{{ post.mark }}/10</span>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div class=\"card-action\">\n                                    <a title=\"Читать запись\" class=\"__more_link __font_exo teal-text text-darken-4\" :href=\"'/posts/' + post.pubric + '/' + post.id\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n\n                            </div>\n\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n            <div v-if=\"showPlaces\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">места</h3>\n                <div class=\"row\">\n                    <div v-for=\"place in places\" class=\"col s12 m4 l3\">\n                        <div class=\"__post_block\">\n                            <div class=\"card __border_subgray\">\n                                <div v-if=\"place.image != undefined\" class=\"card-image\">\n                                    <div class=\"card-image __preview_img\">\n                                        <div class=\"__img_inner_place\">\n                                            <img :src=\"place.image\">\n                                        </div>\n                                    </div>\n                                </div>\n\n                                <div v-bind:class=\"{activator: place.description != undefined}\"  class=\"card-content __title_block __relative\">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{place.title}}\n                                             <i v-if=\"place.description != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n\n                                <div v-if=\"place.description != undefined\" class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{place.title}}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <p v-html=\"place.description\"></p>\n                                </div>\n                                <div v-if=\"place.mark != 0\" class=\"__margin-bottom_xs __padding-left_s __padding-right_s\">\n                                    <span class=\"yellow-text text-accent-2 \"><i class=\"material-icons __circle_border_darkblue\">star</i></span>\n                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class=\" blue-grey-text text-darken-4 right\">@{{ place.mark }}/10</span>\n                                </div>\n\n                                <div class=\"card-action\"  v-on:click=\"link('/places/' + place.id)\">\n                                    <a title=\"Читать о месте\" class=\"__more_link __font_exo  blue-grey-text text-darken-4\" :href=\"'/places/' + place.id\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</section>"

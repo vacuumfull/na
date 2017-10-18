@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -20078,6 +20078,249 @@ return Vue$3;
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _MessagesComponent = __webpack_require__(8);
+
+var _MessagesComponent2 = _interopRequireDefault(_MessagesComponent);
+
+var _materializeCss = __webpack_require__(3);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+var _dialog = __webpack_require__(10);
+
+var _dialog2 = _interopRequireDefault(_dialog);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Dialog = _vue2.default.extend({
+    template: _dialog2.default,
+    components: {
+        messages: _MessagesComponent2.default
+    },
+    props: ['user-role', 'is-login'],
+    data: function data() {
+        return {
+            message: "",
+            activeMessages: [],
+            users: [],
+            authors: {
+                name: "",
+                count: 0,
+                messages: []
+            },
+            senders: {},
+            selectedGetter: "",
+            showSenders: false,
+            showGetterName: false,
+            showScroll: false,
+            filterAdmin: true,
+            filterOrganizer: true,
+            filterArtist: true,
+            filterDeputy: true,
+            filterUser: true,
+            selectAll: false
+        };
+    },
+
+    created: function created() {
+        _jquery2.default.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        this.getUsers();
+        this.$on('message', function (msg) {
+            console.log(msg);
+            var authors = [];
+            if (msg.length != undefined) {
+                this.senders = msg;
+                this.senders.forEach(function (item, i, arr) {
+                    var name = item.author;
+                    var count = 0;
+                    var messages = [];
+                    for (var j = 0; j < arr.length; j++) {
+                        if (item.author.indexOf(arr[j].author) == 0) {
+                            var inner = {
+                                content: arr[j].content,
+                                time: arr[j].created_at
+                            };
+                            messages.push(inner);
+                            count += 1;
+                        }
+                    }
+                    var author = {
+                        id: i,
+                        name: name,
+                        count: count,
+                        messages: messages
+                    };
+                    authors.push(author);
+                });
+                for (var i in authors) {
+                    for (var j = 0; j < authors.length; j++) {
+                        if (authors[i] != undefined) {
+                            if (authors[i].name.indexOf(authors[j].name) == 0 && i != j) {
+                                authors.splice(j, 1);
+                            }
+                        }
+                    }
+                }
+                this.authors = authors;
+
+                this.authors.forEach(function (item, i) {
+                    item.id = i;
+                });
+                this.showSenders = true;
+            }
+        });
+    },
+    methods: {
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal();
+            (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        openMessages: function openMessages(id, author) {
+            var self = this,
+                uri = '/messages/read';
+            self.activeMessages = self.authors[id].messages;
+            self.selectedGetter = author;
+            self.showGetterName = true;
+            _jquery2.default.post(uri, {
+                author: author
+            }).done(function (data) {
+                if (data.response > 0) {
+                    self.$emit('read');
+                }
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        successAction: function successAction(message) {
+            _materializeCss2.default.toast(message, 4000);
+        },
+        checkHeight: function checkHeight(classname) {
+            var field = document.querySelectorAll(classname)[0];
+            var height = field.offsetHeight;
+            return height;
+        },
+        getUsers: function getUsers() {
+            var uri = "/user/users/advanced",
+                self = this;
+
+            _jquery2.default.get(uri, {
+                filterAdmin: self.filterAdmin,
+                filterOrganizer: self.filterOrganizer,
+                filterDeputy: self.filterDeputy,
+                filterArtist: self.filterArtist,
+                filterUser: self.filterUser
+            }).done(function (data) {
+                self.users = data.response;
+                var height = self.checkHeight(".__usersfield");
+                if (height > 298) {
+                    self.showScroll = true;
+                }
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+
+        selectGetter: function selectGetter(name) {
+            var self = this;
+            self.selectedGetter = name;
+            self.showGetterName = true;
+            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
+        },
+        setForAll: function setForAll() {
+            if (this.selectAll === true) {
+                this.showGetterName = true;
+                this.selectedGetter = 'все';
+                document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
+            } else {
+                this.showGetterName = false;
+            }
+        },
+        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
+            var filesSelected = event.target.files;
+            if (filesSelected.length > 0) {
+                var fileToLoad = filesSelected[0];
+                var fileReader = new FileReader();
+
+                fileReader.onload = function (fileLoadedEvent) {
+                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
+                    var newImage = document.createElement('img');
+                    newImage.src = srcData;
+                    newImage.className = "responsive-img";
+                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
+                };
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        },
+        sendMessage: function sendMessage() {
+            var self = this,
+                author = document.getElementById("username").innerText;
+
+            if (self.selectAll === true) {
+                var uri = "/messages/massive",
+                    users = [];
+
+                self.users.forEach(function (item) {
+                    users.push(item.name);
+                });
+                _jquery2.default.post(uri, {
+                    author: author,
+                    getter: JSON.stringify(users),
+                    content: self.message + document.getElementById("img-field").innerHTML
+                }).done(function (data) {
+                    self.message = "";
+                    document.querySelectorAll(".__dialog-field label")[0].className = "";
+                    self.successAction("Успешно отправлено!");
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            } else {
+
+                var _uri = "/messages/create";
+                _jquery2.default.post(_uri, {
+                    author: author,
+                    getter: self.selectedGetter,
+                    content: self.message + document.getElementById("img-field").innerHTML
+                }).done(function (data) {
+                    self.message = "";
+                    document.querySelectorAll(".__dialog-field label")[0].className = "";
+                    self.successAction("Успешно отправлено!");
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        closeModal: function closeModal() {
+            (0, _jquery2.default)('#dialog_window').modal('close');
+        }
+    }
+});
+
+exports.default = Dialog;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(jQuery, $, __webpack_provided_window_dot_jQuery, module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Materialize v0.100.2 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
@@ -30112,249 +30355,6 @@ if (Vel) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(0), __webpack_require__(0), __webpack_require__(5)(module)))
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _MessagesComponent = __webpack_require__(8);
-
-var _MessagesComponent2 = _interopRequireDefault(_MessagesComponent);
-
-var _materializeCss = __webpack_require__(2);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _dialog = __webpack_require__(10);
-
-var _dialog2 = _interopRequireDefault(_dialog);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Dialog = _vue2.default.extend({
-    template: _dialog2.default,
-    components: {
-        messages: _MessagesComponent2.default
-    },
-    props: ['user-role', 'is-login'],
-    data: function data() {
-        return {
-            message: "",
-            activeMessages: [],
-            users: [],
-            authors: {
-                name: "",
-                count: 0,
-                messages: []
-            },
-            senders: {},
-            selectedGetter: "",
-            showSenders: false,
-            showGetterName: false,
-            showScroll: false,
-            filterAdmin: true,
-            filterOrganizer: true,
-            filterArtist: true,
-            filterDeputy: true,
-            filterUser: true,
-            selectAll: false
-        };
-    },
-
-    created: function created() {
-        _jquery2.default.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        this.getUsers();
-        this.$on('message', function (msg) {
-            console.log(msg);
-            var authors = [];
-            if (msg.length != undefined) {
-                this.senders = msg;
-                this.senders.forEach(function (item, i, arr) {
-                    var name = item.author;
-                    var count = 0;
-                    var messages = [];
-                    for (var j = 0; j < arr.length; j++) {
-                        if (item.author.indexOf(arr[j].author) == 0) {
-                            var inner = {
-                                content: arr[j].content,
-                                time: arr[j].created_at
-                            };
-                            messages.push(inner);
-                            count += 1;
-                        }
-                    }
-                    var author = {
-                        id: i,
-                        name: name,
-                        count: count,
-                        messages: messages
-                    };
-                    authors.push(author);
-                });
-                for (var i in authors) {
-                    for (var j = 0; j < authors.length; j++) {
-                        if (authors[i] != undefined) {
-                            if (authors[i].name.indexOf(authors[j].name) == 0 && i != j) {
-                                authors.splice(j, 1);
-                            }
-                        }
-                    }
-                }
-                this.authors = authors;
-
-                this.authors.forEach(function (item, i) {
-                    item.id = i;
-                });
-                this.showSenders = true;
-            }
-        });
-    },
-    methods: {
-        openDialog: function openDialog() {
-            (0, _jquery2.default)('#dialog_window').modal();
-            (0, _jquery2.default)('#dialog_window').modal('open');
-        },
-        openMessages: function openMessages(id, author) {
-            var self = this,
-                uri = '/messages/read';
-            self.activeMessages = self.authors[id].messages;
-            self.selectedGetter = author;
-            self.showGetterName = true;
-            _jquery2.default.post(uri, {
-                author: author
-            }).done(function (data) {
-                if (data.response > 0) {
-                    self.$emit('read');
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        checkHeight: function checkHeight(classname) {
-            var field = document.querySelectorAll(classname)[0];
-            var height = field.offsetHeight;
-            return height;
-        },
-        getUsers: function getUsers() {
-            var uri = "/user/users/advanced",
-                self = this;
-
-            _jquery2.default.get(uri, {
-                filterAdmin: self.filterAdmin,
-                filterOrganizer: self.filterOrganizer,
-                filterDeputy: self.filterDeputy,
-                filterArtist: self.filterArtist,
-                filterUser: self.filterUser
-            }).done(function (data) {
-                self.users = data.response;
-                var height = self.checkHeight(".__usersfield");
-                if (height > 298) {
-                    self.showScroll = true;
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-
-        selectGetter: function selectGetter(name) {
-            var self = this;
-            self.selectedGetter = name;
-            self.showGetterName = true;
-            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-        },
-        setForAll: function setForAll() {
-            if (this.selectAll === true) {
-                this.showGetterName = true;
-                this.selectedGetter = 'все';
-                document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-            } else {
-                this.showGetterName = false;
-            }
-        },
-        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
-            var filesSelected = event.target.files;
-            if (filesSelected.length > 0) {
-                var fileToLoad = filesSelected[0];
-                var fileReader = new FileReader();
-
-                fileReader.onload = function (fileLoadedEvent) {
-                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
-                    var newImage = document.createElement('img');
-                    newImage.src = srcData;
-                    newImage.className = "responsive-img";
-                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
-                };
-                fileReader.readAsDataURL(fileToLoad);
-            }
-        },
-        sendMessage: function sendMessage() {
-            var self = this,
-                author = document.getElementById("username").innerText;
-
-            if (self.selectAll === true) {
-                var uri = "/messages/massive",
-                    users = [];
-
-                self.users.forEach(function (item) {
-                    users.push(item.name);
-                });
-                _jquery2.default.post(uri, {
-                    author: author,
-                    getter: JSON.stringify(users),
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            } else {
-
-                var _uri = "/messages/create";
-                _jquery2.default.post(_uri, {
-                    author: author,
-                    getter: self.selectedGetter,
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            }
-        },
-        closeModal: function closeModal() {
-            (0, _jquery2.default)('#dialog_window').modal('close');
-        }
-    }
-});
-
-exports.default = Dialog;
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
@@ -33091,7 +33091,7 @@ var _messages = __webpack_require__(9);
 
 var _messages2 = _interopRequireDefault(_messages);
 
-var _DialogComponent = __webpack_require__(3);
+var _DialogComponent = __webpack_require__(2);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
@@ -33160,9 +33160,7 @@ module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if
 /* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33176,15 +33174,15 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _DialogComponent = __webpack_require__(3);
+var _DialogComponent = __webpack_require__(2);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
+__webpack_require__(15);
+
+__webpack_require__(16);
+
 __webpack_require__(17);
-
-__webpack_require__(18);
-
-__webpack_require__(19);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33194,7 +33192,6 @@ new _vue2.default({
         'dialog-component': _DialogComponent2.default
     },
     mounted: function mounted() {
-        console.log('hello');
         (0, _jquery2.default)('#left_message_window').modal();
         (0, _jquery2.default)(".button-collapse").sideNav();
     },
@@ -33207,19 +33204,19 @@ new _vue2.default({
 });
 
 /***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 17 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 19 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
