@@ -10,9 +10,9 @@
     <div class="__footer_block">
         <h5 class="white-text">Рубрики</h5>
         <ul>
-            <li><a class="grey-text text-lighten-3" href="#">Личное мнение</a></li>
-            <li><a class="grey-text text-lighten-3" href="#">Фестивали</a></li>
-            <li><a class="grey-text text-lighten-3" href="#">Музыка</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'blog:rubric' 'imho' %}">Личное мнение</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'blog:rubric' 'festivals' %}">Фестивали</a></li>
+            <li><a class="grey-text text-lighten-3" href="{% url 'blog:rubric' 'music' %}">Музыка</a></li>
         </ul>
     </div>
 </div>

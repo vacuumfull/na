@@ -13,6 +13,13 @@ class IndexList(ListView):
     queryset = Blog.objects.published()
     context_object_name = 'blogs'
 
+    def get_queryset(self):
+        """Filter queryset if choise one rubric."""
+        query = super().get_queryset()
+        if 'rubric' in self.kwargs:
+            query = query.filter(rubric=self.kwargs['rubric'])
+        return query
+
 
 class BlogView(DetailView):
     """Blog view class."""
