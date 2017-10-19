@@ -8,6 +8,8 @@ new Vue({
         'dialog-component': Dialog,
     }, 
     mounted(){
+        $('#left_message_window').modal();
+        $(".button-collapse").sideNav();
         $('select').material_select();
         $('.tooltipped').tooltip({delay: 50});
     },
