@@ -33199,6 +33199,8 @@ new _vue2.default({
     mounted: function mounted() {
         (0, _jquery2.default)('select').material_select();
         (0, _jquery2.default)('.tooltipped').tooltip({ delay: 50 });
+        (0, _jquery2.default)('#left_message_window').modal();
+        (0, _jquery2.default)(".button-collapse").sideNav();
     },
 
     methods: {}

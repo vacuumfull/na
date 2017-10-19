@@ -10,7 +10,9 @@ new Vue({
     mounted(){
         $('select').material_select();
         $('.tooltipped').tooltip({delay: 50});
-    },
+        $('#left_message_window').modal();
+        $(".button-collapse").sideNav();
+    },    
     methods: {
         
     }
