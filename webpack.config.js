@@ -12,7 +12,7 @@ const config = {
         common: './resources/front/common',
         inner: './resources/front/inner',
         map: './resources/front/map',
-        adminPost: './resources/front/admin-post'
+        initAdmin: './resources/front/init-admin'
     },
     output: {
         path: path.join(__dirname, "static/dist"),

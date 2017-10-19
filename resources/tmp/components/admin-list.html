@@ -27,17 +27,17 @@
             <tbody>
                 <template v-for="(item, key) in items" >
                     <tr class="hovered-row"  :id="key + '_' + item.id">
-                        <td>@{{ item.name }}</td>
-                        <td>@{{ item.deputy }}</td>
-                        <td>@{{ item.place }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.deputy }}</td>
+                        <td>{{ item.place }}</td>
                         <td>
                             <template v-for="artist in item.artists ">
-                                <span>@{{ artist.text }}</span>&nbsp;<br>
+                                <span>{{ artist.text }}</span>&nbsp;<br>
                             </template>
                         </td>
                         <td>
                             <template v-for="tag in item.tags ">
-                                <span>#@{{ tag }}</span>&nbsp;<br>
+                                <span>#{{ tag }}</span>&nbsp;<br>
                             </template>
                         </td>
                         <td>@{{ item.published }}</td>
