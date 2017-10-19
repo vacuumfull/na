@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="band_page" class="container">
+    <h4 class="center __margin-top_xxl">Добавить коллектив, лэйбл, промо-группу</h4>
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
+        <div class="col s12">
+            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="card-content black-text">
+                                <div class="input-group">
+                                    <div class="input-field col s7">
+                                        {{ form.name.errors }}
+                                        {{ form.name }}
+                                        {{ form.name.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="file-field input-field col s5">
+                                        {{ form.image.errors }}
+                                        <div class="btn">
+                                            <span>{{ form.image.label }}</span>
+                                            {{ form.image }}
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s7">
+                                        {{ form.members.errors }}
+                                        {{ form.members }}
+                                        {{ form.members.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        Место для вписывания тегов
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        {{ form.description.errors }}
+                                        {{ form.description }}
+                                        {{ form.description.label_tag }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <a class="left amber darken-3 __margin-left_m  btn-hovered waves-effect waves-light btn-large" href="{% url 'event:index' %}">
+                                    Отмена
+                                    <i class="material-icons right dp48">clear</i>
+                                </a>
+                            </div>
+                            <div class="col s6">
+                                <div class="__padding-right_l">
+                                    <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
