@@ -47,53 +47,53 @@
 
 .__wave-hemisphere_bottom.__first{
      height: 10px;
-    -webkit-animation: preloader_wave 1.8s ease 0.5s infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave  1.8s ease 0.5s infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave  1.8s ease 0.5s infinite; /* Opera 12+ */
-    animation:         preloader_wave  1.8s ease 0.5s infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave 1.8s ease-in-out 0.5s infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave  1.8s ease-in-out 0.5s infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave  1.8s ease-in-out 0.5s infinite; /* Opera 12+ */
+    animation:         preloader_wave  1.8s ease-in-out 0.5s infinite;/* IE 10+, Fx 29+ */
 }
 .__wave-hemisphere_bottom.__second{
      height: 30px;
-    -webkit-animation: preloader_wave2  1.8s ease 0.55s infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave2  1.8s ease 0.55s infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave2  1.8s ease 0.55s infinite; /* Opera 12+ */
-    animation:         preloader_wave2  1.8s ease 0.55s infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave2  1.8s ease-in-out 0.55s infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave2  1.8s ease-in-out 0.55s infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave2  1.8s ease-in-out 0.55s infinite; /* Opera 12+ */
+    animation:         preloader_wave2  1.8s ease-in-out 0.55s infinite;/* IE 10+, Fx 29+ */
 }
 .__wave-hemisphere_bottom.__third{
      height: 45px;
-    -webkit-animation: preloader_wave3  1.8s ease 0.55s infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave3  1.8s ease 0.55s infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave3  1.8s ease 0.55s infinite; /* Opera 12+ */
-    animation:         preloader_wave3  1.8s ease 0.55s infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave3  1.8s ease-in-out 0.55s infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave3  1.8s ease-in-out 0.55s infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave3  1.8s ease-in-out 0.55s infinite; /* Opera 12+ */
+    animation:         preloader_wave3  1.8s ease-in-out 0.55s infinite;/* IE 10+, Fx 29+ */
 }
 .__wave-hemisphere_bottom.__fourth{
      height: 60px;
-    -webkit-animation: preloader_wave4  1.8s ease 0.55s infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave4  1.8s ease 0.55s infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave4  1.8s ease 0.55s infinite; /* Opera 12+ */
-    animation:         preloader_wave4  1.8s ease 0.55s infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave4  1.8s ease-in-out 0.55s infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave4  1.8s ease-in-out 0.55s infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave4  1.8s ease-in-out 0.55s infinite; /* Opera 12+ */
+    animation:         preloader_wave4  1.8s ease-in-out 0.55s infinite;/* IE 10+, Fx 29+ */
 }
 .__wave-hemisphere_bottom.__fifth{
      height: 40px;
-    -webkit-animation: preloader_wave5  1.8s ease 0.55s  infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave5  1.8s ease 0.55s  infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave5  1.8s ease 0.55s  infinite; /* Opera 12+ */
-    animation:         preloader_wave5  1.8s ease 0.55s  infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave5  1.8s ease-in-out 0.55s  infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave5  1.8s ease-in-out 0.55s  infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave5  1.8s ease-in-out 0.55s  infinite; /* Opera 12+ */
+    animation:         preloader_wave5  1.8s ease-in-out 0.55s  infinite;/* IE 10+, Fx 29+ */
 
 }
 .__wave-hemisphere_bottom.__sixth{
      height: 20px;
-    -webkit-animation: preloader_wave6  1.8s ease 0.55s  infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave6  1.8s ease 0.55s  infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave6  1.8s ease 0.55s  infinite; /* Opera 12+ */
-    animation:         preloader_wave6  1.8s ease 0.55s  infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave6  1.8s ease-in-out 0.55s  infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave6  1.8s ease-in-out 0.55s  infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave6  1.8s ease-in-out 0.55s  infinite; /* Opera 12+ */
+    animation:         preloader_wave6  1.8s ease-in-out 0.55s  infinite;/* IE 10+, Fx 29+ */
 }
 .__wave-hemisphere_bottom.__seventh{
      height: 30px;
-    -webkit-animation: preloader_wave7  1.8s ease 0.55s  infinite; /* Safari 4+ */
-    -moz-animation:    preloader_wave7  1.8s ease 0.55s  infinite; /* Fx 5+ */
-    -o-animation:     preloader_wave7  1.8s ease 0.55s  infinite; /* Opera 12+ */
-    animation:         preloader_wave7  1.8s ease 0.55s  infinite;/* IE 10+, Fx 29+ */
+    -webkit-animation: preloader_wave7  1.8s ease-in-out 0.55s  infinite; /* Safari 4+ */
+    -moz-animation:    preloader_wave7  1.8s ease-in-out 0.55s  infinite; /* Fx 5+ */
+    -o-animation:     preloader_wave7  1.8s ease-in-out 0.55s  infinite; /* Opera 12+ */
+    animation:         preloader_wave7  1.8s ease-in-out 0.55s  infinite;/* IE 10+, Fx 29+ */
 }
 
 
