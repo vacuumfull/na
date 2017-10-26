@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
@@ -60,7 +61,6 @@ class Blog(models.Model):
     place = models.ForeignKey(Place, blank=True, null=True,
                               verbose_name='Место')
     # tags = models.ManyToManyField(verbose_name='Тэги')
-    # ratings = models.ManyToManyField(verbose_name='Рейтинг')
 
     published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
@@ -78,10 +78,21 @@ class Blog(models.Model):
         verbose_name_plural = 'Посты'
 
 
+class RatingManager(models.Manager):
+    """Blog manager."""
+
+    def average(self, blog_id: int):
+        """Average blog rating."""
+        result = Rating.objects.filter(id=blog_id).aggregate(Avg('value'))
+        return result
+
+
 class Rating(models.Model):
     blog = models.ForeignKey(Blog, verbose_name='Запись')
     user = models.ForeignKey(User, verbose_name='Пользователь')
     value = models.IntegerField(verbose_name='Оценка')
+
+    objects = RatingManager()
 
 
 @receiver(pre_save, sender=Blog)
