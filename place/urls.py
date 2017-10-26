@@ -10,5 +10,4 @@ urlpatterns = [
     url(r'^new/$', PlaceCreate.as_view(), name='create'),
     url(r'^(?P<slug>[-\w]+)/$', PlaceView.as_view(), name='view'),
     url(r'^(?P<slug>[-\w]+)/edit/$', PlaceUpdate.as_view(), name='edit'),
-    
 ]

@@ -76,9 +76,11 @@ class Location(models.Model):
 
     place = models.ForeignKey(Place, on_delete=models.CASCADE,
                               verbose_name='Заведение')
-    maps = models.CharField(max_length=100, verbose_name='Координаты на карте')
+    maps = models.CharField(max_length=100, blank=True, null=True,
+                            verbose_name='Координаты на карте')
     address = models.CharField(max_length=255, verbose_name='Адрес')
-    worktime = models.TextField(verbose_name='Информация о работе')
+    worktime = models.TextField(blank=True, null=True,
+                                verbose_name='Информация о работе',)
 
     def __str__(self):
         return self.address
