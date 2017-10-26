@@ -13,7 +13,7 @@ from place.forms import LocationFormSet
 class PlaceList(ListView):
     """Place with locations list"""
 
-    model = Place
+    queryset = Place.objects.published()
     context_object_name = 'places'
 
 
