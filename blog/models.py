@@ -89,7 +89,8 @@ class RatingManager(models.Manager):
         rows = Rating.objects.filter(blog=blog_id)
         result = {
             'is_vote': rows.filter(user=user).exists(),
-            'value': rows.aggregate(Avg('value')).get('value__avg', 0)
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
         }
         return result
 

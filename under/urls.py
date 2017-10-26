@@ -18,6 +18,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.static import serve
 
+import api.urls
 import band.urls
 import blog.urls
 import event.urls
@@ -31,6 +32,7 @@ urlpatterns = [
         {'document_root': settings.MEDIA_ROOT}),
 
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(api.urls)),
     url(r'^bands/', include(band.urls)),
     url(r'^blogs/', include(blog.urls)),
     url(r'^events/', include(event.urls)),
