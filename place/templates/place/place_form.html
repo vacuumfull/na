@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="places_page" class="container">
+    <h4 class="center __margin-top_xxl">Добавить место</h4>
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
+        <div class="col s12">
+            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl __padding-bottom_xs">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="card-content black-text">
+                                <div class="input-group">
+                                    <div class="input-field col s7">
+                                        {{ form.title.errors }}
+                                        {{ form.title }}
+                                        {{ form.title.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="file-field input-field col s5">
+                                        {{ form.image.errors }}
+                                        <div class="btn">
+                                            <span>{{ form.image.label }}</span>
+                                            {{ form.image }}
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        {{ form.description.errors }}
+                                        {{ form.description }}
+                                        {{ form.description.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        {{ form.musicians.errors }}
+                                        {{ form.musicians }}
+                                        {{ form.musicians.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        Место для вписывания тегов
+                                    </div>
+                                </div>
+                                <hr>
+                                <div>
+                                    <h4>Места где расположено заведение</h4>
+                                    {{ location_formset.management_form }}
+                                    {% for location_form in location_formset %}
+                                        {{ location_form.id }}
+                                        <div class="input-group">
+                                            <div class="input-field col s12">
+                                                {{ location_form.address.errors }}
+                                                {{ location_form.address }}
+                                                {{ location_form.address.label_tag }}
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-field col s12">
+                                                {{ location_form.worktime.errors }}
+                                                {{ location_form.worktime }}
+                                                {{ location_form.worktime.label_tag }}
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-field col s12">
+                                                {{ location_form.maps.errors }}
+                                                {{ location_form.maps }}
+                                                {{ location_form.maps.label_tag }}
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-field col s12">
+                                                {{ location_form.DELETE }}
+                                                {{ location_form.DELETE.label_tag }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="input-group">
+                                    <div class="file-field input-field col s5">
+                                        {{ form.icon.errors }}
+                                        <div class="btn">
+                                            <span>{{ form.icon.label }}</span>
+                                            {{ form.icon }}
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <a class="left amber darken-3 __margin-left_m  btn-hovered waves-effect waves-light btn-large" href="{% url 'place:index' %}">
+                            Отмена
+                            <i class="material-icons right dp48">clear</i>
+                        </a>
+                    </div>
+                    <div class="col s6">
+                        <div class="__padding-right_l">
+                            <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="/static/dist/initAdmin.entry.js"></script>
+
+{% endblock js %}

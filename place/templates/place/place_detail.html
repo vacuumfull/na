@@ -13,7 +13,7 @@
                     <h1>{{ place.title }}</h1>
                     <span id="hidden-id" class="__hidden">{{ place.id }}</span>
                     <p><span>Адрес и время работы:</span><br>
-                        {% for location in place.locations.all %}
+                        {% for location in place.location_set.all %}
                             <strong>{{ location.address }}</strong>
                             <strong>{{ location.worktime }}</strong>
                         {% endfor %}                
