@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from blog.views import IndexList, BlogCreate, BlogView, BlogUpdate
+from blog.views import (IndexList, BlogCreate, BlogView, BlogUpdate)
 
 app_name = 'blog'
 urlpatterns = [
