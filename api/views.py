@@ -33,12 +33,12 @@ def vote_rating(request):
     app = request.POST.get('app')
     key = request.POST.get('key')
     vote = int(request.POST.get('vote', 5))
-    session = SessionStore(sessionid)
 
-    try:
-        user = User.objects.get(id=session.get('_auth_user_id'))
-    except User.DoesNotExist:
-        return {'error': 'User must be authenticated!'}
+    session = SessionStore(sessionid)
+    if not session.get('_auth_user_id'):
+        return JsonResponse({'error': 'User must be authenticated!'})
+
+    user = User.objects.get(id=session.get('_auth_user_id'))
 
     try:
         if app == 'blog':
