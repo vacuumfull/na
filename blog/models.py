@@ -78,6 +78,12 @@ class Blog(models.Model):
         verbose_name_plural = 'Посты'
 
 
+class Rating(models.Model):
+    blog = models.ForeignKey(Blog, verbose_name='Запись')
+    user = models.ForeignKey(User, verbose_name='Пользователь')
+    value = models.IntegerField(verbose_name='Оценка')
+
+
 @receiver(pre_save, sender=Blog)
 def created_slug(sender, instance, **_):
     """Generate custom slug before save object."""
