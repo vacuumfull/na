@@ -81,9 +81,16 @@ class Blog(models.Model):
 class RatingManager(models.Manager):
     """Blog manager."""
 
-    def average(self, blog_id: int):
-        """Average blog rating."""
-        result = Rating.objects.filter(id=blog_id).aggregate(Avg('value'))
+    def average(self, blog_id: int, user: User) -> dict:
+        """Average blog rating.
+        is_vote - check voted this user in current blog
+        value - average blog rating
+        """
+        rows = Rating.objects.filter(blog=blog_id)
+        result = {
+            'is_vote': rows.filter(user=user).exists(),
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0)
+        }
         return result
 
 
@@ -93,6 +100,9 @@ class Rating(models.Model):
     value = models.IntegerField(verbose_name='Оценка')
 
     objects = RatingManager()
+
+    class Meta:
+        unique_together = ('blog', 'user')
 
 
 @receiver(pre_save, sender=Blog)

@@ -1,10 +1,13 @@
 """Blog view."""
 from django.core.urlresolvers import reverse_lazy
+from django.http.response import JsonResponse
+from django.views.decorators.http import require_GET
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from django.contrib.sessions.backends.db import SessionStore
 
-from blog.models import Blog
+from blog.models import Blog, Rating, User
 
 
 class IndexList(ListView):
@@ -49,3 +52,18 @@ class BlogUpdate(UpdateView):
     fields = [
         'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')
+
+
+@require_GET
+def get_blog_rating(request, sessionid, blog_id: int):
+    """Get average blog rating."""
+    session = SessionStore(sessionid)
+    try:
+        user = User.objects.get(id=session.get('_auth_user_id'))
+    except User.DoesNotExist:
+        user = None
+    result = Rating.objects.average(blog_id, user)
+    return JsonResponse(result)
+
+
+# def vote_blog_rating(request, blog)
