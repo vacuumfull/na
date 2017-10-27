@@ -33250,6 +33250,7 @@ var Rate = _vue2.default.extend({
         this.getRate();
         this.csrf = this.getCookie('csrftoken');
         console.log(this.csrf);
+        console.log(this.isLogin);
     },
 
     methods: {
@@ -33296,6 +33297,7 @@ var Rate = _vue2.default.extend({
                 key: self.unique,
                 vote: mark
             };
+            console.log(params);
             self.activated = true;
             self.colorStars(mark);
             console.log(uri);
