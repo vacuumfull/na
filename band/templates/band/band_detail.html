@@ -11,7 +11,6 @@
                 </div>
                 <div class="article __margin-bottom_l">
                     <h1>{{ band.title }}</h1>
-                    <span id="hidden-id" class="__hidden">{{ band.id }}</span>
                     <p>
                         <span>Представитель: </span>
                         <strong id="getter-name">{{ band.owner.username }}</strong>
@@ -24,10 +23,10 @@
         </div>
         {% if user.is_authenticated %}
             <hr>
-            <comment-component is-login="true" type="place"></comment-component>
+            <comment-component is-login="true" unique="{{ band.id }}" type="place"></comment-component>
         {% else %}
             <hr>
-            <comment-component is-login="false" type="place"></comment-component>
+            <comment-component is-login="false" unique="{{ band.id }}" type="place"></comment-component>
         {% endif %}
     </div>
 </div>

@@ -55,13 +55,13 @@
         </div>
 
         {% if user.is_authenticated %}
-            <rate-component is-login="true" type="event"></rate-component>
+            <rate-component is-login="true" unique="{{ event.id }}" type="event"></rate-component>
             <hr>
-            <comment-component is-login="true" type="event"></comment-component>
+            <comment-component is-login="true" unique="{{ event.id }}" type="event"></comment-component>
         {% else %}
-            <rate-component is-login="false" type="event"></rate-component>
+            <rate-component is-login="false" unique="{{ event.id }}" type="event"></rate-component>
             <hr>
-            <comment-component is-login="false" type="event"></comment-component>
+            <comment-component is-login="false" unique="{{ event.id }}" type="event"></comment-component>
         {% endif %}
     </div>
 </div>

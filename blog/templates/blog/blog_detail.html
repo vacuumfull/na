@@ -11,8 +11,6 @@
                 </div>
                 <div class="article">
                     <h1>{{ blog.title }}</h1>
-                    <!-- TODO: Этому здесь не место -->
-                    <span id="hidden-id" class="__hidden">{{ blog.id }}</span>
                     {% comment "Тут должны быть ТЭГИ"%}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Тэги:&nbsp;</span>
@@ -37,13 +35,13 @@
             </div>
         </div>
         {% if user.is_authenticated %}
-            <rate-component is-login="true" type="post"></rate-component>
+            <rate-component is-login="true" unique="{{ blog.id }}" type="blog"></rate-component>
             <hr>
-            <comment-component is-login="true" type="post"></comment-component>
+            <comment-component is-login="true" unique="{{ blog.id }}" type="blog"></comment-component>
         {% else %}
-            <rate-component is-login="false" type="post"></rate-component>
+            <rate-component is-login="false" unique="{{ blog.id }}" type="blog"></rate-component>
             <hr>
-            <comment-component is-login="false" type="post"></comment-component>
+            <comment-component is-login="false" unique="{{ blog.id }}" type="blog"></comment-component>
         {% endif %}
     </div>
 </div>

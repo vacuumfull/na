@@ -5,7 +5,7 @@ import template from '../../tmp/components/rating.html';
 
 const Rate = Vue.extend({
     template,
-    props: ['isLogin', 'type'],
+    props: ['isLogin', 'type', 'unique'],
     data(){
         return {
             rate: [
@@ -21,59 +21,68 @@ const Rate = Vue.extend({
                 { mark: 10, name: "star_border" },
             ],
             allRate: 0,
+            csrf: '',
             activated: false,
             showCommonRate: false
         }
     },
     created(){
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        })
         this.getRate()
+        this.csrf =  this.getCookie('csrftoken');
+        console.log(this.csrf);
     },
     methods: {
         getRate(){
             let self = this,
-                uri = '/rating/' + self.type,
-                id = document.getElementById("hidden-id").innerText,
-                params = {
-                    [self.type + 'Id'] : id
-                };
-            $.get(uri, params).done(data => {
+                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + self.csrf + '/';
+               console.log(uri);
+            $.get(uri).done(data => {
+                console.log(data);
+                if (data)
                 self.allRate = data.response
                 self.colorStars(self.allRate)
             })
         },
         colorStars(mark){
-            console.log(mark)
             this.rate.forEach((item, i) => {
                 if (mark > i) {
                     item.name = "star"
                 } else {
-                    item.name = "start_border"
+                    item.name = "star_border"
                 }
             })
         },
         unsetStars(){
             if (this.activated = false) {
                 this.rate.forEach((item) => {
-                    item.name = "start_border"
+                    item.name = "star_border"
                 })
             }
         },
+        getCookie(name){
+            let cookies = document.cookie.split(';');
+            for(let i=0 ; i < cookies.length ; ++i) {
+                let pair = cookies[i].trim().split('=');
+                if(pair[0] == name)
+                    return pair[1];
+            }
+            return null;
+        },  
         setStars(mark){
             let self = this,
-                uri = "/rating/user/" + self.type,
-                id = document.getElementById("hidden-id").innerText,
+                uri = '/api/1/vote/',
                 params = {
-                    rate: mark,
-                    [self.type + 'Id']: id
-                }
+                    sessionid: self.csrf,
+                    app: self.type,
+                    key: self.unique,
+                    vote: mark
+                };
+                console.log(params);
             self.activated = true
             self.colorStars(mark)
+            console.log(uri);
             $.post(uri, params).done(data => {
+                console.log(data);
                 self.getRate()
                 self.successAction("Оценка учтена!")
             }).fail(error => {

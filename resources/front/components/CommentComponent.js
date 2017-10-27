@@ -5,7 +5,7 @@ import Materialize from 'materialize-css';
 
 const Comment = Vue.extend({
     template,
-    props: [ 'isLogin',  'type'],
+    props: [ 'isLogin',  'type', 'unique'],
     data(){
         return {
             content: "huihui",
@@ -14,18 +14,13 @@ const Comment = Vue.extend({
         }
     },
     created(){
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        })
         this.getComments()
     },
     methods: {
         create(){
             let self = this,
                 uri = '/messages/' + self.type,
-                id = document.getElementById("hidden-id").innerText,
+                id = self.unique,
                 params = {
                     [self.type + 'Id']: id,
                     getter:  self.getter,
@@ -47,7 +42,7 @@ const Comment = Vue.extend({
         getComments(){
             let self = this,
                 uri = "/messages/"+ self.type +"/get",
-                id = document.getElementById("hidden-id").innerText,
+                id = self.unique,
                 params = {
                     [self.type + 'Id'] : id
                 };
