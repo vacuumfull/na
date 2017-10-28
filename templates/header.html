@@ -8,9 +8,7 @@
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 {% include "menu/base.html" %}
-                {% if request.user.is_authenticated %}
-                    {% include "menu/user.html" %}
-                {% else %}
+                {% if request.user.is_anonymous %}
                     {% include "menu/auth.html" %}
                 {%endif %}
             </ul>

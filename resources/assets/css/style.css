@@ -16,6 +16,54 @@ table.__left > thead> tr > th.__left{
 .wrapper{
     min-height: 445px;
 }
+.__left-menu_btn{
+    position: absolute;
+    top: 127px;
+    cursor: pointer;
+    padding-top: 5px;
+    padding-left: 9px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    z-index: 1000;
+    background-color: black;
+    transition: 0.35s ease;
+}
+.drag-target{
+    z-index: 996!important;
+}
+
+.__left-menu_btn:hover + .__left-menu_key{
+    opacity: 1;
+    transition: 0.5s ease;
+    left: 35px;
+}
+.__left-menu_btn > a > i {
+    color: white;
+    font-size: 35px;
+}
+.__left-menu_key:hover{
+    opacity: 1;
+    cursor: pointer;
+    left: 35px;
+}
+.side-nav .userView{
+    padding-bottom: 45px;
+}
+
+.__left-menu_key{
+    opacity: 0;
+    background-color: #212121;
+    padding: 11px 15px 10px 25px;
+    font-size: 17px;
+    z-index: 99;
+    top: 127px;
+    position: absolute;
+    left: -50px;
+    transition: 0.5s ease;
+}
+.__left-menu_key > a{
+    color: white;
+}
 
 body nav .button-collapse{
     margin: 0px;

@@ -1,5 +1,10 @@
-<li class="__menu_item">
-    <a title="Меню" href="#" data-activates="slide-out" class="button-collapse">
-        <i class="material-icons">menu</i>
-    </a>
-</li>
+<div id="menu-triggers">
+    <div v-on:click="openMenu()" data-activates="slide-out"  class=" button-collapse __left-menu_btn" v-bind:style="{ left: left + 'px' }">
+        <a title="Меню" href="#" >
+            <i class="material-icons">menu</i>
+        </a>
+    </div>
+    <div class="__left-menu_key">
+        <a href="" data-activates="slide-out" class="button-collapse">Меню</a>
+    </div>
+</div>
