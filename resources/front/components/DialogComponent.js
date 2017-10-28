@@ -10,6 +10,7 @@ const Dialog = Vue.extend({
     data() {
         return {
             message: "",
+            isSelected: false,
             users: [
                 {
                     name: "Vasya",
@@ -22,6 +23,10 @@ const Dialog = Vue.extend({
                 {
                     name: "Fedor",
                     role: "musician"
+                },
+                {
+                    name: "Bondarchuk",
+                    role: "organizer"
                 },
                 {
                     name: "Alice",
@@ -54,6 +59,10 @@ const Dialog = Vue.extend({
                         {
                             date: '21/12/2013',
                             text: 'Здорово нигеры!'
+                        },
+                        {
+                            date: '21/11/2013',
+                            text: 'HI BITCHES!'
                         }
                     ]
                 }

@@ -5,7 +5,7 @@
         </a>
     </div>
     <div class="__left-menu_key">
-        <a href="" data-activates="slide-out" class="button-collapse">Меню</a>
+        <a href="" v-on:click="move" data-activates="slide-out" class="button-collapse">Меню</a>
     </div>
 </div>
 <div>
@@ -18,7 +18,7 @@
         </span>
     </div>
     <div class="__left-dialog_key">
-        <a href="">Диалог</a>
+        <a v-on:click="openDialog">Диалог</a>
     </div>
 </div>
 <dialog-component user-role="3"></dialog-component>

@@ -76,7 +76,7 @@ table.__left > thead> tr > th.__left{
     font-size: 35px;
 }
 
-.__left-menu_key:hover{
+.__left-menu_key:hover, .__left-dialog_key:hover{
     opacity: 1;
     cursor: pointer;
     left: 35px;
