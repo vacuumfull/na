@@ -11,7 +11,6 @@ new Vue({
     },
     data: {
         left: -5
-
     },
     mounted(){
         $('#left_message_window').modal();

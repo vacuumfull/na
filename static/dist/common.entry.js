@@ -20489,10 +20489,6 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _MessagesComponent = __webpack_require__(11);
-
-var _MessagesComponent2 = _interopRequireDefault(_MessagesComponent);
-
 var _materializeCss = __webpack_require__(4);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
@@ -20505,152 +20501,77 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Dialog = _vue2.default.extend({
     template: _dialog2.default,
-    components: {
-        messages: _MessagesComponent2.default
-    },
-    props: ['user-role', 'is-login'],
+    props: ['user-role'],
     data: function data() {
         return {
             message: "",
-            activeMessages: [],
-            users: [],
-            authors: {
-                name: "",
-                count: 0,
-                messages: []
-            },
-            senders: {},
-            selectedGetter: "",
-            showSenders: false,
-            showGetterName: false,
-            showScroll: false,
-            filterAdmin: true,
-            filterOrganizer: true,
-            filterArtist: true,
-            filterDeputy: true,
-            filterUser: true,
-            selectAll: false
+            users: [{
+                name: "Vasya",
+                role: "deputy"
+            }, {
+                name: "Kyle",
+                role: "musician"
+            }, {
+                name: "Fedor",
+                role: "musician"
+            }, {
+                name: "Alice",
+                role: "admin"
+            }],
+            senders: [{
+                name: 'Nikolas',
+                role: 'organizer',
+                messages: [{
+                    date: '21/12/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '21/12/2013',
+                    text: 'Здорово нигеры!'
+                }]
+            }, {
+                name: 'Ann',
+                role: 'deputy',
+                messages: [{
+                    date: '21/12/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '21/12/2013',
+                    text: 'Здорово нигеры!'
+                }]
+            }]
         };
     },
 
     created: function created() {
-        _jquery2.default.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': (0, _jquery2.default)('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        this.getUsers();
-        this.$on('message', function (msg) {
-            console.log(msg);
-            var authors = [];
-            if (msg.length != undefined) {
-                this.senders = msg;
-                this.senders.forEach(function (item, i, arr) {
-                    var name = item.author;
-                    var count = 0;
-                    var messages = [];
-                    for (var j = 0; j < arr.length; j++) {
-                        if (item.author.indexOf(arr[j].author) == 0) {
-                            var inner = {
-                                content: arr[j].content,
-                                time: arr[j].created_at
-                            };
-                            messages.push(inner);
-                            count += 1;
-                        }
-                    }
-                    var author = {
-                        id: i,
-                        name: name,
-                        count: count,
-                        messages: messages
-                    };
-                    authors.push(author);
-                });
-                for (var i in authors) {
-                    for (var j = 0; j < authors.length; j++) {
-                        if (authors[i] != undefined) {
-                            if (authors[i].name.indexOf(authors[j].name) == 0 && i != j) {
-                                authors.splice(j, 1);
-                            }
-                        }
-                    }
-                }
-                this.authors = authors;
-
-                this.authors.forEach(function (item, i) {
-                    item.id = i;
-                });
-                this.showSenders = true;
-            }
-        });
+        //this.getUsers();
     },
+    mounted: function mounted() {
+        (0, _jquery2.default)('#dialog_window').modal();
+    },
+
     methods: {
         openDialog: function openDialog() {
-            (0, _jquery2.default)('#dialog_window').modal();
             (0, _jquery2.default)('#dialog_window').modal('open');
         },
-        openMessages: function openMessages(id, author) {
-            var self = this,
-                uri = '/messages/read';
-            self.activeMessages = self.authors[id].messages;
-            self.selectedGetter = author;
-            self.showGetterName = true;
-            _jquery2.default.post(uri, {
-                author: author
-            }).done(function (data) {
-                if (data.response > 0) {
-                    self.$emit('read');
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
+        openMessages: function openMessages(author) {},
         successAction: function successAction(message) {
             _materializeCss2.default.toast(message, 4000);
         },
-        checkHeight: function checkHeight(classname) {
-            var field = document.querySelectorAll(classname)[0];
-            var height = field.offsetHeight;
-            return height;
-        },
         getUsers: function getUsers() {
-            var uri = "/user/users/advanced",
+            var uri = "/api/1/users",
                 self = this;
 
-            _jquery2.default.get(uri, {
-                filterAdmin: self.filterAdmin,
-                filterOrganizer: self.filterOrganizer,
-                filterDeputy: self.filterDeputy,
-                filterArtist: self.filterArtist,
-                filterUser: self.filterUser
-            }).done(function (data) {
+            _jquery2.default.get(uri).done(function (data) {
                 self.users = data.response;
-                var height = self.checkHeight(".__usersfield");
-                if (height > 298) {
-                    self.showScroll = true;
-                }
             }).fail(function (error) {
                 console.log(error);
             });
         },
 
         selectGetter: function selectGetter(name) {
-            var self = this;
-            self.selectedGetter = name;
-            self.showGetterName = true;
             document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
         },
-        setForAll: function setForAll() {
-            if (this.selectAll === true) {
-                this.showGetterName = true;
-                this.selectedGetter = 'все';
-                document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-            } else {
-                this.showGetterName = false;
-            }
-        },
+        setForAll: function setForAll() {},
         encodeImageFileAsURL: function encodeImageFileAsURL(event) {
             var filesSelected = event.target.files;
             if (filesSelected.length > 0) {
@@ -20667,44 +20588,7 @@ var Dialog = _vue2.default.extend({
                 fileReader.readAsDataURL(fileToLoad);
             }
         },
-        sendMessage: function sendMessage() {
-            var self = this,
-                author = document.getElementById("username").innerText;
-
-            if (self.selectAll === true) {
-                var uri = "/messages/massive",
-                    users = [];
-
-                self.users.forEach(function (item) {
-                    users.push(item.name);
-                });
-                _jquery2.default.post(uri, {
-                    author: author,
-                    getter: JSON.stringify(users),
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            } else {
-
-                var _uri = "/messages/create";
-                _jquery2.default.post(_uri, {
-                    author: author,
-                    getter: self.selectedGetter,
-                    content: self.message + document.getElementById("img-field").innerHTML
-                }).done(function (data) {
-                    self.message = "";
-                    document.querySelectorAll(".__dialog-field label")[0].className = "";
-                    self.successAction("Успешно отправлено!");
-                }).fail(function (error) {
-                    console.log(error);
-                });
-            }
-        },
+        sendMessage: function sendMessage() {},
         closeModal: function closeModal() {
             (0, _jquery2.default)('#dialog_window').modal('close');
         }
@@ -33880,92 +33764,12 @@ if (true) {
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _messages = __webpack_require__(12);
-
-var _messages2 = _interopRequireDefault(_messages);
-
-var _DialogComponent = __webpack_require__(3);
-
-var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Messages = _vue2.default.extend({
-    data: function data() {
-        return {
-            newMessages: 0,
-            showMessagesCount: false,
-            message: {}
-        };
-    },
-    render: function render(h) {
-        return _messages2.default;
-    },
-
-    created: function created() {
-        this.getUnreadMessages();
-        //  Dialog.$on('read', function(){
-        //      self.getUnreadMessages();
-        //  })
-    },
-    updated: function updated() {},
-
-    methods: {
-        dialog: function dialog() {
-            this.$emit('dialog');
-            this.$emit('message', this.message);
-        },
-        getUnreadMessages: function getUnreadMessages() {
-            var uri = "/user/messages",
-                self = this;
-
-            _jquery2.default.get(uri).done(function (data) {
-                if (data.response.length > 0) {
-                    self.message = data.response;
-                    self.newMessages = data.response.length;
-                    self.showMessagesCount = true;
-                } else {
-                    self.newMessages = 0;
-                    self.showMessagesCount = false;
-                }
-            }).fail(function (error) {
-                console.log(error);
-            });
-        }
-    }
-});
-
-exports.default = Messages;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = "<a v-on:click=\"dialog\" title=\"Сообщения\" href=\"#\">\n    <i class=\"material-icons\">mail</i>\n    <span v-if=\"showMessagesCount\" class=\"new badge\">{{ newMessages }}</span>\n</a>"
-
-/***/ }),
+/* 11 */,
+/* 12 */,
 /* 13 */
 /***/ (function(module, exports) {
 
-module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if=\"userRole > 1 \" id=\"dialog_window\" class=\"modal __modal __advanced\">\n        <div class=\"modal-content\">\n            <h4 v-if=\"!showGetterName\" class=\"black-text\">Диалоговое окно</h4>\n            <h4 v-if=\"showGetterName\" class=\"black-text\">Диалог c {{ selectedGetter }}</h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s4 __border_right\">\n                        <div v-if=\"showSenders\" class=\"senders\">\n                            <div class=\"collection\">\n                                <a v-on:click=\"openMessages(author.id, author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"author in authors\">{{ author.name }}<span class=\"badge right new \">{{ author.count }}</span></a>\n                            </div>\n                        </div>\n                        <div v-if=\"!showSenders\" class=\"__filtered\" >\n                            <div class=\"__filter __filtered __margin-bottom_m\">\n                           <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_admins\" type=\"checkbox\" v-model=\"filterAdmin\" v-on:change=\"getUsers\">\n                                <label for=\"filter_admins\">админы</label>\n                           </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_orgs\" type=\"checkbox\" v-model=\"filterOrganizer\" v-on:change=\"getUsers\">\n                                <label for=\"filter_orgs\">орги</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_users\" type=\"checkbox\" v-model=\"filterUser\" v-on:change=\"getUsers\">\n                                <label for=\"filter_users\">юзеры</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_artists\" type=\"checkbox\" v-model=\"filterArtist\" v-on:change=\"getUsers\">\n                                <label for=\"filter_artists\">музыканты</label>\n                            </span>\n                                <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"filter_deputy\" type=\"checkbox\" v-model=\"filterDeputy\" v-on:change=\"getUsers\">\n                                <label for=\"filter_deputy\">представители</label>\n                            </span>\n                            </div>\n                            <div class=\"collection __usersfield\" :class=\"{ __overflow_y: showScroll }\">\n                                <a v-for=\"user in users\" :id=\"user.id\" class=\"collection-item\" v-on:click=\"selectGetter(user.name)\">\n                                    {{ user.name }}\n                                    <span class=\"__rolename\">{{ user.rolename }}</span>\n                                    <span v-if=\"selectAll\" class=\"__absolute __all_icon\"> <i class=\"material-icons dp48\">bubble_chart</i></span>\n                                </a>\n                            </div>\n                            <div class=\"__filtered\">\n                             <span class=\"__inline-block __margin-right_m __filter_elem\">\n                                <input id=\"select_all\" type=\"checkbox\" v-model=\"selectAll\" v-on:change=\"setForAll\">\n                                <label for=\"select_all\">выбрать всех</label>\n                            </span>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"col s8\">\n                        <p class=\"__message black-text __margin-top_xs __margin-bottom_xs\" v-for=\"message in activeMessages\">\n                            <span class=\"blue-text text-darken-5\" >{{ message.time }}</span>: <span v-html=\"message.content\"></span>\n                        </p>\n                        <div id=\"img-field\" class=\"__message_img\">\n\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"__dialog-field col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n                <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !showGetterName}\">\n                    &nbsp;&nbsp;Отправить\n                    <i class=\"material-icons right dp48\">send</i>\n                </a>\n                <div v-if=\"showGetterName\" class=\"file-field input-field right\">\n                    <div class=\"btn-large __download_btn\">\n                        <span>Добавить изображение</span>\n                        <i class=\"material-icons right dp48\">photo</i>\n                        <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                    </div>\n                </div>\n            </div>\n        </div>\n        <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n\n    <div v-if=\"userRole == 1\" id=\"dialog_window\" class=\"modal __modal\">\n        <div class=\"modal-content\">\n            <h4 v-if=\"!showGetterName\" class=\"black-text\">Диалоговое окно</h4>\n            <h4 v-if=\"showGetterName\" class=\"black-text\">Диалог c {{ selectedGetter }}</h4>\n            <div class=\"dialog-field\">\n                <div class=\"row\">\n                    <div class=\"col s4 __border_right\">\n                        <div v-if=\"showSenders\" class=\"senders\">\n                            <div class=\"collection\">\n                                <a v-on:click=\"openMessages(author.id, author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"author in authors\">{{ author.name }}<span class=\"badge right new \">{{ author.count }}</span></a>\n                            </div>\n                        </div>\n                        <div v-if=\"!showSenders\" >\n                            <div class=\"collection __usersfield\" :class=\"{ __overflow_y: showScroll }\">\n                                <a v-for=\"user in users\" :id=\"user.id\" class=\"collection-item\" v-on:click=\"selectGetter(user.name)\">{{ user.name }}</a>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"col s8\">\n                        <p class=\"__message black-text __margin-top_xs __margin-bottom_xs\" v-for=\"message in activeMessages\"><span class=\"blue-text text-darken-5\" >{{ message.time }}</span>: {{ message.content }}</p>\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <form class=\"__dialog-field col s12\">\n                    <div class=\"row\">\n                        <div class=\"input-field col s12\">\n                            <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                            <label>Ваше сообщение</label>\n                        </div>\n                    </div>\n                </form>\n            </div>\n\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !showGetterName}\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n        </div>\n        <div class=\"modal-footer\">\n            <a  v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n        </div>\n    </div>\n    <messages v-on:dialog=\"openDialog\"></messages>\n</li>\n\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 class=\"black-text\">Диалоговое окно</h4>\n        <h4 class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div class=\"modal-footer\">\n        <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>\n"
 
 /***/ }),
 /* 14 */,
@@ -33989,24 +33793,37 @@ var _DialogComponent = __webpack_require__(3);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
-__webpack_require__(18);
+var _LeftMessagesComponent = __webpack_require__(18);
 
-__webpack_require__(19);
+var _LeftMessagesComponent2 = _interopRequireDefault(_LeftMessagesComponent);
+
+var _LeftModalComponent = __webpack_require__(57);
+
+var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
 __webpack_require__(20);
+
+__webpack_require__(21);
+
+__webpack_require__(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
     el: '#index',
     components: {
-        'dialog-component': _DialogComponent2.default
+        'dialog-component': _DialogComponent2.default,
+        'left-messages': _LeftMessagesComponent2.default,
+        'left-modal': _LeftModalComponent2.default
     },
     data: {
-        left: -5
+        left: -5,
+        userInfo: {
+            name: ""
+        },
+        dialogInfo: {}
     },
     mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
         (0, _jquery2.default)(".button-collapse").sideNav();
     },
     updated: function updated() {
@@ -34024,33 +33841,230 @@ new _vue2.default({
         link: function link(string) {
             window.location = window.location.origin + string;
         },
-        openMenu: function openMenu() {
+        move: function move() {
             if (this.left == -5) {
                 this.left = 300;
             } else {
                 this.left = -5;
             }
+        },
+        openModal: function openModal(userInfo) {
+            this.userInfo = userInfo;
+        },
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal('open');
         }
     }
 });
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _leftMessages = __webpack_require__(19);
+
+var _leftMessages2 = _interopRequireDefault(_leftMessages);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LeftMessages = _vue2.default.extend({
+    template: _leftMessages2.default,
+    props: ['user-role'],
+    data: function data() {
+        return {
+            showField: false,
+            getter: '',
+            users: [{ name: "Ivan" }]
+        };
+    },
+
+    methods: {
+        openField: function openField() {
+            this.showField = true;
+        },
+        search: function search(event) {
+            var uri = "/api/1/user/search",
+                self = this,
+                keyword = event.target.value;
+
+            if (keyword.length > 2) {
+                self.users = [];
+                _jquery2.default.get(uri, {
+                    keyword: keyword
+                }).done(function (data) {
+                    self.users = data.response;
+                }).fail(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        selectGetter: function selectGetter(event) {
+            var userInfo = {};
+            userInfo['name'] = event.target.innerText;
+
+            this.$emit('open-modal', userInfo);
+            this.showField = false;
+        }
+    }
+
+});
+
+exports.default = LeftMessages;
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+module.exports = "<div>\n    <li><a v-on:click=\"openField()\" class=\"waves-effect\" href=\"#!\"><i class=\"material-icons\">chat</i>Cообщение</a></li>\n    <li v-if=\"showField\" class=\"__padding-left_xl __padding-right_xl\">\n        <div class=\"input-group\">\n            <div class=\"input-field user-search\">\n                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                <label>кому</label>\n            </div>\n        </div>\n        <ul class=\"__select_users\" >\n            <li v-for=\"user in users\">\n                <a href=\"#!\" v-on:click=\"selectGetter($event)\">{{ user.name }}</a>\n            </li>\n        </ul>\n    </li>\n    <li v-if=\"showField\"><div class=\"divider\"></div></li>\n</div>\n"
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _leftModal = __webpack_require__(58);
+
+var _leftModal2 = _interopRequireDefault(_leftModal);
+
+var _materializeCss = __webpack_require__(4);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LeftModal = _vue2.default.extend({
+    template: _leftModal2.default,
+    props: ['user-info'],
+    data: function data() {
+        return {
+            message: '',
+            getter: ""
+        };
+    },
+
+    watch: {
+        userInfo: function userInfo(val) {
+            if (val['name'] != '') {
+                this.getter = val['name'];
+                this.openModal();
+            }
+        }
+    },
+    mounted: function mounted() {
+        (0, _jquery2.default)('#left_message_window').modal();
+    },
+
+    methods: {
+        sendMessage: function sendMessage() {
+            var uri = '/api/1/message',
+                self = this;
+            if (self.message.length == 0) {
+                return;
+            }
+            _jquery2.default.post(uri, { message: self.message }).done(function (data) {
+                self.successAction("Сообщение успешно отправлено!");
+                (0, _jquery2.default)('#left_message_window').modal('close');
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        openModal: function openModal() {
+            (0, _jquery2.default)('#left_message_window').modal('open');
+        },
+        successAction: function successAction(message) {
+            _materializeCss2.default.toast(message, 4000);
+        }
+    }
+});
+
+exports.default = LeftModal;
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div class=\"modal-content\">\n        <h4>Диалог с <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s12\">\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n        </div>\n\n        <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n            &nbsp;&nbsp;Отправить\n            <i class=\"material-icons right dp48\">send</i>\n        </a>\n    </div>\n    <div class=\"modal-footer\">\n        <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>"
 
 /***/ })
 /******/ ]);

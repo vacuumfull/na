@@ -3,27 +3,21 @@
 
 <div id="left-menu">
     <ul id="slide-out" class="side-nav">
-        <li><div class="userView">
-            <div class="background">
-                <img class="responsive-img" src="{% static 'images/logo_inner.jpg' %}">
-            </div>
-            <a href="#!user">
-                <img  class="circle" src="{% static 'images/fresh_no_avatar.png' %}">
-            </a>
-            <a href="#!name"><span class="white-text name">{{ user.name }}</span></a>
-            <a href="#!email"><span class="white-text email">{{ email }}</span></a>
-        </div>
-        </li>
-        <li><a class="waves-effect" href="#!"><i class="material-icons">chat</i>Cообщение</a></li>
-        <li  class="__padding-left_xl __padding-right_xl">
-            <div class="input-group">
-                <div class="input-field user-search">
-                    <input type="text">
-                    <label>кому</label>
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img class="responsive-img" src="{% static 'images/logo_inner.jpg' %}">
                 </div>
+                <a href="#!user">
+                    <img  class="circle" src="{% static 'images/fresh_no_avatar.png' %}">
+                </a>
+                <a href="#!name"><span class="white-text name">{{ user.name }}</span></a>
+                <a href="#!email"><span class="white-text email">{{ email }}</span></a>
             </div>
         </li>
-        <li ><div class="divider"></div></li>
+
+        <left-messages user-role="3" v-on:open-modal="openModal"></left-messages>
+
         <li>
             <a class="dropdown-button waves-effect" href="#!" data-activates="posts">
                 <i class="material-icons">description</i>

@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import Materialize from 'materialize-css';
-import template from '../../tmp/components/left-menu.html';
 
 const LeftMenu = Vue.extend({
-    template,
     props: ['avatar', 'name', 'email', 'role'],
     data(){
         return {

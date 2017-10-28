@@ -16,9 +16,35 @@ table.__left > thead> tr > th.__left{
 .wrapper{
     min-height: 445px;
 }
+
+.__left-dialog_btn{
+    position: absolute;
+    top: 219px;
+    cursor: pointer;
+    padding-top: 5px;
+    padding-left: 9px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    z-index: 1000;
+    background-color: black;
+    transition: 0.35s ease;
+    border-top: 1px solid white;
+}
+.__message-count{
+    position: relative;
+}
+.__message-count span{
+    font-family: GillSans,Calibri,Trebuchet,sans-serif;
+    color: #0ade27;
+    margin-top: -22px;
+    position: absolute;
+    font-size: 17px;
+    left: 24px;
+}
+
 .__left-menu_btn{
     position: absolute;
-    top: 127px;
+    top: 173px;
     cursor: pointer;
     padding-top: 5px;
     padding-left: 9px;
@@ -31,16 +57,25 @@ table.__left > thead> tr > th.__left{
 .drag-target{
     z-index: 996!important;
 }
+.modal-action.modal-close:hover{
+    background-color: transparent;
+}
+.__left-dialog_btn:hover + .__left-dialog_key{
+    opacity: 1;
+    transition: 0.5s ease;
+    left: 35px;
+}
 
 .__left-menu_btn:hover + .__left-menu_key{
     opacity: 1;
     transition: 0.5s ease;
     left: 35px;
 }
-.__left-menu_btn > a > i {
+.__left-menu_btn > a > i, .__left-dialog_btn > a > i {
     color: white;
     font-size: 35px;
 }
+
 .__left-menu_key:hover{
     opacity: 1;
     cursor: pointer;
@@ -49,6 +84,17 @@ table.__left > thead> tr > th.__left{
 .side-nav .userView{
     padding-bottom: 45px;
 }
+.__left-dialog_key{
+    opacity: 0;
+    background-color: #212121;
+    padding: 11px 15px 10px 25px;
+    font-size: 17px;
+    z-index: 99;
+    top: 220px;
+    position: absolute;
+    left: -50px;
+    transition: 0.5s ease;
+}
 
 .__left-menu_key{
     opacity: 0;
@@ -56,12 +102,12 @@ table.__left > thead> tr > th.__left{
     padding: 11px 15px 10px 25px;
     font-size: 17px;
     z-index: 99;
-    top: 127px;
+    top: 173px;
     position: absolute;
     left: -50px;
     transition: 0.5s ease;
 }
-.__left-menu_key > a{
+.__left-menu_key > a, .__left-dialog_key > a{
     color: white;
 }
 
@@ -845,8 +891,12 @@ body nav .__menu_item > a {
     font-size: 1rem;
     color: #fff;
     display: block;
-    padding: 0 15px;
 }
+#dialog_window .__close-btn{
+    right: 25px;
+    top: 25px;
+}
+
 .modal-close span{
     font-size: 25px;
 }
