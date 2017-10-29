@@ -1,7 +1,7 @@
 <div id="dialog_window" class="modal __modal __advanced">
     <div class="modal-content">
-        <h4 class="black-text">Диалоговое окно</h4>
-        <h4 class="black-text">Диалог c </h4>
+        <h4 v-if="!isSelected" class="black-text">Диалоговое окно</h4>
+        <h4 v-if="isSelected" class="black-text">Диалог c </h4>
         <div class="dialog-field">
             <div class="row">
                 <div class="col s4 __border_right">

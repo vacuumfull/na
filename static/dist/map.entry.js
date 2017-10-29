@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33659,7 +33659,11 @@ var _materializeCss = __webpack_require__(2);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _dialog = __webpack_require__(11);
+var _StorageMixin = __webpack_require__(11);
+
+var _StorageMixin2 = _interopRequireDefault(_StorageMixin);
+
+var _dialog = __webpack_require__(12);
 
 var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -33668,6 +33672,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Dialog = _vue2.default.extend({
     template: _dialog2.default,
     props: ['user-role'],
+    mixins: [_StorageMixin2.default],
     data: function data() {
         return {
             message: "",
@@ -33692,31 +33697,27 @@ var Dialog = _vue2.default.extend({
                 name: 'Nikolas',
                 role: 'organizer',
                 messages: [{
-                    date: '21/12/2013',
+                    date: '11/11/2013',
                     text: 'hihihihi hello'
                 }, {
-                    date: '21/12/2013',
+                    date: '11/12/2013',
                     text: 'Здорово нигеры!'
                 }]
             }, {
                 name: 'Ann',
                 role: 'deputy',
                 messages: [{
-                    date: '21/12/2013',
+                    date: '13/10/2013',
                     text: 'hihihihi hello'
                 }, {
-                    date: '21/12/2013',
+                    date: '11/09/2013',
                     text: 'Здорово нигеры!'
                 }, {
-                    date: '21/11/2013',
+                    date: '11/11/2013',
                     text: 'HI BITCHES!'
                 }]
             }]
         };
-    },
-
-    created: function created() {
-        //this.getUsers();
     },
     mounted: function mounted() {
         (0, _jquery2.default)('#dialog_window').modal();
@@ -33736,6 +33737,7 @@ var Dialog = _vue2.default.extend({
 
             _jquery2.default.get(uri).done(function (data) {
                 self.users = data.response;
+                self.storageSave('users', self.users);
             }).fail(function (error) {
                 console.log(error);
             });
@@ -33772,12 +33774,54 @@ exports.default = Dialog;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 class=\"black-text\">Диалоговое окно</h4>\n        <h4 class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !isSelected }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            storage: localStorage
+        };
+    },
+
+    methods: {
+        storageSave: function storageSave(key, info) {
+            console.log('hi');
+            try {
+                this.storage.setItem(key, info);
+            } catch (e) {
+                if (e == QUOTA_EXCEEDED_ERR) {
+                    console.error('Quota exceeded!');
+                }
+            }
+        },
+        storageGet: function storageGet(key) {
+            return this.storage.getItem(key);
+        },
+        storageRemove: function storageRemove(key) {
+            this.storage.removeItem(key);
+        },
+        storageKey: function storageKey(n) {
+            return this.storage.key(n);
+        },
+        storageClear: function storageClear() {
+            this.storage.clear();
+        }
+    }
+};
 
 /***/ }),
-/* 12 */,
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !isSelected }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+
+/***/ }),
 /* 13 */,
 /* 14 */,
 /* 15 */,
@@ -33793,7 +33837,8 @@ module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\
 /* 25 */,
 /* 26 */,
 /* 27 */,
-/* 28 */
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33807,7 +33852,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _googleMaps = __webpack_require__(29);
+var _googleMaps = __webpack_require__(30);
 
 var _googleMaps2 = _interopRequireDefault(_googleMaps);
 
@@ -33935,7 +33980,7 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33659,7 +33659,11 @@ var _materializeCss = __webpack_require__(2);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _dialog = __webpack_require__(11);
+var _StorageMixin = __webpack_require__(11);
+
+var _StorageMixin2 = _interopRequireDefault(_StorageMixin);
+
+var _dialog = __webpack_require__(12);
 
 var _dialog2 = _interopRequireDefault(_dialog);
 
@@ -33668,6 +33672,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Dialog = _vue2.default.extend({
     template: _dialog2.default,
     props: ['user-role'],
+    mixins: [_StorageMixin2.default],
     data: function data() {
         return {
             message: "",
@@ -33692,31 +33697,27 @@ var Dialog = _vue2.default.extend({
                 name: 'Nikolas',
                 role: 'organizer',
                 messages: [{
-                    date: '21/12/2013',
+                    date: '11/11/2013',
                     text: 'hihihihi hello'
                 }, {
-                    date: '21/12/2013',
+                    date: '11/12/2013',
                     text: 'Здорово нигеры!'
                 }]
             }, {
                 name: 'Ann',
                 role: 'deputy',
                 messages: [{
-                    date: '21/12/2013',
+                    date: '13/10/2013',
                     text: 'hihihihi hello'
                 }, {
-                    date: '21/12/2013',
+                    date: '11/09/2013',
                     text: 'Здорово нигеры!'
                 }, {
-                    date: '21/11/2013',
+                    date: '11/11/2013',
                     text: 'HI BITCHES!'
                 }]
             }]
         };
-    },
-
-    created: function created() {
-        //this.getUsers();
     },
     mounted: function mounted() {
         (0, _jquery2.default)('#dialog_window').modal();
@@ -33736,6 +33737,7 @@ var Dialog = _vue2.default.extend({
 
             _jquery2.default.get(uri).done(function (data) {
                 self.users = data.response;
+                self.storageSave('users', self.users);
             }).fail(function (error) {
                 console.log(error);
             });
@@ -33772,16 +33774,59 @@ exports.default = Dialog;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 class=\"black-text\">Диалоговое окно</h4>\n        <h4 class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !isSelected }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            storage: localStorage
+        };
+    },
+
+    methods: {
+        storageSave: function storageSave(key, info) {
+            console.log('hi');
+            try {
+                this.storage.setItem(key, info);
+            } catch (e) {
+                if (e == QUOTA_EXCEEDED_ERR) {
+                    console.error('Quota exceeded!');
+                }
+            }
+        },
+        storageGet: function storageGet(key) {
+            return this.storage.getItem(key);
+        },
+        storageRemove: function storageRemove(key) {
+            this.storage.removeItem(key);
+        },
+        storageKey: function storageKey(n) {
+            return this.storage.key(n);
+        },
+        storageClear: function storageClear() {
+            this.storage.clear();
+        }
+    }
+};
 
 /***/ }),
-/* 12 */,
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !isSelected }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+
+/***/ }),
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33795,7 +33840,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _SearchComponent = __webpack_require__(17);
+var _SearchComponent = __webpack_require__(18);
 
 var _SearchComponent2 = _interopRequireDefault(_SearchComponent);
 
@@ -33844,7 +33889,7 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33866,7 +33911,7 @@ var _materializeCss = __webpack_require__(2);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _search = __webpack_require__(18);
+var _search = __webpack_require__(19);
 
 var _search2 = _interopRequireDefault(_search);
 
@@ -33957,7 +34002,7 @@ var Search = _vue2.default.extend({
 exports.default = Search;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = "<section id=\"search-block\">\n    <div id=\"search\" v-bind:class=\"{ __open: showField }\" class=\"grey darken-4\">\n        <a v-on:click=\"showField = !showField; getTags();\"><i class=\"material-icons\">search</i></a>\n    </div>\n    <div class=\"searchfield\" v-bind:class=\"{ __open: showField }\">\n        <div v-on:click=\"showField = !showField\" class=\"__close_circle\">\n            <i class=\"material-icons\">close</i>\n        </div>\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col s6\">\n                    <div class=\"row __padding-top_xxl __margin-top_xl\">\n                        <div class=\"input-field col s11\">\n                            <input id=\"search-tag\" type=\"text\" v-model=\"keyword\" v-on:keyup.enter=\"search(keyword)\">\n                            <label v-bind:class=\"{ active: isFilled }\" class=\"white-text\">Введите ключевое слово или выберите тэг </label>\n                        </div>\n                        <div class=\"input-field col s1\">\n                            <i class=\"material-icons prefix white-text __input_search_icon\" v-on:click=\"search(keyword)\">search</i>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s6\">\n                    <h4 class=\"center white-text\">Облако тэгов</h4>\n                    <div class=\"center\">\n                        <span v-bind:style=\"{ fontSize: tagFont + tag + 'px'  }\" v-on:click=\"setKeyword(key)\" v-for=\"(tag, key) in tags\" class=\"white-text __search-tag\">#@{{ key }}&nbsp;&nbsp;</span>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div v-if=\"showPosts||showEvents||showPlaces\" class=\"container\">\n        <div class=\"row\">\n            <div v-if=\"showEvents\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">происходящее</h3>\n                <div class=\"row\">\n\n                    <div v-for=\"event in events\" class=\"col s12 m4 l3\">\n                        <div class=\"__event_block\">\n                            <div class=\"card __border_subgray\">\n                                <div class=\"card-image __preview_img\">\n                                    <div class=\"__img_inner\">\n                                        <img :src=\"event.image\">\n                                    </div>\n                                </div>\n                                <div v-bind:class=\"{activator: event.content != undefined}\" class=\"card-content __title_block __relative \">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{event.title}}\n                                             <i v-if=\"event.content != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n                                <div class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{ event.title }}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <div v-html=\"event.content\">\n                                    </div>\n                                </div>\n                                <div class=\"__block_more_info\">\n                                    <div class=\"__font_exo __semi_bold\">\n                                        <div v-if=\"event.place != undefined\" class=\" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"red-text text-darken-4\"><i class=\"material-icons\">location_on</i></span>\n                                            <span class=\" grey-text text-darken-3 right\">@{{ event.place  }}</span>\n\n                                        </div>\n                                        <div class=\"__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"red-text text-darken-4\"><i class=\"material-icons\">alarm</i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"  grey-text text-darken-3 right\">@{{ event.date_formatted    }}</span>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div v-if=\"event.link != undefined\" class=\"card-action\" v-on:click=\"link(event.link)\">\n                                    <a title=\"Узнать больше о событии\" class=\"__more_link __font_exo red-text text-accent-4\" :href=\"event.link\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n\n                </div>\n            </div>\n\n            <div v-if=\"showPosts\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">посты</h3>\n                <div class=\"row\">\n                    <div v-for=\"post in posts\" class=\"col s12 m4 l3\">\n                        <div class=\"__post_block\">\n                            <div class=\"card __border_subgray\">\n                                <div class=\"card-image __preview_img\">\n                                    <div class=\"__img_inner\">\n                                        <img :src=\"post.image\">\n                                    </div>\n                                </div>\n                                <div v-bind:class=\"{activator: post.introtext != undefined}\" class=\"card-content __title_block __relative \">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{post.title}}\n                                             <i v-if=\"post.introtext != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n                                <div v-if=\"post.introtext != undefined\" class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{ post.title }}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <div v-html=\"post.introtext\">\n                                    </div>\n                                </div>\n                                <div class=\" __padding-top_xs __rubric_preview_block __padding-left_s __padding-right_s \">\n                                    <span title=\"Рубрика\" class=\" teal-text text-darken-4\"><i class=\"material-icons __rubric_icon_size\">format_list_bulleted</i></span>\n                                    <span class=\"__rubric_size right __semi_bold __font_exo grey-text text-darken-3\">@{{ post.rubric_name }}</span>\n                                </div>\n                                <div class=\"__block_more_info\">\n                                    <div class=\"__font_exo __semi_bold\">\n                                        <div class=\"  __margin-top_xs __padding-left_8 __padding-right_s\">\n                                            <span title=\"Автор\" class=\" teal-text text-darken-4\"><i class=\"material-icons __author_icon_size\">account_circle</i></span>\n                                            <span class=\" grey-text text-darken-3 right\"> @{{ post.author }}</span>\n                                        </div>\n                                        <div v-if=\"post.mark != 0\" class=\"__margin-bottom_xs __padding-left_s __padding-right_s\">\n                                            <span class=\"yellow-text text-accent-2\"><i class=\"material-icons __circle_border\">star</i></span>\n                                            &nbsp;&nbsp;&nbsp;&nbsp;<span class=\"grey-text text-darken-3 right\">@{{ post.mark }}/10</span>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div class=\"card-action\">\n                                    <a title=\"Читать запись\" class=\"__more_link __font_exo teal-text text-darken-4\" :href=\"'/posts/' + post.pubric + '/' + post.id\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n\n                            </div>\n\n                        </div>\n                    </div>\n                </div>\n            </div>\n\n            <div v-if=\"showPlaces\" class=\"col s12\">\n                <h3 class=\"center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase\">места</h3>\n                <div class=\"row\">\n                    <div v-for=\"place in places\" class=\"col s12 m4 l3\">\n                        <div class=\"__post_block\">\n                            <div class=\"card __border_subgray\">\n                                <div v-if=\"place.image != undefined\" class=\"card-image\">\n                                    <div class=\"card-image __preview_img\">\n                                        <div class=\"__img_inner_place\">\n                                            <img :src=\"place.image\">\n                                        </div>\n                                    </div>\n                                </div>\n\n                                <div v-bind:class=\"{activator: place.description != undefined}\"  class=\"card-content __title_block __relative\">\n                                         <span class=\"card-title __font_exo\">\n                                             @{{place.title}}\n                                             <i v-if=\"place.description != undefined\" class=\"material-icons right __open_more_icon\">gamepad</i>\n                                        </span>\n                                </div>\n\n                                <div v-if=\"place.description != undefined\" class=\"card-reveal  __relative\">\n                                        <span class=\"card-title __font_exo\">\n                                            @{{place.title}}\n                                            <i class=\"material-icons right __close_more_icon\">close</i>\n                                        </span>\n                                    <p v-html=\"place.description\"></p>\n                                </div>\n                                <div v-if=\"place.mark != 0\" class=\"__margin-bottom_xs __padding-left_s __padding-right_s\">\n                                    <span class=\"yellow-text text-accent-2 \"><i class=\"material-icons __circle_border_darkblue\">star</i></span>\n                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class=\" blue-grey-text text-darken-4 right\">@{{ place.mark }}/10</span>\n                                </div>\n\n                                <div class=\"card-action\"  v-on:click=\"link('/places/' + place.id)\">\n                                    <a title=\"Читать о месте\" class=\"__more_link __font_exo  blue-grey-text text-darken-4\" :href=\"'/places/' + place.id\">\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_four material-icons __icon-margin_xs left\">play_arrow</i>\n                                        <i class=\"__icon_five material-icons __icon-margin_xs left\">play_arrow</i>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</section>"

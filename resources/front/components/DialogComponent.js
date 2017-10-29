@@ -2,11 +2,13 @@ import Vue from 'vue';
 import $ from 'jquery';
 import _ from 'lodash';
 import Materialize from 'materialize-css';
+import Storage from '../mixins/StorageMixin';
 import template from '../../tmp/components/dialog.html';
 
 const Dialog = Vue.extend({
     template,
     props: ['user-role'],
+    mixins: [Storage],
     data() {
         return {
             message: "",
@@ -39,11 +41,11 @@ const Dialog = Vue.extend({
                     role: 'organizer',
                     messages: [
                         {
-                            date: '21/12/2013',
+                            date: '11/11/2013',
                             text: 'hihihihi hello'
                         },
                         {
-                            date: '21/12/2013',
+                            date: '11/12/2013',
                             text: 'Здорово нигеры!'
                         }
                     ]
@@ -53,24 +55,21 @@ const Dialog = Vue.extend({
                     role: 'deputy',
                     messages: [
                         {
-                            date: '21/12/2013',
+                            date: '13/10/2013',
                             text: 'hihihihi hello'
                         },
                         {
-                            date: '21/12/2013',
+                            date: '11/09/2013',
                             text: 'Здорово нигеры!'
                         },
                         {
-                            date: '21/11/2013',
+                            date: '11/11/2013',
                             text: 'HI BITCHES!'
                         }
                     ]
                 }
             ]
         }
-    },
-    created: function(){
-        //this.getUsers();
     },
     mounted(){
         $('#dialog_window').modal();
@@ -92,6 +91,7 @@ const Dialog = Vue.extend({
             $.get(uri)
                 .done(function(data){
                     self.users =  data.response;
+                    self.storageSave('users', self.users);
                 })
                 .fail(function(error) {
                     console.log(error);
