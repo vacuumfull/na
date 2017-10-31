@@ -78,6 +78,37 @@ class Blog(models.Model):
         verbose_name_plural = 'Посты'
 
 
+class CommentManager(models.Manager):
+    """Blog comments manager."""
+
+    def get_last_comments(self, blog_id: int, offset: int=0):
+        """Get last comment with offset in blog."""
+        rows = Comment.objects.filter(
+            blog=blog_id, published=True)[offset:offset+20]
+        return rows
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь')
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
+                             verbose_name='Запись')
+    content = models.CharField(max_length=250, verbose_name='Содержание')
+    published = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CommentManager()
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.content)
+
+    class Meta:
+        ordering = ['created_at', 'user']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+
 class RatingManager(models.Manager):
     """Blog manager."""
 
