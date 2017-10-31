@@ -37,7 +37,9 @@ def vote_rating(request):
     try:
         if app == 'blog':
             blog = Blog.objects.get(pk=key)
-            BlogRating.objects.create(blog=blog, user=user, value=vote)
+            BlogRating.objects.update_or_create(
+                blog=blog, user=user,
+                defaults={'value': vote})
     except (ObjectDoesNotExist, IntegrityError):
         pass
 
