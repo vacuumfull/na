@@ -33296,27 +33296,27 @@ var Rate = _vue2.default.extend({
         return {
             rate: [{ mark: 1, name: "star_border" }, { mark: 2, name: "star_border" }, { mark: 3, name: "star_border" }, { mark: 4, name: "star_border" }, { mark: 5, name: "star_border" }, { mark: 6, name: "star_border" }, { mark: 7, name: "star_border" }, { mark: 8, name: "star_border" }, { mark: 9, name: "star_border" }, { mark: 10, name: "star_border" }],
             allRate: 0,
-            csrf: '',
+            session: '',
             activated: false,
             showCommonRate: false
         };
     },
     created: function created() {
         this.getRate();
-        this.csrf = this.getCookie('csrftoken');
-        console.log(this.csrf);
-        console.log(this.isLogin);
+        this.session = this.getSess();
     },
 
     methods: {
         getRate: function getRate() {
             var self = this,
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + self.csrf + '/';
+                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
             console.log(uri);
             _jquery2.default.get(uri).done(function (data) {
                 console.log(data);
-                if (data) self.allRate = data.response;
-                self.colorStars(self.allRate);
+                if (data.is_vote) {
+                    self.allRate = data.value;
+                    self.colorStars(data.value);
+                }
             });
         },
         colorStars: function colorStars(mark) {
@@ -33335,31 +33335,30 @@ var Rate = _vue2.default.extend({
                 });
             }
         },
-        getCookie: function getCookie(name) {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; ++i) {
-                var pair = cookies[i].trim().split('=');
-                if (pair[0] == name) return pair[1];
-            }
-            return null;
+        getSess: function getSess() {
+            return document.getElementById('session_id').innerHTML;
         },
         setStars: function setStars(mark) {
+            console.log(mark);
             var self = this,
                 uri = '/api/1/vote/',
                 params = {
-                sessionid: self.csrf,
+                sessionid: self.getSess(),
                 app: self.type,
                 key: self.unique,
                 vote: mark
             };
-            console.log(params);
+
             self.activated = true;
             self.colorStars(mark);
-            console.log(uri);
+            console.log(params);
             _jquery2.default.post(uri, params).done(function (data) {
-                console.log(data);
-                self.getRate();
-                self.successAction("Оценка учтена!");
+                if (data.is_vote) {
+                    console.log(data);
+                    self.colorStars(data.value);
+                    self.successAction("Оценка учтена!");
+                    self.getRate();
+                }
             }).fail(function (error) {
                 console.log(error);
             });

@@ -34,8 +34,6 @@ new Vue({
                 })
             }
         }, 300);
-
-
     },
     methods: {
         link(string){

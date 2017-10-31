@@ -21,27 +21,26 @@ const Rate = Vue.extend({
                 { mark: 10, name: "star_border" },
             ],
             allRate: 0,
-            csrf: '',
+            session: '',
             activated: false,
             showCommonRate: false
         }
     },
     created(){
         this.getRate()
-        this.csrf =  this.getCookie('csrftoken');
-        console.log(this.csrf);
-        console.log(this.isLogin);
+        this.session =  this.getSess();
     },
     methods: {
         getRate(){
             let self = this,
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + self.csrf + '/';
+                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
                console.log(uri);
             $.get(uri).done(data => {
                 console.log(data);
-                if (data)
-                self.allRate = data.response
-                self.colorStars(self.allRate)
+                if (data.is_vote){
+                    self.allRate = data.value;
+                    self.colorStars(data.value);
+                }
             })
         },
         colorStars(mark){
@@ -60,32 +59,30 @@ const Rate = Vue.extend({
                 })
             }
         },
-        getCookie(name){
-            let cookies = document.cookie.split(';');
-            for(let i=0 ; i < cookies.length ; ++i) {
-                let pair = cookies[i].trim().split('=');
-                if(pair[0] == name)
-                    return pair[1];
-            }
-            return null;
+        getSess(){
+           return document.getElementById('session_id').innerHTML;
         },  
         setStars(mark){
+            console.log(mark);
             let self = this,
                 uri = '/api/1/vote/',
                 params = {
-                    sessionid: self.csrf,
+                    sessionid: self.getSess(),
                     app: self.type,
                     key: self.unique,
                     vote: mark
                 };
-                console.log(params);
+
             self.activated = true
             self.colorStars(mark)
-            console.log(uri);
+            console.log(params);
             $.post(uri, params).done(data => {
-                console.log(data);
-                self.getRate()
-                self.successAction("Оценка учтена!")
+                if (data.is_vote){
+                    console.log(data)
+                    self.colorStars(data.value);
+                    self.successAction("Оценка учтена!");
+                    self.getRate()
+                }
             }).fail(error => {
                 console.log(error)
             })
