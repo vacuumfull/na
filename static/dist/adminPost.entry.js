@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33164,7 +33164,14 @@ module.exports = "<li v-if=\"isLogin\" class=\"__menu_messages\">\n    <div v-if
 /* 15 */,
 /* 16 */,
 /* 17 */,
-/* 18 */
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33182,244 +33189,22 @@ var _DialogComponent = __webpack_require__(2);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
-var _RateComponent = __webpack_require__(19);
-
-var _RateComponent2 = _interopRequireDefault(_RateComponent);
-
-var _CommentComponent = __webpack_require__(21);
-
-var _CommentComponent2 = _interopRequireDefault(_CommentComponent);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
     el: '#index',
     components: {
-        'dialog-component': _DialogComponent2.default,
-        'rate-component': _RateComponent2.default,
-        'comment-component': _CommentComponent2.default
+        'dialog-component': _DialogComponent2.default
     },
     mounted: function mounted() {
+        (0, _jquery2.default)('select').material_select();
+        (0, _jquery2.default)('.tooltipped').tooltip({ delay: 50 });
         (0, _jquery2.default)('#left_message_window').modal();
         (0, _jquery2.default)(".button-collapse").sideNav();
-    }
-});
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _materializeCss = __webpack_require__(3);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _rating = __webpack_require__(20);
-
-var _rating2 = _interopRequireDefault(_rating);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Rate = _vue2.default.extend({
-    template: _rating2.default,
-    props: ['isLogin', 'type', 'unique'],
-    data: function data() {
-        return {
-            rate: [{ mark: 1, name: "star_border" }, { mark: 2, name: "star_border" }, { mark: 3, name: "star_border" }, { mark: 4, name: "star_border" }, { mark: 5, name: "star_border" }, { mark: 6, name: "star_border" }, { mark: 7, name: "star_border" }, { mark: 8, name: "star_border" }, { mark: 9, name: "star_border" }, { mark: 10, name: "star_border" }],
-            allRate: 0,
-            csrf: '',
-            activated: false,
-            showCommonRate: false
-        };
-    },
-    created: function created() {
-        this.getRate();
-        this.csrf = this.getCookie('csrftoken');
-        console.log(this.csrf);
     },
 
-    methods: {
-        getRate: function getRate() {
-            var self = this,
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + self.csrf + '/';
-            console.log(uri);
-            _jquery2.default.get(uri).done(function (data) {
-                console.log(data);
-                if (data) self.allRate = data.response;
-                self.colorStars(self.allRate);
-            });
-        },
-        colorStars: function colorStars(mark) {
-            this.rate.forEach(function (item, i) {
-                if (mark > i) {
-                    item.name = "star";
-                } else {
-                    item.name = "star_border";
-                }
-            });
-        },
-        unsetStars: function unsetStars() {
-            if (this.activated = false) {
-                this.rate.forEach(function (item) {
-                    item.name = "star_border";
-                });
-            }
-        },
-        getCookie: function getCookie(name) {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; ++i) {
-                var pair = cookies[i].trim().split('=');
-                if (pair[0] == name) return pair[1];
-            }
-            return null;
-        },
-        setStars: function setStars(mark) {
-            var self = this,
-                uri = '/api/1/vote/',
-                params = {
-                sessionid: self.csrf,
-                app: self.type,
-                key: self.unique,
-                vote: mark
-            };
-            console.log(params);
-            self.activated = true;
-            self.colorStars(mark);
-            console.log(uri);
-            _jquery2.default.post(uri, params).done(function (data) {
-                console.log(data);
-                self.getRate();
-                self.successAction("Оценка учтена!");
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        }
-    }
-
+    methods: {}
 });
-
-exports.default = Rate;
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _comments = __webpack_require__(22);
-
-var _comments2 = _interopRequireDefault(_comments);
-
-var _materializeCss = __webpack_require__(3);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Comment = _vue2.default.extend({
-    template: _comments2.default,
-    props: ['isLogin', 'type', 'unique'],
-    data: function data() {
-        return {
-            content: "huihui",
-            getter: "",
-            comments: []
-        };
-    },
-    created: function created() {
-        this.getComments();
-    },
-
-    methods: {
-        create: function create() {
-            var _params;
-
-            var self = this,
-                uri = '/messages/' + self.type,
-                id = self.unique,
-                params = (_params = {}, _defineProperty(_params, self.type + 'Id', id), _defineProperty(_params, 'getter', self.getter), _defineProperty(_params, 'content', self.content), _params);
-            self.getter = document.getElementById("getter-name").innerText;
-            self.content = self.content.replace(/^\s*/, '').replace(/\s*$/, '');
-            if (self.content == "") {
-                return;
-            }
-            _jquery2.default.post(uri, params).done(function (data) {
-                self.successAction("Комментарий отправлен!");
-                self.getComments();
-                self.content = "";
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        getComments: function getComments() {
-            var self = this,
-                uri = "/messages/" + self.type + "/get",
-                id = self.unique,
-                params = _defineProperty({}, self.type + 'Id', id);
-            _jquery2.default.get(uri, params).done(function (data) {
-                self.comments = data.response;
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        setName: function setName(name) {
-            this.getter = name;
-            this.content = name + ", " + this.content;
-            document.querySelectorAll(".__comment label")[0].className = " active";
-            document.querySelectorAll(".__comment input")[0].focus();
-        }
-    }
-
-});
-
-exports.default = Comment;
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.author }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.author }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{ item.date_formatted }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
 
 /***/ })
 /******/ ]);
