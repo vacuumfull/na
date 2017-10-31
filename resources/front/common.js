@@ -26,12 +26,16 @@ new Vue({
         $(".button-collapse").sideNav();
     },
     updated(){
-        let elem = document.getElementById('sidenav-overlay');
-        if (elem !== null){
-            elem.addEventListener('click', () => {
-               this.left = -5;
-            })
-        }
+        setTimeout(() => {
+           let elem = document.getElementById('sidenav-overlay');
+            if (elem !== null){
+                elem.addEventListener('click', () => {
+                    this.left = -5;
+                })
+            }
+        }, 300);
+
+
     },
     methods: {
         link(string){
@@ -40,8 +44,10 @@ new Vue({
         move(){
             if (this.left == -5){
                 this.left = 300;
+
             } else {
                 this.left = -5;
+
             }
         },
         openModal(userInfo){

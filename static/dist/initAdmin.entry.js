@@ -33232,12 +33232,14 @@ new _vue2.default({
     updated: function updated() {
         var _this = this;
 
-        var elem = document.getElementById('sidenav-overlay');
-        if (elem !== null) {
-            elem.addEventListener('click', function () {
-                _this.left = -5;
-            });
-        }
+        setTimeout(function () {
+            var elem = document.getElementById('sidenav-overlay');
+            if (elem !== null) {
+                elem.addEventListener('click', function () {
+                    _this.left = -5;
+                });
+            }
+        }, 300);
     },
 
     methods: {

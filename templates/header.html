@@ -10,7 +10,7 @@
                 {% include "menu/base.html" %}
 
                 {% if request.user.is_authenticated %}
-                    <session class="hide">{{ request.session.session_key }}</session>
+                    <div id="session_id" class="__hidden">{{ request.session.session_key }}</div>
                 {% else %}
                     {% include "menu/auth.html" %}
                 {%endif %}

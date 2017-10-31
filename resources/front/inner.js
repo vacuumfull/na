@@ -23,12 +23,14 @@ new Vue({
         dialogInfo: {}
     },
     updated(){
-        let elem = document.getElementById('sidenav-overlay');
-        if (elem !== null){
-            elem.addEventListener('click', () =>{
-                this.left = -5;
-            })
-        }
+        setTimeout(() => {
+            let elem = document.getElementById('sidenav-overlay');
+            if (elem !== null){
+                elem.addEventListener('click', () => {
+                    this.left = -5;
+                })
+            }
+        }, 300);
     },
     mounted(){
         $(".button-collapse").sideNav();

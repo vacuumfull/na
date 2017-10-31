@@ -24,12 +24,14 @@ new Vue({
         $('.tooltipped').tooltip({delay: 50});
     },
     updated(){
-        let elem = document.getElementById('sidenav-overlay');
-        if (elem !== null){
-            elem.addEventListener('click', () =>{
-                this.left = -5;
-            })
-        }
+        setTimeout(() => {
+            let elem = document.getElementById('sidenav-overlay');
+            if (elem !== null){
+                elem.addEventListener('click', () => {
+                    this.left = -5;
+                })
+            }
+        }, 300);
     },
     methods: {
         move(){

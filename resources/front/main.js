@@ -17,12 +17,14 @@ new Vue({
         $(".button-collapse").sideNav();
     },
     updated(){
-        let elem = document.getElementById('sidenav-overlay');
-        if (elem !== null){
-            elem.addEventListener('click', () =>{
-                this.left = -5;
-            })
-        }
+        setTimeout(() => {
+            let elem = document.getElementById('sidenav-overlay');
+            if (elem !== null){
+                elem.addEventListener('click', () => {
+                    this.left = -5;
+                })
+            }
+        }, 300);
     },
     methods: {
         link(string){

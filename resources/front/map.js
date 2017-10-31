@@ -22,12 +22,14 @@ new Vue({
         })
     },
     updated(){
-        let elem = document.getElementById('sidenav-overlay');
-        if (elem !== null){
-            elem.addEventListener('click', () =>{
-                this.left = -5;
-            })
-        }
+        setTimeout(() => {
+            let elem = document.getElementById('sidenav-overlay');
+            if (elem !== null){
+                elem.addEventListener('click', () => {
+                    this.left = -5;
+                })
+            }
+        }, 300);
     },
     mounted(){
         $('#left_message_window').modal();
