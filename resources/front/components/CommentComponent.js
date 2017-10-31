@@ -8,7 +8,7 @@ const Comment = Vue.extend({
     props: [ 'isLogin',  'type', 'unique'],
     data(){
         return {
-            content: "huihui",
+            content: "",
             getter: "",
             comments: [],
         }
@@ -19,14 +19,13 @@ const Comment = Vue.extend({
     methods: {
         create(){
             let self = this,
-                uri = '/messages/' + self.type,
-                id = self.unique,
                 params = {
                     [self.type + 'Id']: id,
-                    getter:  self.getter,
-                    content:  self.content
-                }
-            self.getter = document.getElementById("getter-name").innerText
+                    getter: self.getter,
+                    content: self.content
+                },
+                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
+            self.getter = document.getElementById("getter-name").innerText;
             self.content = self.content.replace(/^\s*/,'').replace(/\s*$/,'')
             if (self.content == ""){
                 return;
@@ -51,6 +50,9 @@ const Comment = Vue.extend({
             }).fail((error) => {
                 console.log(error)
             })
+        },
+        getSess(){
+            return document.getElementById('session_id').innerHTML;
         },
         successAction(message){
             Materialize.toast(message, 4000);
