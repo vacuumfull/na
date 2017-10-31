@@ -19,6 +19,10 @@
 <body class="grey lighten-3">
     <div id="index">
         {% include "header.html" %}
+        {% if request.user.is_authenticated %}
+            {% include "menu/user_menu.html" %}
+        {%endif %}
+
         <div class="wrapper">
             {% block content %}
             {% endblock content %}
@@ -27,6 +31,7 @@
         {% if user.is_authenticated  %}
             {% include "menu/left_menu.html" %}
             {% include "menu/left_function.html" %}
+            <left-modal v-bind:user-info="userInfo"></left-modal>
         {% endif %}
     </div>
 

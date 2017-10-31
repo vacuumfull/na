@@ -18,7 +18,7 @@
                     </p>
                     {% endcomment %}
                     <article class="__margin-bottom_xl __margin-top_xl">
-                        <p>{{ blog.annotation }}</p>
+                        <p>{{ blog.annotacdtion }}</p>
                         <p>{{ blog.content|safe }}</p>
                     </article>
                     <p class="__margin-bottom_xs __margin-top_xs">
@@ -34,15 +34,9 @@
                 </div>
             </div>
         </div>
-        {% if user.is_authenticated %}
-            <rate-component is-login="true" unique="{{ blog.id }}" type="blog"></rate-component>
-            <hr>
-            <comment-component is-login="true" unique="{{ blog.id }}" type="blog"></comment-component>
-        {% else %}
-            <rate-component is-login="false" unique="{{ blog.id }}" type="blog"></rate-component>
-            <hr>
-            <comment-component is-login="false" unique="{{ blog.id }}" type="blog"></comment-component>
-        {% endif %}
+        <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></rate-component>
+        <hr>
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></comment-component>
     </div>
 </div>
 

@@ -30,6 +30,7 @@ const Rate = Vue.extend({
         this.getRate()
         this.csrf =  this.getCookie('csrftoken');
         console.log(this.csrf);
+        console.log(this.isLogin);
     },
     methods: {
         getRate(){

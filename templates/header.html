@@ -8,8 +8,8 @@
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 {% include "menu/base.html" %}
+
                 {% if request.user.is_authenticated %}
-                    {% include "menu/user.html" %}
                     <session class="hide">{{ request.session.session_key }}</session>
                 {% else %}
                     {% include "menu/auth.html" %}

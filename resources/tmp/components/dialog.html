@@ -1,132 +1,42 @@
-<li v-if="isLogin" class="__menu_messages">
-    <div v-if="userRole > 1 " id="dialog_window" class="modal __modal __advanced">
-        <div class="modal-content">
-            <h4 v-if="!showGetterName" class="black-text">Диалоговое окно</h4>
-            <h4 v-if="showGetterName" class="black-text">Диалог c {{ selectedGetter }}</h4>
-            <div class="dialog-field">
-                <div class="row">
-                    <div class="col s4 __border_right">
-                        <div v-if="showSenders" class="senders">
-                            <div class="collection">
-                                <a v-on:click="openMessages(author.id, author.name)" href="#!" class="collection-item" v-for="author in authors">{{ author.name }}<span class="badge right new ">{{ author.count }}</span></a>
-                            </div>
-                        </div>
-                        <div v-if="!showSenders" class="__filtered" >
-                            <div class="__filter __filtered __margin-bottom_m">
-                           <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="filter_admins" type="checkbox" v-model="filterAdmin" v-on:change="getUsers">
-                                <label for="filter_admins">админы</label>
-                           </span>
-                                <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="filter_orgs" type="checkbox" v-model="filterOrganizer" v-on:change="getUsers">
-                                <label for="filter_orgs">орги</label>
-                            </span>
-                                <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="filter_users" type="checkbox" v-model="filterUser" v-on:change="getUsers">
-                                <label for="filter_users">юзеры</label>
-                            </span>
-                                <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="filter_artists" type="checkbox" v-model="filterArtist" v-on:change="getUsers">
-                                <label for="filter_artists">музыканты</label>
-                            </span>
-                                <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="filter_deputy" type="checkbox" v-model="filterDeputy" v-on:change="getUsers">
-                                <label for="filter_deputy">представители</label>
-                            </span>
-                            </div>
-                            <div class="collection __usersfield" :class="{ __overflow_y: showScroll }">
-                                <a v-for="user in users" :id="user.id" class="collection-item" v-on:click="selectGetter(user.name)">
-                                    {{ user.name }}
-                                    <span class="__rolename">{{ user.rolename }}</span>
-                                    <span v-if="selectAll" class="__absolute __all_icon"> <i class="material-icons dp48">bubble_chart</i></span>
-                                </a>
-                            </div>
-                            <div class="__filtered">
-                             <span class="__inline-block __margin-right_m __filter_elem">
-                                <input id="select_all" type="checkbox" v-model="selectAll" v-on:change="setForAll">
-                                <label for="select_all">выбрать всех</label>
-                            </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s8">
-                        <p class="__message black-text __margin-top_xs __margin-bottom_xs" v-for="message in activeMessages">
-                            <span class="blue-text text-darken-5" >{{ message.time }}</span>: <span v-html="message.content"></span>
-                        </p>
-                        <div id="img-field" class="__message_img">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div id="dialog_window" class="modal __modal __advanced">
+    <div class="modal-content">
+        <h4 v-if="!isSelected" class="black-text">Диалоговое окно</h4>
+        <h4 v-if="isSelected" class="black-text">Диалог c </h4>
+        <div class="dialog-field">
             <div class="row">
-                <form class="__dialog-field col s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <textarea class="materialize-textarea black-text" v-model="message"></textarea>
-                            <label>Ваше сообщение</label>
+                <div class="col s4 __border_right">
+                    <div class="senders">
+                        <div class="collection">
+                            <a v-on:click="openMessages(author.name)" href="#!" class="collection-item" v-for="sender in senders">
+                                {{ sender.name }}
+                                <span class="badge right new ">{{ sender.messages.length }}</span>
+                            </a>
                         </div>
-                    </div>
-                </form>
-                <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: !showGetterName}">
-                    &nbsp;&nbsp;Отправить
-                    <i class="material-icons right dp48">send</i>
-                </a>
-                <div v-if="showGetterName" class="file-field input-field right">
-                    <div class="btn-large __download_btn">
-                        <span>Добавить изображение</span>
-                        <i class="material-icons right dp48">photo</i>
-                        <input type="file" v-on:change="encodeImageFileAsURL($event)">
                     </div>
                 </div>
             </div>
         </div>
-        <a v-on:click="closeModal" class="modal-action black-text __close-btn"><i class="material-icons right dp48">clear</i></a>
-    </div>
-
-    <div v-if="userRole == 1" id="dialog_window" class="modal __modal">
-        <div class="modal-content">
-            <h4 v-if="!showGetterName" class="black-text">Диалоговое окно</h4>
-            <h4 v-if="showGetterName" class="black-text">Диалог c {{ selectedGetter }}</h4>
-            <div class="dialog-field">
+        <div class="row">
+            <form class="__dialog-field col s12">
                 <div class="row">
-                    <div class="col s4 __border_right">
-                        <div v-if="showSenders" class="senders">
-                            <div class="collection">
-                                <a v-on:click="openMessages(author.id, author.name)" href="#!" class="collection-item" v-for="author in authors">{{ author.name }}<span class="badge right new ">{{ author.count }}</span></a>
-                            </div>
-                        </div>
-                        <div v-if="!showSenders" >
-                            <div class="collection __usersfield" :class="{ __overflow_y: showScroll }">
-                                <a v-for="user in users" :id="user.id" class="collection-item" v-on:click="selectGetter(user.name)">{{ user.name }}</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col s8">
-                        <p class="__message black-text __margin-top_xs __margin-bottom_xs" v-for="message in activeMessages"><span class="blue-text text-darken-5" >{{ message.time }}</span>: {{ message.content }}</p>
+                    <div class="input-field col s12">
+                        <textarea class="materialize-textarea black-text" v-model="message"></textarea>
+                        <label>Ваше сообщение</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <form class="__dialog-field col s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <textarea class="materialize-textarea black-text" v-model="message"></textarea>
-                            <label>Ваше сообщение</label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: !showGetterName}">
+            </form>
+            <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: !isSelected }">
                 &nbsp;&nbsp;Отправить
                 <i class="material-icons right dp48">send</i>
             </a>
-        </div>
-        <div class="modal-footer">
-            <a  v-on:click="closeModal" class="modal-action black-text __close-btn"><i class="material-icons right dp48">clear</i></a>
+            <div class="file-field input-field right">
+                <div class="btn-large __download_btn">
+                    <span>Добавить изображение</span>
+                    <i class="material-icons right dp48">photo</i>
+                    <input type="file" v-on:change="encodeImageFileAsURL($event)">
+                </div>
+            </div>
         </div>
     </div>
-    <messages v-on:dialog="openDialog"></messages>
-</li>
-
+    <a v-on:click="closeModal" class="modal-action black-text __close-btn"><i class="material-icons right dp48">clear</i></a>
+</div>

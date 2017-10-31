@@ -36,17 +36,9 @@
                 </div>
             </div>
         </div>
-        
-        {% if user.is_authenticated %}
-            <rate-component is-login="true" unique="{{ place.id }}"  type="place"></rate-component>
-            <hr>
-            <comment-component is-login="true"  unique="{{ place.id }}"  type="place"></comment-component>
-        {% else %}
-            <rate-component is-login="false"  unique="{{ place.id }}"  type="place"></rate-component>
-            <hr>
-            <comment-component is-login="false"  unique="{{ place.id }}"  type="place"></comment-component>
-        {% endif %}
-
+        <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
+        <hr>
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
     </div>
 </div>
 

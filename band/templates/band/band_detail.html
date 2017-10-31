@@ -21,13 +21,8 @@
                 </div>
             </div>
         </div>
-        {% if user.is_authenticated %}
-            <hr>
-            <comment-component is-login="true" unique="{{ band.id }}" type="place"></comment-component>
-        {% else %}
-            <hr>
-            <comment-component is-login="false" unique="{{ band.id }}" type="place"></comment-component>
-        {% endif %}
+        <hr>
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ band.id }}" type="band"></comment-component>
     </div>
 </div>
 

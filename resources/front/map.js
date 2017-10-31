@@ -9,7 +9,8 @@ new Vue({
         'dialog-component': Dialog,
     },
     data: {
-        places: []
+        places: [],
+        left: -5
     },
     created(){
         GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q'
@@ -19,6 +20,14 @@ new Vue({
                 zoom: 12
             })
         })
+    },
+    updated(){
+        let elem = document.getElementById('sidenav-overlay');
+        if (elem !== null){
+            elem.addEventListener('click', () =>{
+                this.left = -5;
+            })
+        }
     },
     mounted(){
         $('#left_message_window').modal();
@@ -45,6 +54,13 @@ new Vue({
                 })
                 this.setLocations(map);
             })
+        },
+        openMenu(){
+            if (this.left == -5){
+                this.left = 300;
+            } else {
+                this.left = -5;
+            }
         },
         setLocations(map){
             let self = this,
