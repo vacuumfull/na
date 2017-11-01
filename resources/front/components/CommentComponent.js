@@ -28,7 +28,6 @@ const Comment = Vue.extend({
                 return;
             }
             $.post(uri, params).done((data) => {
-                console.log(data);
                 self.successAction("Комментарий отправлен!")
                 self.getComments()
                 self.content = ""
@@ -38,17 +37,20 @@ const Comment = Vue.extend({
         },
         getComments(){
             let self = this,
-                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
-
-            $.get(uri, params).done((data) => {
-                console.log(data);
-                self.comments = data.response
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.getSess() + '/' + self.offset;
+            $.get(uri).done((data) => {
+                self.comments = data.comments
             }).fail((error) => {
                 console.log(error)
             })
         },
         getSess(){
             return document.getElementById('session_id').innerHTML;
+        },
+        formatDate(dateString){
+            let date = new Date(dateString);
+            let month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
+            return date.getHours() + ":" + date.getMinutes() + "  " + month + "/" + (parseInt(date.getMonth()) + 1) + "/" + date.getFullYear();
         },
         successAction(message){
             Materialize.toast(message, 4000);
@@ -63,4 +65,4 @@ const Comment = Vue.extend({
 
 })
 
-export default Comment
+export default Comment  

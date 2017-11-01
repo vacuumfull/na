@@ -33339,7 +33339,6 @@ var Rate = _vue2.default.extend({
             return document.getElementById('session_id').innerHTML;
         },
         setStars: function setStars(mark) {
-            console.log(mark);
             var self = this,
                 uri = '/api/1/vote/',
                 params = {
@@ -33351,10 +33350,9 @@ var Rate = _vue2.default.extend({
 
             self.activated = true;
             self.colorStars(mark);
-            console.log(params);
+
             _jquery2.default.post(uri, params).done(function (data) {
                 if (data.is_vote) {
-                    console.log(data);
                     self.colorStars(data.value);
                     self.successAction("Оценка учтена!");
                     self.getRate();
@@ -33407,15 +33405,13 @@ var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var Comment = _vue2.default.extend({
     template: _comments2.default,
     props: ['isLogin', 'type', 'unique'],
     data: function data() {
         return {
-            content: "huihui",
-            getter: "",
+            content: "",
+            offset: 0,
             comments: []
         };
     },
@@ -33425,13 +33421,11 @@ var Comment = _vue2.default.extend({
 
     methods: {
         create: function create() {
-            var _params;
-
             var self = this,
-                uri = '/messages/' + self.type,
-                id = self.unique,
-                params = (_params = {}, _defineProperty(_params, self.type + 'Id', id), _defineProperty(_params, 'getter', self.getter), _defineProperty(_params, 'content', self.content), _params);
-            self.getter = document.getElementById("getter-name").innerText;
+                params = {
+                content: self.content
+            },
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
             self.content = self.content.replace(/^\s*/, '').replace(/\s*$/, '');
             if (self.content == "") {
                 return;
@@ -33446,14 +33440,22 @@ var Comment = _vue2.default.extend({
         },
         getComments: function getComments() {
             var self = this,
-                uri = "/messages/" + self.type + "/get",
-                id = self.unique,
-                params = _defineProperty({}, self.type + 'Id', id);
-            _jquery2.default.get(uri, params).done(function (data) {
-                self.comments = data.response;
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.getSess() + '/' + self.offset;
+            _jquery2.default.get(uri).done(function (data) {
+                self.comments = data.comments;
             }).fail(function (error) {
                 console.log(error);
             });
+        },
+        getSess: function getSess() {
+            return document.getElementById('session_id').innerHTML;
+        },
+        formatDate: function formatDate(dateString) {
+            var date = new Date(dateString);
+            var month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
+            console.log(month);
+            date = date.getHours() + ":" + date.getMinutes() + "  " + month + "/" + (parseInt(date.getMonth()) + 1) + "/" + date.getFullYear();
+            return date;
         },
         successAction: function successAction(message) {
             _materializeCss2.default.toast(message, 4000);
@@ -33474,7 +33476,7 @@ exports.default = Comment;
 /* 25 */
 /***/ (function(module, exports) {
 
-module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.author }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.author }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{ item.date_formatted }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
+module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
 
 /***/ })
 /******/ ]);

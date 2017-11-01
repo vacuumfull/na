@@ -24,12 +24,12 @@
             <div v-for="item in comments" class="__comment-each __margin-bottom_l __margin-top_m">
                 <p class="__margin-bottom_xs">
                     <b v-if="isLogin" class="__pointer"  v-on:click="setName(item.author)">
-                        {{ item.author }}
+                        {{ item.user }}
                     </b>
                     <b  v-if="!isLogin">
-                        {{ item.author }}
+                        {{ item.user }}
                     </b>
-                    написал в <span class="__time_color"><strong>{{ item.date_formatted }}</strong></span>:
+                    написал в <span class="__time_color"><strong>{{  formatDate(item.datetime) }}</strong></span>:
                 </p>
                 <!--p v-if="item.getter != null" class="__margin-bottom_xs">
                     <b  @if (Auth::user())  class="__pointer" v-on:click="setName(item.author)" @endif>@{{ item.author }}</b> ответил пользователю <b class=" blue-grey-text text-darken-2">@{{ item.getter }}</b> в <span class="__time_color"><strong>@{{ item.date_formatted }}</strong></span>:
