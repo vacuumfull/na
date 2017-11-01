@@ -9,7 +9,7 @@ const Comment = Vue.extend({
     data(){
         return {
             content: "",
-            getter: "",
+            offset: 0,
             comments: [],
         }
     },
@@ -20,17 +20,15 @@ const Comment = Vue.extend({
         create(){
             let self = this,
                 params = {
-                    [self.type + 'Id']: id,
-                    getter: self.getter,
                     content: self.content
                 },
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
-            self.getter = document.getElementById("getter-name").innerText;
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
             self.content = self.content.replace(/^\s*/,'').replace(/\s*$/,'')
             if (self.content == ""){
                 return;
             }
             $.post(uri, params).done((data) => {
+                console.log(data);
                 self.successAction("Комментарий отправлен!")
                 self.getComments()
                 self.content = ""
@@ -40,12 +38,10 @@ const Comment = Vue.extend({
         },
         getComments(){
             let self = this,
-                uri = "/messages/"+ self.type +"/get",
-                id = self.unique,
-                params = {
-                    [self.type + 'Id'] : id
-                };
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
+
             $.get(uri, params).done((data) => {
+                console.log(data);
                 self.comments = data.response
             }).fail((error) => {
                 console.log(error)

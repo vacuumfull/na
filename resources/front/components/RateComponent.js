@@ -63,7 +63,6 @@ const Rate = Vue.extend({
            return document.getElementById('session_id').innerHTML;
         },  
         setStars(mark){
-            console.log(mark);
             let self = this,
                 uri = '/api/1/vote/',
                 params = {
@@ -75,10 +74,9 @@ const Rate = Vue.extend({
 
             self.activated = true
             self.colorStars(mark)
-            console.log(params);
+
             $.post(uri, params).done(data => {
                 if (data.is_vote){
-                    console.log(data)
                     self.colorStars(data.value);
                     self.successAction("Оценка учтена!");
                     self.getRate()
