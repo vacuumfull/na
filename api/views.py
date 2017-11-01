@@ -7,7 +7,7 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from blog.models import Blog, Comment as BlogComment, Rating as BlogRating
+from blog.api import blog_rating, vote_blog_rating, blog_comment
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -16,7 +16,7 @@ def get_rating(request, sessionid: str, app: str, key: int):
 
     result = {}
     if app == 'blog':
-        result = BlogRating.objects.average(key, user)
+        result = blog_rating(key, user)
 
     return JsonResponse(result)
 
@@ -32,18 +32,13 @@ def vote_rating(request):
     user = _get_user(sessionid)
 
     if not user:
-        return JsonResponse({'error': 'User must be authenticated!'})
+        result = JsonResponse({'error': 'User must be authenticated!'})
 
-    try:
-        if app == 'blog':
-            blog = Blog.objects.get(pk=key)
-            BlogRating.objects.update_or_create(
-                blog=blog, user=user,
-                defaults={'value': vote})
-    except (ObjectDoesNotExist, IntegrityError):
-        pass
+    if app == 'blog':
+        vote_blog_rating(key, user, vote)
 
-    return get_rating(request, sessionid, app, key)
+    result = get_rating(request, sessionid, app, key)
+    return result
 
 
 def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
@@ -53,7 +48,7 @@ def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
     }
 
     if app == 'blog':
-        queryset = BlogComment.objects.get_last_comments(key, int(offset))
+        queryset = blog_comment(key, offset)
 
     for query in queryset:
         result['comments'].append({
