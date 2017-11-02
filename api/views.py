@@ -1,13 +1,11 @@
 """Under api views."""
 from django.contrib.auth.models import User
 from django.contrib.sessions.backends.db import SessionStore
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.utils import IntegrityError
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from blog.api import blog_rating, vote_blog_rating, blog_comment
+import blog.api
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -15,8 +13,7 @@ def get_rating(request, sessionid: str, app: str, key: int):
     user = _get_user(sessionid)
 
     result = {}
-    if app == 'blog':
-        result = blog_rating(key, user)
+    result = getattr(_load_module(app), 'get_rating')(key, user)
 
     return JsonResponse(result)
 
@@ -34,8 +31,7 @@ def vote_rating(request):
     if not user:
         result = JsonResponse({'error': 'User must be authenticated!'})
 
-    if app == 'blog':
-        vote_blog_rating(key, user, vote)
+    getattr(_load_module(app), 'vote_rating')(key, user, vote)
 
     result = get_rating(request, sessionid, app, key)
     return result
@@ -47,8 +43,7 @@ def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
         'comments': []
     }
 
-    if app == 'blog':
-        queryset = blog_comment(key, offset)
+    queryset = getattr(_load_module(app), 'get_comment')(key, offset)
 
     for query in queryset:
         result['comments'].append({
@@ -68,3 +63,12 @@ def _get_user(sessionid):
         user = None
 
     return user
+
+
+def _load_module(module_name: str) -> object:
+    """Load module api from string."""
+    module_dict = {
+        'blog': blog.api,
+    }
+
+    return module_dict[module_name]
