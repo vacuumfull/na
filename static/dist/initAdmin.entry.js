@@ -33168,7 +33168,235 @@ exports.default = LeftModal;
 module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div class=\"modal-content\">\n        <h4>Диалог с <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s12\">\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n        </div>\n\n        <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n            &nbsp;&nbsp;Отправить\n            <i class=\"material-icons right dp48\">send</i>\n        </a>\n    </div>\n    <div class=\"modal-footer\">\n        <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>"
 
 /***/ }),
-/* 14 */,
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
+
+	if (root === null) {
+		throw new Error('Google-maps package can be used only in browser');
+	}
+
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else if (typeof exports === 'object') {
+		module.exports = factory();
+	} else {
+		root.GoogleMapsLoader = factory();
+	}
+
+})(typeof window !== 'undefined' ? window : null, function() {
+
+
+	'use strict';
+
+
+	var googleVersion = '3.18';
+
+	var script = null;
+
+	var google = null;
+
+	var loading = false;
+
+	var callbacks = [];
+
+	var onLoadEvents = [];
+
+	var originalCreateLoaderMethod = null;
+
+
+	var GoogleMapsLoader = {};
+
+
+	GoogleMapsLoader.URL = 'https://maps.googleapis.com/maps/api/js';
+
+	GoogleMapsLoader.KEY = null;
+
+	GoogleMapsLoader.LIBRARIES = [];
+
+	GoogleMapsLoader.CLIENT = null;
+
+	GoogleMapsLoader.CHANNEL = null;
+
+	GoogleMapsLoader.LANGUAGE = null;
+
+	GoogleMapsLoader.REGION = null;
+
+	GoogleMapsLoader.VERSION = googleVersion;
+
+	GoogleMapsLoader.WINDOW_CALLBACK_NAME = '__google_maps_api_provider_initializator__';
+
+
+	GoogleMapsLoader._googleMockApiObject = {};
+
+
+	GoogleMapsLoader.load = function(fn) {
+		if (google === null) {
+			if (loading === true) {
+				if (fn) {
+					callbacks.push(fn);
+				}
+			} else {
+				loading = true;
+
+				window[GoogleMapsLoader.WINDOW_CALLBACK_NAME] = function() {
+					ready(fn);
+				};
+
+				GoogleMapsLoader.createLoader();
+			}
+		} else if (fn) {
+			fn(google);
+		}
+	};
+
+
+	GoogleMapsLoader.createLoader = function() {
+		script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = GoogleMapsLoader.createUrl();
+
+		document.body.appendChild(script);
+	};
+
+
+	GoogleMapsLoader.isLoaded = function() {
+		return google !== null;
+	};
+
+
+	GoogleMapsLoader.createUrl = function() {
+		var url = GoogleMapsLoader.URL;
+
+		url += '?callback=' + GoogleMapsLoader.WINDOW_CALLBACK_NAME;
+
+		if (GoogleMapsLoader.KEY) {
+			url += '&key=' + GoogleMapsLoader.KEY;
+		}
+
+		if (GoogleMapsLoader.LIBRARIES.length > 0) {
+			url += '&libraries=' + GoogleMapsLoader.LIBRARIES.join(',');
+		}
+
+		if (GoogleMapsLoader.CLIENT) {
+			url += '&client=' + GoogleMapsLoader.CLIENT + '&v=' + GoogleMapsLoader.VERSION;
+		}
+
+		if (GoogleMapsLoader.CHANNEL) {
+			url += '&channel=' + GoogleMapsLoader.CHANNEL;
+		}
+
+		if (GoogleMapsLoader.LANGUAGE) {
+			url += '&language=' + GoogleMapsLoader.LANGUAGE;
+		}
+
+		if (GoogleMapsLoader.REGION) {
+			url += '&region=' + GoogleMapsLoader.REGION;
+		}
+
+		return url;
+	};
+
+
+	GoogleMapsLoader.release = function(fn) {
+		var release = function() {
+			GoogleMapsLoader.KEY = null;
+			GoogleMapsLoader.LIBRARIES = [];
+			GoogleMapsLoader.CLIENT = null;
+			GoogleMapsLoader.CHANNEL = null;
+			GoogleMapsLoader.LANGUAGE = null;
+			GoogleMapsLoader.REGION = null;
+			GoogleMapsLoader.VERSION = googleVersion;
+
+			google = null;
+			loading = false;
+			callbacks = [];
+			onLoadEvents = [];
+
+			if (typeof window.google !== 'undefined') {
+				delete window.google;
+			}
+
+			if (typeof window[GoogleMapsLoader.WINDOW_CALLBACK_NAME] !== 'undefined') {
+				delete window[GoogleMapsLoader.WINDOW_CALLBACK_NAME];
+			}
+
+			if (originalCreateLoaderMethod !== null) {
+				GoogleMapsLoader.createLoader = originalCreateLoaderMethod;
+				originalCreateLoaderMethod = null;
+			}
+
+			if (script !== null) {
+				script.parentElement.removeChild(script);
+				script = null;
+			}
+
+			if (fn) {
+				fn();
+			}
+		};
+
+		if (loading) {
+			GoogleMapsLoader.load(function() {
+				release();
+			});
+		} else {
+			release();
+		}
+	};
+
+
+	GoogleMapsLoader.onLoad = function(fn) {
+		onLoadEvents.push(fn);
+	};
+
+
+	GoogleMapsLoader.makeMock = function() {
+		originalCreateLoaderMethod = GoogleMapsLoader.createLoader;
+
+		GoogleMapsLoader.createLoader = function() {
+			window.google = GoogleMapsLoader._googleMockApiObject;
+			window[GoogleMapsLoader.WINDOW_CALLBACK_NAME]();
+		};
+	};
+
+
+	var ready = function(fn) {
+		var i;
+
+		loading = false;
+
+		if (google === null) {
+			google = window.google;
+		}
+
+		for (i = 0; i < onLoadEvents.length; i++) {
+			onLoadEvents[i](google);
+		}
+
+		if (fn) {
+			fn(google);
+		}
+
+		for (i = 0; i < callbacks.length; i++) {
+			callbacks[i](google);
+		}
+
+		callbacks = [];
+	};
+
+
+	return GoogleMapsLoader;
+
+});
+
+
+/***/ }),
 /* 15 */,
 /* 16 */,
 /* 17 */,
@@ -33208,6 +33436,10 @@ var _LeftModalComponent = __webpack_require__(12);
 
 var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
+var _MapComponent = __webpack_require__(29);
+
+var _MapComponent2 = _interopRequireDefault(_MapComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
@@ -33215,28 +33447,40 @@ new _vue2.default({
     components: {
         'dialog-component': _DialogComponent2.default,
         'left-messages': _LeftMessagesComponent2.default,
-        'left-modal': _LeftModalComponent2.default
+        'left-modal': _LeftModalComponent2.default,
+        'map-component': _MapComponent2.default
     },
     data: {
         left: -5,
         userInfo: {
             name: ""
         },
+        showModal: false,
+        showMap: false,
         dialogInfo: {}
     },
     mounted: function mounted() {
+        var _this = this;
+
         (0, _jquery2.default)(".button-collapse").sideNav();
         (0, _jquery2.default)('select').material_select();
         (0, _jquery2.default)('.tooltipped').tooltip({ delay: 50 });
+        setTimeout(function () {
+            var mapInput = document.querySelectorAll('#map-coordinates > div > input')[0];
+            mapInput.addEventListener('click', function () {
+                _this.showModal = !_this.showModal;
+                _this.showMap = true;
+            });
+        }, 200);
     },
     updated: function updated() {
-        var _this = this;
+        var _this2 = this;
 
         setTimeout(function () {
             var elem = document.getElementById('sidenav-overlay');
             if (elem !== null) {
                 elem.addEventListener('click', function () {
-                    _this.left = -5;
+                    _this2.left = -5;
                 });
             }
         }, 300);
@@ -33255,9 +33499,130 @@ new _vue2.default({
         },
         openDialog: function openDialog() {
             (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        setCoordinates: function setCoordinates(coordinates) {
+            document.querySelectorAll('#map-coordinates > div > input')[0].value = coordinates;
         }
     }
 });
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _googleMaps = __webpack_require__(14);
+
+var _googleMaps2 = _interopRequireDefault(_googleMaps);
+
+var _map = __webpack_require__(30);
+
+var _map2 = _interopRequireDefault(_map);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MapComponent = _vue2.default.extend({
+    template: _map2.default,
+    props: ['showMap'],
+    data: function data() {
+        return {
+            map: {},
+            marker: null,
+            coordinates: "",
+            position: {
+                lat: 0,
+                lng: 0
+            },
+            icon: "",
+            title: ""
+        };
+    },
+
+    watch: {
+        coordinates: function coordinates(val) {
+            console.log(val);
+            this.$emit('set-coordinates', val);
+        },
+        showMap: function showMap(val) {
+            var self = this;
+            if (val) {
+                _googleMaps2.default.load(function (google) {
+
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: 59.93961241484262, lng: 30.321905688476562 },
+                        zoom: 12
+                    });
+
+                    google.maps.event.addListener(map, "rightclick", function (event) {
+
+                        if (self.marker !== null) {
+                            self.marker.setMap(null);
+                        }
+
+                        var lat = event.latLng.lat();
+                        var lng = event.latLng.lng();
+                        self.position = {
+                            lat: lat,
+                            lng: lng
+                        };
+                        self.coordinates = lat + ", " + lng;
+
+                        self.marker = new google.maps.Marker({
+                            position: self.position,
+                            map: map,
+                            title: self.title,
+                            draggable: true
+                        });
+                    });
+                });
+            }
+        }
+    },
+    mounted: function mounted() {
+        _googleMaps2.default.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q';
+    },
+    created: function created() {},
+    setMarkerIcon: function setMarkerIcon() {
+        var self = this;
+        _googleMaps2.default.load(function (google) {
+            var shape = {
+                coords: [1, 1, 1, 34, 32, 33, 34, 1],
+                type: 'poly'
+            };
+            var image = {
+                url: self.icon,
+                size: new google.maps.Size(40, 44),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(0, 44)
+            };
+            marker = new google.maps.Marker({
+                position: self.position,
+                icon: image,
+                shape: shape,
+                map: map,
+                title: self.title,
+                draggable: true
+            });
+        });
+    }
+});
+exports.default = MapComponent;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"map\"></div>"
 
 /***/ })
 /******/ ]);

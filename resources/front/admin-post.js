@@ -7,6 +7,9 @@ new Vue({
     components: {
         'dialog-component': Dialog,
     }, 
+    data:{
+
+    },
     mounted(){
         $('select').material_select();
         $('.tooltipped').tooltip({delay: 50});

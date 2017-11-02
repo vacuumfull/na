@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33175,7 +33175,8 @@ module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div cla
 /* 18 */,
 /* 19 */,
 /* 20 */,
-/* 21 */
+/* 21 */,
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33201,11 +33202,11 @@ var _LeftModalComponent = __webpack_require__(12);
 
 var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
-var _RateComponent = __webpack_require__(22);
+var _RateComponent = __webpack_require__(23);
 
 var _RateComponent2 = _interopRequireDefault(_RateComponent);
 
-var _CommentComponent = __webpack_require__(24);
+var _CommentComponent = __webpack_require__(25);
 
 var _CommentComponent2 = _interopRequireDefault(_CommentComponent);
 
@@ -33261,7 +33262,7 @@ new _vue2.default({
 });
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33283,7 +33284,7 @@ var _materializeCss = __webpack_require__(2);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _rating = __webpack_require__(23);
+var _rating = __webpack_require__(24);
 
 var _rating2 = _interopRequireDefault(_rating);
 
@@ -33371,13 +33372,13 @@ var Rate = _vue2.default.extend({
 exports.default = Rate;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33395,7 +33396,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _comments = __webpack_require__(25);
+var _comments = __webpack_require__(26);
 
 var _comments2 = _interopRequireDefault(_comments);
 
@@ -33453,9 +33454,7 @@ var Comment = _vue2.default.extend({
         formatDate: function formatDate(dateString) {
             var date = new Date(dateString);
             var month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
-            console.log(month);
-            date = date.getHours() + ":" + date.getMinutes() + "  " + month + "/" + (parseInt(date.getMonth()) + 1) + "/" + date.getFullYear();
-            return date;
+            return date.getHours() + ":" + date.getMinutes() + "  " + month + "/" + (parseInt(date.getMonth()) + 1) + "/" + date.getFullYear();
         },
         successAction: function successAction(message) {
             _materializeCss2.default.toast(message, 4000);
@@ -33473,7 +33472,7 @@ var Comment = _vue2.default.extend({
 exports.default = Comment;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"

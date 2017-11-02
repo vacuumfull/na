@@ -3,6 +3,8 @@ import $ from 'jquery';
 import Dialog from './components/DialogComponent';
 import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
+import MapComponent from './components/MapComponent';
+
 
 new Vue({
     el: '#index',
@@ -10,18 +12,28 @@ new Vue({
         'dialog-component': Dialog,
         'left-messages': LeftMessages,
         'left-modal': LeftModal,
+        'map-component': MapComponent,
     },
     data: {
         left: -5,
         userInfo: {
             name: ""
         },
+        showModal:  false,
+        showMap: false,
         dialogInfo: {}
     },
     mounted(){
         $(".button-collapse").sideNav();
         $('select').material_select();
         $('.tooltipped').tooltip({delay: 50});
+        setTimeout(() => {
+            let mapInput = document.querySelectorAll('#map-coordinates > div > input')[0];
+            mapInput.addEventListener('click', () => {
+                this.showModal = !this.showModal;
+                this.showMap = true;
+            })
+        }, 200);
     },
     updated(){
         setTimeout(() => {
@@ -46,6 +58,9 @@ new Vue({
         },
         openDialog(){
             $('#dialog_window').modal('open');
+        },
+        setCoordinates(coordinates){
+            document.querySelectorAll('#map-coordinates > div > input')[0].value = coordinates;
         }
     }
 });

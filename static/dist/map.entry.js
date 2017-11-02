@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 27);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33015,163 +33015,7 @@ module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\
 /* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _googleMaps = __webpack_require__(27);
-
-var _googleMaps2 = _interopRequireDefault(_googleMaps);
-
-var _DialogComponent = __webpack_require__(7);
-
-var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-new _vue2.default({
-    el: '#index',
-    components: {
-        'dialog-component': _DialogComponent2.default
-    },
-    data: {
-        places: [],
-        left: -5
-    },
-    created: function created() {
-        _googleMaps2.default.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q';
-        _googleMaps2.default.load(function (google) {
-            new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 59.93961241484262, lng: 30.321905688476562 },
-                zoom: 12
-            });
-        });
-    },
-    updated: function updated() {
-        var _this = this;
-
-        setTimeout(function () {
-            var elem = document.getElementById('sidenav-overlay');
-            if (elem !== null) {
-                elem.addEventListener('click', function () {
-                    _this.left = -5;
-                });
-            }
-        }, 300);
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
-        (0, _jquery2.default)(".button-collapse").sideNav();
-    },
-
-    methods: {
-        getPlaces: function getPlaces() {
-            var self = this,
-                uri = "/map/api";
-            _jquery2.default.get(uri).done(function (data) {
-                self.places = data.response;
-                self.setMap();
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        setMap: function setMap() {
-            var _this2 = this;
-
-            _googleMaps2.default.load(function (google) {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: 59.93961241484262, lng: 30.321905688476562 },
-                    zoom: 12
-                });
-                _this2.setLocations(map);
-            });
-        },
-        openMenu: function openMenu() {
-            if (this.left == -5) {
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
-        },
-        setLocations: function setLocations(map) {
-            var self = this,
-                infowindow = new google.maps.InfoWindow();
-            self.places.forEach(function (item) {
-                var activeEvents = "",
-                    marker = void 0,
-                    coords = item.coordinates.split(","),
-                    position = {
-                    lat: parseFloat(coords[0]),
-                    lng: parseFloat(coords[1])
-                };
-
-                if (item.icon === null) {
-                    marker = new google.maps.Marker({
-                        position: position,
-                        map: map,
-                        title: item.title,
-                        draggable: false
-                    });
-                } else {
-                    var shape = {
-                        coords: [1, 1, 1, 34, 32, 33, 34, 1],
-                        type: 'poly'
-                    };
-                    var image = {
-                        url: item.icon,
-                        size: new google.maps.Size(40, 44),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(0, 44)
-                    };
-                    marker = new google.maps.Marker({
-                        position: position,
-                        icon: image,
-                        shape: shape,
-                        map: map,
-                        title: item.title,
-                        draggable: true
-                    });
-                }
-                if (item.active_events !== undefined) {
-                    activeEvents += '<h6>Текущие события</h6><br>';
-                    item.active_events.forEach(function (event) {
-                        activeEvents += '<a href="/events/' + event.id + '">' + event.title + '</a><br>';
-                    });
-                }
-
-                google.maps.event.addListener(marker, 'click', function () {
-                    infowindow.setContent('<div>' + '<h6><a href="/places/' + item.id + '">' + item.title + '</a></h6>' + '<br>' + '<strong>' + item.description + '</strong><br>' + '<br>' + activeEvents + '</div>');
-                    infowindow.open(map, this);
-                });
-            });
-        }
-    }
-});
-
-/***/ }),
-/* 27 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
@@ -33398,6 +33242,162 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 
 });
 
+
+/***/ }),
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _googleMaps = __webpack_require__(14);
+
+var _googleMaps2 = _interopRequireDefault(_googleMaps);
+
+var _DialogComponent = __webpack_require__(7);
+
+var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+new _vue2.default({
+    el: '#index',
+    components: {
+        'dialog-component': _DialogComponent2.default
+    },
+    data: {
+        places: [],
+        left: -5
+    },
+    created: function created() {
+        _googleMaps2.default.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q';
+        _googleMaps2.default.load(function (google) {
+            new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 59.93961241484262, lng: 30.321905688476562 },
+                zoom: 12
+            });
+        });
+    },
+    updated: function updated() {
+        var _this = this;
+
+        setTimeout(function () {
+            var elem = document.getElementById('sidenav-overlay');
+            if (elem !== null) {
+                elem.addEventListener('click', function () {
+                    _this.left = -5;
+                });
+            }
+        }, 300);
+    },
+    mounted: function mounted() {
+        (0, _jquery2.default)('#left_message_window').modal();
+        (0, _jquery2.default)(".button-collapse").sideNav();
+    },
+
+    methods: {
+        getPlaces: function getPlaces() {
+            var self = this,
+                uri = "/map/api";
+            _jquery2.default.get(uri).done(function (data) {
+                self.places = data.response;
+                self.setMap();
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        setMap: function setMap() {
+            var _this2 = this;
+
+            _googleMaps2.default.load(function (google) {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 59.93961241484262, lng: 30.321905688476562 },
+                    zoom: 12
+                });
+                _this2.setLocations(map);
+            });
+        },
+        openMenu: function openMenu() {
+            if (this.left == -5) {
+                this.left = 300;
+            } else {
+                this.left = -5;
+            }
+        },
+        setLocations: function setLocations(map) {
+            var self = this,
+                infowindow = new google.maps.InfoWindow();
+            self.places.forEach(function (item) {
+                var activeEvents = "",
+                    marker = void 0,
+                    coords = item.coordinates.split(","),
+                    position = {
+                    lat: parseFloat(coords[0]),
+                    lng: parseFloat(coords[1])
+                };
+
+                if (item.icon === null) {
+                    marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: item.title,
+                        draggable: false
+                    });
+                } else {
+                    var shape = {
+                        coords: [1, 1, 1, 34, 32, 33, 34, 1],
+                        type: 'poly'
+                    };
+                    var image = {
+                        url: item.icon,
+                        size: new google.maps.Size(40, 44),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(0, 44)
+                    };
+                    marker = new google.maps.Marker({
+                        position: position,
+                        icon: image,
+                        shape: shape,
+                        map: map,
+                        title: item.title,
+                        draggable: true
+                    });
+                }
+                if (item.active_events !== undefined) {
+                    activeEvents += '<h6>Текущие события</h6><br>';
+                    item.active_events.forEach(function (event) {
+                        activeEvents += '<a href="/events/' + event.id + '">' + event.title + '</a><br>';
+                    });
+                }
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.setContent('<div>' + '<h6><a href="/places/' + item.id + '">' + item.title + '</a></h6>' + '<br>' + '<strong>' + item.description + '</strong><br>' + '<br>' + activeEvents + '</div>');
+                    infowindow.open(map, this);
+                });
+            });
+        }
+    }
+});
 
 /***/ })
 /******/ ]);

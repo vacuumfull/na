@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
 
 <div id="places_page" class="container">
@@ -70,7 +72,7 @@
                                                 {{ location_form.worktime.label_tag }}
                                             </div>
                                         </div>
-                                        <div class="input-group">
+                                        <div id="map-coordinates" class="input-group">
                                             <div class="input-field col s12">
                                                 {{ location_form.maps.errors }}
                                                 {{ location_form.maps }}
@@ -117,6 +119,15 @@
             </div>
         </div>
     </form>
+</div>
+
+<div class="overlay " v-bind:class="{ __hidden : !showModal }">
+</div>
+<div class="modal-win" v-bind:class="{ __hidden : !showModal }">
+    <div class="__modal-close" v-on:click="showModal = !showModal">
+        <i class="material-icons dp48">clear</i>
+    </div>
+    <map-component v-on:set-coordinates="setCoordinates" :show-map="showMap" ></map-component>
 </div>
 
 {% endblock content %}
