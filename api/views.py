@@ -91,7 +91,7 @@ def send_comment(request):
     request.session['last_comment'] = datetime.now().strftime(r'%x %X')
     if not result.get('error'):
         getattr(_load_module(app), 'send_comment')(key, user, content)
-        result = {'success': 'Comment add'}
+        result = {'success': 'Comment success append'}
     return JsonResponse(result)
 
 
