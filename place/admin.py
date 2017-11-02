@@ -1,7 +1,7 @@
 """Admin models from Places app"""
 from django.contrib import admin
 
-from place.models import Location, Place
+from place.models import Comment, Location, Place
 
 
 class LocationInLine(admin.StackedInline):
@@ -20,3 +20,12 @@ class AdminPlace(admin.ModelAdmin):
     list_editable = ('published',)
     list_filter = ('published',)
     search_fields = ('title', 'address')
+
+
+@admin.register(Comment)
+class AdminBlogComment(admin.ModelAdmin):
+    """Admin panel for Place comment system."""
+
+    list_display = ('place', 'user', 'published', 'created_at')
+    list_editable = ('published',)
+    list_filter = ('published', 'created_at')

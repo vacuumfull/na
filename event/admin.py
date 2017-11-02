@@ -1,7 +1,7 @@
 """Admin models from Places app"""
 from django.contrib import admin
 
-from event.models import Event
+from event.models import Comment, Event
 
 
 @admin.register(Event)
@@ -17,3 +17,12 @@ class AdminEvent(admin.ModelAdmin):
     list_editable = ('published',)
     list_filter = ('published', 'date', 'price')
     search_fields = ('title',)
+
+
+@admin.register(Comment)
+class AdminBlogComment(admin.ModelAdmin):
+    """Admin panel for Blog comment system."""
+
+    list_display = ('event', 'user', 'published', 'created_at')
+    list_editable = ('published',)
+    list_filter = ('published', 'created_at')

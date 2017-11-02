@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^1/rating/(?P<app>\w+)/(?P<key>\d+)/(?P<sessionid>.*)/$',
         views.get_rating),
 
+    url(r'^1/send/$', views.send_comment),
     url(r'^1/vote/$', views.vote_rating),
 ]
