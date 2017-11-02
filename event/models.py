@@ -5,6 +5,7 @@ from uuid import uuid4
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -22,7 +23,7 @@ def image_path(_instance, filename):
 
 
 class EventManager(models.Manager):
-    """Blog manager."""
+    """Event manager."""
 
     def last_published(self):
         """Last published upcoming events."""
@@ -82,6 +83,70 @@ class Event(models.Model):
         ordering = ['date', 'title']
         verbose_name = 'События'
         verbose_name_plural = 'События'
+
+
+class CommentManager(models.Manager):
+    """Events comments manager."""
+
+    def get_last_comments(self, event_id: int, offset: int=0):
+        """Get last comment with offset in event."""
+        rows = Comment.objects.filter(
+            event=event_id, published=True)[offset:offset+20]
+        return rows
+
+
+class Comment(models.Model):
+    """Events comment model."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
+                             related_name='event_commentator')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE,
+                              verbose_name='Запись')
+    content = models.CharField(max_length=250, verbose_name='Содержание')
+    published = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CommentManager()
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.content)
+
+    class Meta:
+        ordering = ['created_at', 'user']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+
+class RatingManager(models.Manager):
+    """Events rating manager."""
+
+    def average(self, event_id: int, user: User) -> dict:
+        """Average event rating.
+        is_vote - check voted this user in current event
+        value - average event rating
+        """
+        rows = Rating.objects.filter(event=event_id)
+        result = {
+            'is_vote': rows.filter(user=user).exists(),
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
+        }
+        return result
+
+
+class Rating(models.Model):
+    """Events Rating model."""
+
+    event = models.ForeignKey(Event, verbose_name='Запись')
+    user = models.ForeignKey(User, verbose_name='Пользователь',
+                             related_name='event_voted')
+    value = models.IntegerField(verbose_name='Оценка')
+
+    objects = RatingManager()
+
+    class Meta:
+        unique_together = ('event', 'user')
 
 
 @receiver(pre_save, sender=Event)

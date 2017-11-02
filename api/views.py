@@ -1,13 +1,15 @@
 """Under api views."""
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
 from django.contrib.sessions.backends.db import SessionStore
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.utils import IntegrityError
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from blog.models import Blog, Comment as BlogComment, Rating as BlogRating
+import blog.api
+import event.api
+import place.api
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -15,8 +17,7 @@ def get_rating(request, sessionid: str, app: str, key: int):
     user = _get_user(sessionid)
 
     result = {}
-    if app == 'blog':
-        result = BlogRating.objects.average(key, user)
+    result = getattr(_load_module(app), 'get_rating')(key, user)
 
     return JsonResponse(result)
 
@@ -24,7 +25,7 @@ def get_rating(request, sessionid: str, app: str, key: int):
 @csrf_exempt
 @require_http_methods(['POST'])
 def vote_rating(request):
-    """Get app rating."""
+    """Vote for app and get updated rating."""
     sessionid = request.POST.get('sessionid')
     app = request.POST.get('app')
     key = request.POST.get('key')
@@ -32,18 +33,16 @@ def vote_rating(request):
     user = _get_user(sessionid)
 
     if not user:
-        return JsonResponse({'error': 'User must be authenticated!'})
+        result = JsonResponse({'error': 'User must be authenticated!'})
 
-    try:
-        if app == 'blog':
-            blog = Blog.objects.get(pk=key)
-            BlogRating.objects.update_or_create(
-                blog=blog, user=user,
-                defaults={'value': vote})
-    except (ObjectDoesNotExist, IntegrityError):
-        pass
+    if vote > 10:
+        # Anticheat system
+        vote = 0
 
-    return get_rating(request, sessionid, app, key)
+    getattr(_load_module(app), 'vote_rating')(key, user, vote)
+
+    result = get_rating(request, sessionid, app, key)
+    return result
 
 
 def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
@@ -52,8 +51,7 @@ def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
         'comments': []
     }
 
-    if app == 'blog':
-        queryset = BlogComment.objects.get_last_comments(key, int(offset))
+    queryset = getattr(_load_module(app), 'get_comment')(key, offset)
 
     for query in queryset:
         result['comments'].append({
@@ -61,6 +59,39 @@ def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
             'content': query.content,
             'datetime': str(query.created_at),
         })
+    return JsonResponse(result)
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_comment(request):
+    """Send app comment and get updated rating."""
+    sessionid = request.POST.get('sessionid')
+    app = request.POST.get('app')
+    key = request.POST.get('key')
+    content = request.POST.get('content', '')
+    user = _get_user(sessionid)
+    last_comment = request.session.get('last_comment')
+    result = {}
+
+    if not user:
+        result = {'error': 'User must be authenticated!'}
+
+    if not content.strip():
+        result = {'error': 'Content not be empty!'}
+
+    if last_comment:
+        last_comment = datetime.strptime(last_comment, r'%x %X')
+        if datetime.now() - last_comment < timedelta(seconds=30):
+            result = {'error': 'Too many query per minutes!'}
+
+    if len(content) > 250:
+        result = {'error': 'Comment must be less 250 chars!'}
+
+    request.session['last_comment'] = datetime.now().strftime(r'%x %X')
+    if not result.get('error'):
+        getattr(_load_module(app), 'send_comment')(key, user, content)
+        result = {'success': 'Comment add'}
     return JsonResponse(result)
 
 
@@ -73,3 +104,14 @@ def _get_user(sessionid):
         user = None
 
     return user
+
+
+def _load_module(module_name: str) -> object:
+    """Load module api from string."""
+    module_dict = {
+        'blog': blog.api,
+        'event': event.api,
+        'place': place.api,
+    }
+
+    return module_dict[module_name]

@@ -5,6 +5,7 @@ from uuid import uuid4
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from uuslug import uuslug
@@ -25,14 +26,14 @@ def icon_path(_instance, filename):
 
 
 class PlaceManager(models.Manager):
-    """Blog manager."""
+    """Place manager."""
 
     def published(self):
         result = Place.objects.filter(published=True)
         return result
 
     def last_published(self):
-        """Last published blog."""
+        """Last published place."""
         result = Place.objects.published()[:4]
         return result
 
@@ -93,6 +94,67 @@ class Location(models.Model):
         ordering = ['address']
         verbose_name = 'Адрес'
         verbose_name_plural = 'Адреса'
+
+
+class CommentManager(models.Manager):
+    """Place comments manager."""
+
+    def get_last_comments(self, place_id: int, offset: int=0):
+        """Get last comment with offset in place."""
+        rows = Comment.objects.filter(
+            place=place_id, published=True)[offset:offset+20]
+        return rows
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
+                             related_name='place_commentator')
+    place = models.ForeignKey(Place, on_delete=models.CASCADE,
+                              verbose_name='Запись')
+    content = models.CharField(max_length=250, verbose_name='Содержание')
+    published = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CommentManager()
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.content)
+
+    class Meta:
+        ordering = ['created_at', 'user']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+
+class RatingManager(models.Manager):
+    """Place rating manager."""
+
+    def average(self, place_id: int, user: User) -> dict:
+        """Average place rating.
+        is_vote - check voted this user in current place
+        value - average place rating
+        """
+        rows = Rating.objects.filter(place=place_id)
+        result = {
+            'is_vote': rows.filter(user=user).exists(),
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
+        }
+        return result
+
+
+class Rating(models.Model):
+    place = models.ForeignKey(Place, verbose_name='Запись')
+    user = models.ForeignKey(User, verbose_name='Пользователь',
+                             related_name='place_voted')
+    value = models.IntegerField(verbose_name='Оценка')
+
+    objects = RatingManager()
+
+    class Meta:
+        unique_together = ('place', 'user')
 
 
 @receiver(pre_save, sender=Place)
