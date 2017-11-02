@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 import blog.api
+import event.api
+import place.api
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -109,6 +111,8 @@ def _load_module(module_name: str) -> object:
     """Load module api from string."""
     module_dict = {
         'blog': blog.api,
+        'event': event.api,
+        'place': place.api,
     }
 
     return module_dict[module_name]
