@@ -88,10 +88,9 @@ def send_comment(request):
     if len(content) > 250:
         result = {'error': 'Comment must be less 250 chars!'}
 
-    getattr(_load_module(app), 'send_comment')(key, user, content)
     request.session['last_comment'] = datetime.now().strftime(r'%x %X')
-
     if not result.get('error'):
+        getattr(_load_module(app), 'send_comment')(key, user, content)
         result = {'success': 'Comment add'}
     return JsonResponse(result)
 
