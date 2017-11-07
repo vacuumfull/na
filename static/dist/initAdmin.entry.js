@@ -32865,7 +32865,9 @@ var Dialog = _vue2.default.extend({
     data: function data() {
         return {
             message: "",
+            getter: null,
             isSelected: false,
+            selected: null,
             users: [{
                 name: "Vasya",
                 role: "deputy"
@@ -32885,6 +32887,7 @@ var Dialog = _vue2.default.extend({
             senders: [{
                 name: 'Nikolas',
                 role: 'organizer',
+                avatar: '/src/reacl.jpg',
                 messages: [{
                     date: '11/11/2013',
                     text: 'hihihihi hello'
@@ -32895,6 +32898,7 @@ var Dialog = _vue2.default.extend({
             }, {
                 name: 'Ann',
                 role: 'deputy',
+                avatar: null,
                 messages: [{
                     date: '13/10/2013',
                     text: 'hihihihi hello'
@@ -32909,6 +32913,7 @@ var Dialog = _vue2.default.extend({
         };
     },
     mounted: function mounted() {
+        (0, _jquery2.default)('select').material_select();
         (0, _jquery2.default)('#dialog_window').modal();
     },
 
@@ -32916,14 +32921,17 @@ var Dialog = _vue2.default.extend({
         openDialog: function openDialog() {
             (0, _jquery2.default)('#dialog_window').modal('open');
         },
-        openMessages: function openMessages(author) {},
+        openMessages: function openMessages(author) {
+            this.selected = author.messages;
+            this.getter = author.name;
+            this.isSelected = true;
+        },
         successAction: function successAction(message) {
             _materializeCss2.default.toast(message, 4000);
         },
         getUsers: function getUsers() {
             var uri = "/api/1/users",
                 self = this;
-
             _jquery2.default.get(uri).done(function (data) {
                 self.users = data.response;
                 self.storageSave('users', self.users);
@@ -32931,11 +32939,10 @@ var Dialog = _vue2.default.extend({
                 console.log(error);
             });
         },
-
         selectGetter: function selectGetter(name) {
             document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
         },
-        setForAll: function setForAll() {},
+        search: function search(event) {},
         encodeImageFileAsURL: function encodeImageFileAsURL(event) {
             var filesSelected = event.target.files;
             if (filesSelected.length > 0) {
@@ -32952,7 +32959,20 @@ var Dialog = _vue2.default.extend({
                 fileReader.readAsDataURL(fileToLoad);
             }
         },
-        sendMessage: function sendMessage() {},
+        sendMessage: function sendMessage() {
+            var self = this,
+                uri = '/api/1/message',
+                params = {
+                getter: self.getter,
+                message: self.message
+            };
+            if (self.getter === null) {
+                return self.successAction('Выберите получателя!');
+            }
+            _jquery2.default.post(uri, params).done(function (data) {}).fail(function (error) {
+                console.error(error);
+            });
+        },
         closeModal: function closeModal() {
             (0, _jquery2.default)('#dialog_window').modal('close');
         }
@@ -33008,7 +33028,7 @@ exports.default = {
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c </h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <a v-on:click=\"openMessages(author.name)\" href=\"#!\" class=\"collection-item\" v-for=\"sender in senders\">\n                                {{ sender.name }}\n                                <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                            </a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: !isSelected }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                                <label>кому</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in senders\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 10 */
@@ -33550,7 +33570,6 @@ var MapComponent = _vue2.default.extend({
 
     watch: {
         coordinates: function coordinates(val) {
-            console.log(val);
             this.$emit('set-coordinates', val);
         },
         showMap: function showMap(val) {

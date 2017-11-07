@@ -12,7 +12,9 @@ const Dialog = Vue.extend({
     data() {
         return {
             message: "",
+            getter: null,
             isSelected: false,
+            selected: null,
             users: [
                 {
                     name: "Vasya",
@@ -39,6 +41,7 @@ const Dialog = Vue.extend({
                 {
                     name: 'Nikolas',
                     role: 'organizer',
+                    avatar: '/src/reacl.jpg',
                     messages: [
                         {
                             date: '11/11/2013',
@@ -53,6 +56,7 @@ const Dialog = Vue.extend({
                 {
                     name: 'Ann',
                     role: 'deputy',
+                    avatar: null,
                     messages: [
                         {
                             date: '13/10/2013',
@@ -72,6 +76,7 @@ const Dialog = Vue.extend({
         }
     },
     mounted(){
+        $('select').material_select();
         $('#dialog_window').modal();
     },
     methods: {
@@ -79,7 +84,9 @@ const Dialog = Vue.extend({
             $('#dialog_window').modal('open');
         },
         openMessages(author){
-
+            this.selected = author.messages;
+            this.getter = author.name;
+            this.isSelected = true;
         },
         successAction(message){
             Materialize.toast(message, 4000);
@@ -87,7 +94,6 @@ const Dialog = Vue.extend({
         getUsers(){
             let uri = "/api/1/users",
                 self = this;
-
             $.get(uri)
                 .done(function(data){
                     self.users =  data.response;
@@ -97,10 +103,10 @@ const Dialog = Vue.extend({
                     console.log(error);
                 });
         },
-        selectGetter: function(name){
+        selectGetter(name){
             document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
         },
-        setForAll: function(){
+        search(event){
 
         },
         encodeImageFileAsURL(event) {
@@ -121,7 +127,20 @@ const Dialog = Vue.extend({
             }
         },
         sendMessage(){
+            let self = this,
+                uri = '/api/1/message',
+                params = {
+                    getter: self.getter,
+                    message: self.message
+                }
+            if (self.getter === null){
+                return self.successAction('Выберите получателя!')
+            }
+            $.post(uri, params).done((data) => {
 
+            }).fail((error) => {
+                console.error(error);
+            });
         },
         closeModal(){
             $('#dialog_window').modal('close');

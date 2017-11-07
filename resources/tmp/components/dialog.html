@@ -1,16 +1,44 @@
 <div id="dialog_window" class="modal __modal __advanced">
     <div class="modal-content">
         <h4 v-if="!isSelected" class="black-text">Диалоговое окно</h4>
-        <h4 v-if="isSelected" class="black-text">Диалог c </h4>
+        <h4 v-if="isSelected" class="black-text">Диалог c <span class="purple-text text-darken-4">{{ getter }}</span></h4>
         <div class="dialog-field">
             <div class="row">
                 <div class="col s4 __border_right">
+                    <div class="__filter">
+                        <div class="input-group">
+                            <div class="input-field user-search">
+                                <input type="text" v-on:keyup="search($event)"  autofocus>
+                                <label>кому</label>
+                            </div>
+                        </div>
+                        <!--select multiple>
+                            <option value="all" selected>Выбраны все</option>
+                            <option value="musician">Музыканты</option>
+                            <option value="user">Пользователи</option>
+                            <option value="deputy">Представители</option>
+                            <option value="organizer">Организаторы</option>   
+                        </select-->
+                    </div>
                     <div class="senders">
                         <div class="collection">
-                            <a v-on:click="openMessages(author.name)" href="#!" class="collection-item" v-for="sender in senders">
-                                {{ sender.name }}
-                                <span class="badge right new ">{{ sender.messages.length }}</span>
-                            </a>
+                            <template v-for="sender in senders">
+                                <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
+                                    <span class="left" v-if="sender.avatar === null"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
+                                    <span class="left" v-if="sender.avatar !== null"><img class="responsive-img __small-avatar circle" :src='sender.avatar'></span>
+                                    <span class="__sender-name __margin-left_m">{{ sender.name }} <span  class="__sender-role">{{ sender.role }}</span></span>
+                                    <span class="badge right new ">{{ sender.messages.length }}</span>
+                                </a>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s8">
+                    <div class="__messages-window">
+                        <div v-if="selected !== null" >
+                            <p v-for="message in selected" class="__margin-top_xs __margin-bottom_xs">
+                                <span class="__margin-right_m grey-text text-darken-2">{{ message.date }}:</span><span>{{ message.text }}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -25,7 +53,7 @@
                     </div>
                 </div>
             </form>
-            <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: !isSelected }">
+            <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: message.length < 2 }">
                 &nbsp;&nbsp;Отправить
                 <i class="material-icons right dp48">send</i>
             </a>

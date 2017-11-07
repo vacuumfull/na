@@ -60,6 +60,13 @@ table.__left > thead> tr > th.__left{
 .modal-action.modal-close:hover{
     background-color: transparent;
 }
+.__sender-role{
+    position: absolute;
+    font-size: 9px;
+    top: 24px;
+    left: 58px;
+    color: dimgrey;
+}
 .__left-dialog_btn:hover + .__left-dialog_key{
     opacity: 1;
     transition: 0.5s ease;
@@ -83,6 +90,14 @@ table.__left > thead> tr > th.__left{
 }
 .side-nav .userView{
     padding-bottom: 45px;
+}
+.__sender-name{
+    font-size: 20px;
+}
+.__small-avatar{
+    width: 23px;
+    display: block;
+    border: 1px solid #e0e0e0;
 }
 .__left-dialog_key{
     opacity: 0;
@@ -729,6 +744,10 @@ p.__message {
     animation:         vkmove 0.5s linear;/* IE 10+, Fx 29+ */
 }
 
+.__messages-window{
+    height: 170px;
+    max-height: 175px;
+}
 
 .__enter_icons a:hover{
     background-color: transparent;
@@ -744,11 +763,6 @@ body nav .__menu_item > a {
     transform: translateY(-70%);
 }
 
-.__dialog-field .input-field label.active {
-    font-size: 0.8rem;
-    -webkit-transform: translateY(-30%);
-    transform: translateY(-30%);
-}
 .input-field.user-search {
     margin-top: 0px;
 }
@@ -768,11 +782,6 @@ body nav .__menu_item > a {
     background-color: #e85934;
     padding: 2px 7px;
     border-radius: 7px;
-}
-.modal.__modal.__advanced{
-    width: 70% !important;
-    top: 10% !important;
-    max-height: 80% !important;
 }
 
 .modal.__modal{
