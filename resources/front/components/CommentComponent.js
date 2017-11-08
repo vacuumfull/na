@@ -20,16 +20,21 @@ const Comment = Vue.extend({
         create(){
             let self = this,
                 params = {
-                    content: self.content
+                    app: self.type,
+                    key: self.unique,
+                    content: self.content,
+                    sessionid: self.getSess()
                 },
-                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
+                uri = `/api/1/send/`;
             self.content = self.content.replace(/^\s*/,'').replace(/\s*$/,'')
-            if (self.content == ""){
+            if (self.content === ""){
                 return;
             }
             $.post(uri, params).done((data) => {
-                self.successAction("Комментарий отправлен!")
-                self.getComments()
+                if (data.success){
+                    self.successAction("Комментарий отправлен!")
+                    self.getComments();
+                }
                 self.content = ""
             }).fail((error) => {
                 console.log(error)
@@ -37,7 +42,7 @@ const Comment = Vue.extend({
         },
         getComments(){
             let self = this,
-                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.getSess() + '/' + self.offset;
+                uri = `/api/1/comment/${self.type}/${self.unique}/${self.getSess()}/${self.offset}`;
             $.get(uri).done((data) => {
                 self.comments = data.comments
             }).fail((error) => {
@@ -50,7 +55,7 @@ const Comment = Vue.extend({
         formatDate(dateString){
             let date = new Date(dateString);
             let month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
-            return date.getHours() + ":" + date.getMinutes() + "  " + month + "/" + (parseInt(date.getMonth()) + 1) + "/" + date.getFullYear();
+            return `${date.getHours()}:${date.getMinutes()}  ${month}/${parseInt(date.getMonth()) + 1}/${date.getFullYear()}`;
         },
         successAction(message){
             Materialize.toast(message, 4000);

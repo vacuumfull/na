@@ -33,7 +33,7 @@ const Rate = Vue.extend({
     methods: {
         getRate(){
             let self = this,
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess() + '/';
+                uri = `/api/1/rating/${self.type}/${self.unique}/${this.getSess()}`;
                console.log(uri);
             $.get(uri).done(data => {
                 console.log(data);

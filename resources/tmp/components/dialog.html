@@ -5,11 +5,11 @@
         <div class="dialog-field">
             <div class="row">
                 <div class="col s4 __border_right">
-                    <div class="__filter">
+                    <div class="__filter __padding-right_l">
                         <div class="input-group">
                             <div class="input-field user-search">
                                 <input type="text" v-on:keyup="search($event)"  autofocus>
-                                <label>кому</label>
+                                <label>кому написать</label>
                             </div>
                         </div>
                         <!--select multiple>
@@ -20,7 +20,7 @@
                             <option value="organizer">Организаторы</option>   
                         </select-->
                     </div>
-                    <div class="senders">
+                    <div class="senders __padding-right_l">
                         <div class="collection">
                             <template v-for="sender in senders">
                                 <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
