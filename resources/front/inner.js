@@ -3,6 +3,7 @@ import $ from 'jquery';
 import Dialog from './components/DialogComponent';
 import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
+import UserMenu from './components/UserMenuComponent';
 import Rate from './components/RateComponent';
 import Comment from './components/CommentComponent';
 
@@ -13,6 +14,7 @@ new Vue({
         'left-messages': LeftMessages,
         'left-modal': LeftModal,
         'rate-component': Rate,
+        'user-menu': UserMenu,
         'comment-component': Comment
     },
     data: {
@@ -20,34 +22,21 @@ new Vue({
         userInfo: {
             name: ""
         },
-        dialogInfo: {}
-    },
-    updated(){
-        setTimeout(() => {
-            let elem = document.getElementById('sidenav-overlay');
-            if (elem !== null){
-                elem.addEventListener('click', () => {
-                    this.left = -5;
-                })
-            }
-        }, 300);
+        dialogInfo: {},
+        messagesUnread: {},
     },
     mounted(){
         $(".button-collapse").sideNav();
     },
     methods:{
-        move(){
-            if (this.left == -5){
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
-        },
         openModal(userInfo){
             this.userInfo = userInfo;
         },
         openDialog(){
             $('#dialog_window').modal('open');
+        },
+        transportUserMessages(messagesUnread){
+            this.messagesUnread = messagesUnread;
         }
     }
 })

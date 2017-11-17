@@ -2,15 +2,24 @@ import Vue from 'vue';
 import $ from 'jquery';
 import GoogleMapsLoader from 'google-maps';
 import Dialog from './components/DialogComponent';
+import LeftMessages from './components/LeftMessagesComponent';
+import LeftModal from './components/LeftModalComponent';
+import UserMenu from './components/UserMenuComponent';
 
 new Vue({
     el: '#index',
     components: {
         'dialog-component': Dialog,
+        'left-messages': LeftMessages,
+        'left-modal': LeftModal,
+        'user-menu': UserMenu
     },
     data: {
         places: [],
-        left: -5
+        userInfo: {
+            name: ""
+        },
+        messagesUnread: {},
     },
     created(){
         GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q'
@@ -20,16 +29,6 @@ new Vue({
                 zoom: 12
             })
         })
-    },
-    updated(){
-        setTimeout(() => {
-            let elem = document.getElementById('sidenav-overlay');
-            if (elem !== null){
-                elem.addEventListener('click', () => {
-                    this.left = -5;
-                })
-            }
-        }, 300);
     },
     mounted(){
         $('#left_message_window').modal();
@@ -57,12 +56,14 @@ new Vue({
                 this.setLocations(map);
             })
         },
-        openMenu(){
-            if (this.left == -5){
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
+        openModal(userInfo){
+            this.userInfo = userInfo;
+        },
+        openDialog(){
+            $('#dialog_window').modal('open');
+        },
+        transportUserMessages(messagesUnread){
+            this.messagesUnread = messagesUnread;
         },
         setLocations(map){
             let self = this,

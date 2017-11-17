@@ -7,7 +7,7 @@ import template from '../../tmp/components/dialog.html';
 
 const Dialog = Vue.extend({
     template,
-    props: ['user-role'],
+    props: ['user-role', 'messages-unread'],
     mixins: [Storage],
     data() {
         return {
@@ -37,42 +37,12 @@ const Dialog = Vue.extend({
                     role: "admin"
                 },
             ],
-            senders: [
-                {
-                    name: 'Nikolas',
-                    role: 'organizer',
-                    avatar: '/src/reacl.jpg',
-                    messages: [
-                        {
-                            date: '11/11/2013',
-                            text: 'hihihihi hello'
-                        },
-                        {
-                            date: '11/12/2013',
-                            text: 'Здорово нигеры!'
-                        }
-                    ]
-                },
-                {
-                    name: 'Ann',
-                    role: 'deputy',
-                    avatar: null,
-                    messages: [
-                        {
-                            date: '13/10/2013',
-                            text: 'hihihihi hello'
-                        },
-                        {
-                            date: '11/09/2013',
-                            text: 'Здорово нигеры!'
-                        },
-                        {
-                            date: '11/11/2013',
-                            text: 'HI BITCHES!'
-                        }
-                    ]
-                }
-            ]
+            messages: []
+        }
+    },
+    watch: {
+        messagesUnread(val){
+            this.messages = val;
         }
     },
     mounted(){

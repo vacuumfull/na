@@ -32860,7 +32860,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Dialog = _vue2.default.extend({
     template: _dialog2.default,
-    props: ['user-role'],
+    props: ['user-role', 'messages-unread'],
     mixins: [_StorageMixin2.default],
     data: function data() {
         return {
@@ -32884,33 +32884,14 @@ var Dialog = _vue2.default.extend({
                 name: "Alice",
                 role: "admin"
             }],
-            senders: [{
-                name: 'Nikolas',
-                role: 'organizer',
-                avatar: '/src/reacl.jpg',
-                messages: [{
-                    date: '11/11/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/12/2013',
-                    text: 'Здорово нигеры!'
-                }]
-            }, {
-                name: 'Ann',
-                role: 'deputy',
-                avatar: null,
-                messages: [{
-                    date: '13/10/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/09/2013',
-                    text: 'Здорово нигеры!'
-                }, {
-                    date: '11/11/2013',
-                    text: 'HI BITCHES!'
-                }]
-            }]
+            messages: []
         };
+    },
+
+    watch: {
+        messagesUnread: function messagesUnread(val) {
+            this.messages = val;
+        }
     },
     mounted: function mounted() {
         (0, _jquery2.default)('select').material_select();
@@ -33028,7 +33009,7 @@ exports.default = {
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in senders\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in  messages\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 10 */,
@@ -33091,7 +33072,7 @@ new _vue2.default({
             window.location = window.location.origin + string;
         },
         openMenu: function openMenu() {
-            if (this.left == -5) {
+            if (this.left === -5) {
                 this.left = 300;
             } else {
                 this.left = -5;

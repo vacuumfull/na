@@ -32860,7 +32860,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Dialog = _vue2.default.extend({
     template: _dialog2.default,
-    props: ['user-role'],
+    props: ['user-role', 'messages-unread'],
     mixins: [_StorageMixin2.default],
     data: function data() {
         return {
@@ -32884,33 +32884,14 @@ var Dialog = _vue2.default.extend({
                 name: "Alice",
                 role: "admin"
             }],
-            senders: [{
-                name: 'Nikolas',
-                role: 'organizer',
-                avatar: '/src/reacl.jpg',
-                messages: [{
-                    date: '11/11/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/12/2013',
-                    text: 'Здорово нигеры!'
-                }]
-            }, {
-                name: 'Ann',
-                role: 'deputy',
-                avatar: null,
-                messages: [{
-                    date: '13/10/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/09/2013',
-                    text: 'Здорово нигеры!'
-                }, {
-                    date: '11/11/2013',
-                    text: 'HI BITCHES!'
-                }]
-            }]
+            messages: []
         };
+    },
+
+    watch: {
+        messagesUnread: function messagesUnread(val) {
+            this.messages = val;
+        }
     },
     mounted: function mounted() {
         (0, _jquery2.default)('select').material_select();
@@ -33028,7 +33009,7 @@ exports.default = {
 /* 9 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in senders\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in  messages\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 10 */
@@ -33146,7 +33127,7 @@ var LeftModal = _vue2.default.extend({
 
     watch: {
         userInfo: function userInfo(val) {
-            if (val['name'] != '') {
+            if (val['name'] !== '') {
                 this.getter = val['name'];
                 this.openModal();
             }
@@ -33160,7 +33141,7 @@ var LeftModal = _vue2.default.extend({
         sendMessage: function sendMessage() {
             var uri = '/api/1/message',
                 self = this;
-            if (self.message.length == 0) {
+            if (self.message.length === 0) {
                 return;
             }
             _jquery2.default.post(uri, { message: self.message }).done(function (data) {
@@ -33222,6 +33203,10 @@ var _LeftModalComponent = __webpack_require__(12);
 
 var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
+var _UserMenuComponent = __webpack_require__(57);
+
+var _UserMenuComponent2 = _interopRequireDefault(_UserMenuComponent);
+
 var _RateComponent = __webpack_require__(23);
 
 var _RateComponent2 = _interopRequireDefault(_RateComponent);
@@ -33239,6 +33224,7 @@ new _vue2.default({
         'left-messages': _LeftMessagesComponent2.default,
         'left-modal': _LeftModalComponent2.default,
         'rate-component': _RateComponent2.default,
+        'user-menu': _UserMenuComponent2.default,
         'comment-component': _CommentComponent2.default
     },
     data: {
@@ -33246,37 +33232,22 @@ new _vue2.default({
         userInfo: {
             name: ""
         },
-        dialogInfo: {}
-    },
-    updated: function updated() {
-        var _this = this;
-
-        setTimeout(function () {
-            var elem = document.getElementById('sidenav-overlay');
-            if (elem !== null) {
-                elem.addEventListener('click', function () {
-                    _this.left = -5;
-                });
-            }
-        }, 300);
+        dialogInfo: {},
+        messagesUnread: {}
     },
     mounted: function mounted() {
         (0, _jquery2.default)(".button-collapse").sideNav();
     },
 
     methods: {
-        move: function move() {
-            if (this.left == -5) {
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
-        },
         openModal: function openModal(userInfo) {
             this.userInfo = userInfo;
         },
         openDialog: function openDialog() {
             (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        transportUserMessages: function transportUserMessages(messagesUnread) {
+            this.messagesUnread = messagesUnread;
         }
     }
 });
@@ -33501,6 +33472,144 @@ exports.default = Comment;
 /***/ (function(module, exports) {
 
 module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
+
+/***/ }),
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _materializeCss = __webpack_require__(2);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+var _userMenu = __webpack_require__(58);
+
+var _userMenu2 = _interopRequireDefault(_userMenu);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var UserMenu = _vue2.default.extend({
+    template: _userMenu2.default,
+    data: function data() {
+        return {
+            left: -5,
+            unread: 3,
+            messagesUnread: [{
+                name: 'Nikolas',
+                role: 'organizer',
+                avatar: '/src/reacl.jpg',
+                messages: [{
+                    date: '11/11/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '11/12/2013',
+                    text: 'Здорово нигеры!'
+                }]
+            }, {
+                name: 'Ann',
+                role: 'deputy',
+                avatar: null,
+                messages: [{
+                    date: '13/10/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '11/09/2013',
+                    text: 'Здорово нигеры!'
+                }, {
+                    date: '11/11/2013',
+                    text: 'HI BITCHES!'
+                }]
+            }]
+        };
+    },
+    mounted: function mounted() {
+        this.getMessages();
+    },
+    updated: function updated() {
+        var _this = this;
+
+        setTimeout(function () {
+            var elem = document.getElementById('sidenav-overlay');
+            if (elem !== null) {
+                elem.addEventListener('click', function () {
+                    _this.left = -5;
+                });
+            }
+        }, 300);
+    },
+
+    methods: {
+        getMessages: function getMessages() {
+            this.transportMessages();
+            return this.messagesUnread;
+        },
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        move: function move() {
+            if (this.left === -5) {
+                this.left = 300;
+            } else {
+                this.left = -5;
+            }
+        },
+        transportMessages: function transportMessages() {
+            this.$emit('transport-messages', this.messagesUnread);
+        }
+    }
+});
+
+exports.default = UserMenu;
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnread.length > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnread.length }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
 
 /***/ })
 /******/ ]);

@@ -696,6 +696,8 @@ p.__message {
 }
 .senders{
     position:relative;
+    max-height: 180px;
+    overflow-x: auto;
 }
 
 .__menu_messages a{

@@ -14,7 +14,7 @@ const LeftModal = Vue.extend({
     },
     watch:{
         userInfo(val){
-            if (val['name'] != ''){
+            if (val['name'] !== ''){
                 this.getter = val['name'];
                 this.openModal();
             }
@@ -27,7 +27,7 @@ const LeftModal = Vue.extend({
         sendMessage(){
             let uri = '/api/1/message',
                 self = this;
-            if (self.message.length == 0){
+            if (self.message.length === 0){
                 return;
             }
             $.post(uri, { message: self.message })

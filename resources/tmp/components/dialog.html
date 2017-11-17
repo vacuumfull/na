@@ -8,7 +8,7 @@
                     <div class="__filter __padding-right_l">
                         <div class="input-group">
                             <div class="input-field user-search">
-                                <input type="text" v-on:keyup="search($event)"  autofocus>
+                                <input type="text" v-on:keyup="search($event)" >
                                 <label>кому написать</label>
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="senders __padding-right_l">
                         <div class="collection">
-                            <template v-for="sender in senders">
+                            <template v-for="sender in  messages">
                                 <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
                                     <span class="left" v-if="sender.avatar === null"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="sender.avatar !== null"><img class="responsive-img __small-avatar circle" :src='sender.avatar'></span>

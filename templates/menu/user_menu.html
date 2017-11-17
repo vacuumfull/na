@@ -1,24 +1,3 @@
-<div id="menu-triggers">
-    <div v-on:click="move" data-activates="slide-out"  class=" button-collapse __left-menu_btn" v-bind:style="{ left: left + 'px' }">
-        <a href="#" >
-            <i class="material-icons">menu</i>
-        </a>
-    </div>
-    <div class="__left-menu_key">
-        <a href="" v-on:click="move" data-activates="slide-out" class="button-collapse">Меню</a>
-    </div>
-</div>
-<div>
-    <div v-on:click="openDialog" class="__left-dialog_btn" v-bind:style="{ left: left + 'px' }">
-        <a href="#" >
-            <i class="material-icons">mail</i>
-        </a>
-        <span class="__message-count">
-            <span>+1</span>
-        </span>
-    </div>
-    <div class="__left-dialog_key">
-        <a v-on:click="openDialog">Диалог</a>
-    </div>
-</div>
-<dialog-component user-role="3"></dialog-component>
+
+<user-menu v-on:transport-messages="transportUserMessages"></user-menu>
+<dialog-component user-role="3" v-bind:messages-unread="messagesUnread"></dialog-component>

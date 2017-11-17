@@ -31,7 +31,7 @@ new Vue({
             window.location = window.location.origin + string;
         },
         openMenu(){
-            if (this.left == -5){
+            if (this.left === -5){
                 this.left = 300;
             } else {
                 this.left = -5;

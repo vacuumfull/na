@@ -22,19 +22,19 @@ const Search = Vue.extend({
         }
     },
     methods: {
-        setKeyword: function(key){
+        setKeyword(key){
             let self = this
             self.keyword = key
             self.isFilled = true
             self.search(self.keyword);
         },
-        successAction: function(message){
+        successAction(message){
             Materialize.toast(message, 4000);
         },
-        link: function(string){
+        link(string){
             window.location = window.location.origin + string;
         },
-        search: function(key){
+        search(key){
             let self = this,
                 uri = "/search/main";
 
@@ -74,7 +74,7 @@ const Search = Vue.extend({
                     console.log(error)
                 })
         },
-        getTags: function(){
+        getTags(){
             let self = this,
                 uri = "/search/tags";
             $.get(uri)
