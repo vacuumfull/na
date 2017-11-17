@@ -33,7 +33,7 @@ const Comment = Vue.extend({
             $.post(uri, params).done((data) => {
                 if (data.success){
                     self.successAction("Комментарий отправлен!")
-                    self.getComments();
+                    self.getComments()
                 }
                 self.content = ""
             }).fail((error) => {
@@ -55,7 +55,7 @@ const Comment = Vue.extend({
         formatDate(dateString){
             let date = new Date(dateString);
             let month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
-            return `${date.getHours()}:${date.getMinutes()}  ${month}/${parseInt(date.getMonth()) + 1}/${date.getFullYear()}`;
+            return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}  ${month}/${parseInt(date.getMonth()) + 1}/${date.getFullYear()}`;
         },
         successAction(message){
             Materialize.toast(message, 4000);

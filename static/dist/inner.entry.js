@@ -33395,7 +33395,7 @@ exports.default = Rate;
 /* 24 */
 /***/ (function(module, exports) {
 
-module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"yellow-text __rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
+module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
 
 /***/ }),
 /* 25 */
@@ -33479,7 +33479,7 @@ var Comment = _vue2.default.extend({
         formatDate: function formatDate(dateString) {
             var date = new Date(dateString);
             var month = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate();
-            return date.getHours() + ':' + date.getMinutes() + '  ' + month + '/' + (parseInt(date.getMonth()) + 1) + '/' + date.getFullYear();
+            return date.getHours() + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + '  ' + month + '/' + (parseInt(date.getMonth()) + 1) + '/' + date.getFullYear();
         },
         successAction: function successAction(message) {
             _materializeCss2.default.toast(message, 4000);

@@ -682,6 +682,9 @@ i.material-icons.__icon-margin_xs{
 .file-field.input-field{
     margin-top: 0px;
 }
+.rating .__rate_icons i {
+    color: #f3e13f;
+}
 
 p.__message {
     display: block;
