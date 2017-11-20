@@ -143,7 +143,6 @@ STATICFILES_DIRS = [
     ('js', 'static/js'),
     ('images', 'static/images'),
     ('dist', 'static/dist'),
-    ('datepicker', 'static/datepicker'),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
