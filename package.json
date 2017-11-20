@@ -49,6 +49,7 @@
     "vue": "^2.4.2",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
+    "vuejs-datepicker": "^0.9.20",
     "webpack": "^3.5.6"
   }
 }

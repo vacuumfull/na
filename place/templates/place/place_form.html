@@ -14,91 +14,103 @@
                     <div class="col s12">
                         <div class="row">
                             <div class="card-content black-text">
-                                <div class="input-group">
-                                    <div class="input-field col s7">
-                                        {{ form.title.errors }}
-                                        {{ form.title }}
-                                        {{ form.title.label_tag }}
-                                    </div>
-                                </div>
-                                <div class="input-group">
-                                    <div class="file-field input-field col s5">
-                                        {{ form.image.errors }}
-                                        <div class="btn">
-                                            <span>{{ form.image.label }}</span>
-                                            {{ form.image }}
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
+                                <div class="col s12">
+                                    <div class="input-group">
+                                        <div class="input-field col s7">
+                                            {{ form.title.errors }}
+                                            {{ form.title }}
+                                            {{ form.title.label_tag }}
                                         </div>
                                     </div>
-                                </div>
-                                <div class="input-group">
-                                    <div class="input-field col s12">
-                                        {{ form.description.errors }}
-                                        {{ form.description }}
-                                        {{ form.description.label_tag }}
+                                    <div class="input-group">
+                                        <div class="input-field col s5">
+                                            {{ form.musicians.errors }}
+                                            {{ form.musicians }}
+                                            {{ form.musicians.label_tag }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="input-group">
-                                    <div class="input-field col s12">
-                                        {{ form.musicians.errors }}
-                                        {{ form.musicians }}
-                                        {{ form.musicians.label_tag }}
+                                    <div class="input-group">
+                                        <div class="input-field col s12">
+                                            {{ form.description.errors }}
+                                            {{ form.description }}
+                                            {{ form.description.label_tag }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="input-group">
-                                    <div class="input-field col s12">
-                                        Место для вписывания тегов
+                                    <div class="input-group">
+                                        <div class="input-field col s12">
+                                            <div class="__tags-field">
+                                                Место для вписывания тегов
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>
-                                <div>
-                                    <h4>Места где расположено заведение</h4>
+                                <div class="col s12">
+                                    <h4 class="__margin-left_s">Места где расположено заведение</h4>
                                     {{ location_formset.management_form }}
                                     {% for location_form in location_formset %}
                                         {{ location_form.id }}
-                                        <div class="input-group">
-                                            <div class="input-field col s12">
-                                                {{ location_form.address.errors }}
-                                                {{ location_form.address }}
-                                                {{ location_form.address.label_tag }}
+                                        <div class="__location-field">
+                                            <div class="input-group">
+                                                <div class="input-field col s4">
+                                                    <div class="__margin-top_xl __padding-top_xs">
+                                                        {{ location_form.address.errors }}
+                                                        {{ location_form.address }}
+                                                        {{ location_form.address.label_tag }}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <div class="input-field col s12">
-                                                {{ location_form.worktime.errors }}
-                                                {{ location_form.worktime }}
-                                                {{ location_form.worktime.label_tag }}
+                                            <div class="input-group __worktime">
+                                                <div class="input-field col s3">
+                                                    {{ location_form.worktime.errors }}
+                                                    {{ location_form.worktime }}
+                                                    {{ location_form.worktime.label_tag }}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div id="map-coordinates" class="input-group">
-                                            <div class="input-field col s12">
-                                                {{ location_form.maps.errors }}
-                                                {{ location_form.maps }}
-                                                {{ location_form.maps.label_tag }}
+                                            <div id="map-coordinates" class="input-group">
+                                                <div class="input-field col s3">
+                                                    <div class="__margin-top_xl __padding-top_xs">
+                                                        {{ location_form.maps.errors }}
+                                                        {{ location_form.maps }}
+                                                        {{ location_form.maps.label_tag }}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <div class="input-field col s12">
+                                            <div class="__remove-field">
                                                 {{ location_form.DELETE }}
                                                 {{ location_form.DELETE.label_tag }}
                                             </div>
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <div class="input-group">
-                                    <div class="file-field input-field col s5">
-                                        {{ form.icon.errors }}
-                                        <div class="btn">
-                                            <span>{{ form.icon.label }}</span>
-                                            {{ form.icon }}
+                                <hr>
+                                <div class="col s12 __margin-top_xxl">
+                                    <div class="input-group">
+                                        <div class="file-field input-field col s4">
+                                            {{ form.icon.errors }}
+                                            <div class="btn">
+                                                <span>{{ form.icon.label }}</span>
+                                                {{ form.icon }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
                                         </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="file-field input-field col s4 offset-s2">
+                                            {{ form.image.errors }}
+                                            <div class="btn">
+                                                <span>{{ form.image.label }}</span>
+                                                {{ form.image }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

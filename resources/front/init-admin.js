@@ -1,9 +1,12 @@
 import Vue from 'vue';
+import Datepicker from 'vuejs-datepicker';
 import $ from 'jquery';
 import Dialog from './components/DialogComponent';
 import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
+import UserMenu from './components/UserMenuComponent';
 import MapComponent from './components/MapComponent';
+
 
 
 new Vue({
@@ -13,45 +16,41 @@ new Vue({
         'left-messages': LeftMessages,
         'left-modal': LeftModal,
         'map-component': MapComponent,
+        'user-menu': UserMenu,
+        'datepicker': Datepicker
     },
     data: {
-        left: -5,
         userInfo: {
             name: ""
         },
         showModal:  false,
         showMap: false,
-        dialogInfo: {}
+        date: null,
+        messagesUnread: {},
     },
     mounted(){
-        $(".button-collapse").sideNav();
-        $('select').material_select();
-        $('.tooltipped').tooltip({delay: 50});
+        console.dir(Datepicker)
+        this.init()
         setTimeout(() => {
-            let mapInput = document.querySelectorAll('#map-coordinates > div > input')[0];
-            mapInput.addEventListener('click', () => {
-                this.showModal = !this.showModal;
-                this.showMap = true;
-            })
-        }, 200);
-    },
-    updated(){
-        setTimeout(() => {
-            let elem = document.getElementById('sidenav-overlay');
-            if (elem !== null){
-                elem.addEventListener('click', () => {
-                    this.left = -5;
+            let mapInput = document.querySelectorAll('#map-coordinates > div > div > input')[0];
+            if (mapInput !== undefined){
+                mapInput.addEventListener('click', () => {
+                    this.showModal = !this.showModal;
+                    this.showMap = true;
                 })
             }
-        }, 300);
+        }, 200);
     },
     methods: {
-        move(){
-            if (this.left == -5){
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
+        init(){
+            $(".button-collapse").sideNav();
+            $('select').material_select();
+            $('.tooltipped').tooltip({delay: 50});
+            $('#id_annotation').addClass('materialize-textarea');
+            $('#id_description').addClass('materialize-textarea');
+            $('.__worktime textarea').addClass('materialize-textarea');
+            $('.__remove-field label').text('Удалить место');
+            this.date = new Date()
         },
         openModal(userInfo){
             this.userInfo = userInfo;
@@ -60,7 +59,13 @@ new Vue({
             $('#dialog_window').modal('open');
         },
         setCoordinates(coordinates){
-            document.querySelectorAll('#map-coordinates > div > input')[0].value = coordinates;
+            document.querySelectorAll('#map-coordinates > div > div > input')[0].value = coordinates;
+        },
+        transportUserMessages(messagesUnread){
+            this.messagesUnread = messagesUnread;
+        },
+        setDate(date){
+            document.getElementById('id_date').value = date;
         }
     }
 });

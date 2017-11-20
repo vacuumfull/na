@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33172,6 +33172,114 @@ module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div cla
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _materializeCss = __webpack_require__(2);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+var _userMenu = __webpack_require__(15);
+
+var _userMenu2 = _interopRequireDefault(_userMenu);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var UserMenu = _vue2.default.extend({
+    template: _userMenu2.default,
+    data: function data() {
+        return {
+            left: -5,
+            unread: 3,
+            messagesUnread: [{
+                name: 'Nikolas',
+                role: 'organizer',
+                avatar: '/src/reacl.jpg',
+                messages: [{
+                    date: '11/11/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '11/12/2013',
+                    text: 'Здорово нигеры!'
+                }]
+            }, {
+                name: 'Ann',
+                role: 'deputy',
+                avatar: null,
+                messages: [{
+                    date: '13/10/2013',
+                    text: 'hihihihi hello'
+                }, {
+                    date: '11/09/2013',
+                    text: 'Здорово нигеры!'
+                }, {
+                    date: '11/11/2013',
+                    text: 'HI BITCHES!'
+                }]
+            }]
+        };
+    },
+    mounted: function mounted() {
+        this.getMessages();
+    },
+    updated: function updated() {
+        var _this = this;
+
+        setTimeout(function () {
+            var elem = document.getElementById('sidenav-overlay');
+            if (elem !== null) {
+                elem.addEventListener('click', function () {
+                    _this.left = -5;
+                });
+            }
+        }, 300);
+    },
+
+    methods: {
+        getMessages: function getMessages() {
+            this.transportMessages();
+            return this.messagesUnread;
+        },
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        move: function move() {
+            if (this.left === -5) {
+                this.left = 300;
+            } else {
+                this.left = -5;
+            }
+        },
+        transportMessages: function transportMessages() {
+            this.$emit('transport-messages', this.messagesUnread);
+        }
+    }
+});
+
+exports.default = UserMenu;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnread.length > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnread.length }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
 
 	if (root === null) {
@@ -33398,8 +33506,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 
 
 /***/ }),
-/* 15 */,
-/* 16 */,
 /* 17 */,
 /* 18 */,
 /* 19 */,
@@ -33410,7 +33516,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 /* 24 */,
 /* 25 */,
 /* 26 */,
-/* 27 */
+/* 27 */,
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33424,7 +33532,7 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _googleMaps = __webpack_require__(14);
+var _googleMaps = __webpack_require__(16);
 
 var _googleMaps2 = _interopRequireDefault(_googleMaps);
 
@@ -33440,7 +33548,7 @@ var _LeftModalComponent = __webpack_require__(12);
 
 var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
-var _UserMenuComponent = __webpack_require__(57);
+var _UserMenuComponent = __webpack_require__(14);
 
 var _UserMenuComponent2 = _interopRequireDefault(_UserMenuComponent);
 
@@ -33560,143 +33668,6 @@ new _vue2.default({
         }
     }
 });
-
-/***/ }),
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _materializeCss = __webpack_require__(2);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _userMenu = __webpack_require__(58);
-
-var _userMenu2 = _interopRequireDefault(_userMenu);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var UserMenu = _vue2.default.extend({
-    template: _userMenu2.default,
-    data: function data() {
-        return {
-            left: -5,
-            unread: 3,
-            messagesUnread: [{
-                name: 'Nikolas',
-                role: 'organizer',
-                avatar: '/src/reacl.jpg',
-                messages: [{
-                    date: '11/11/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/12/2013',
-                    text: 'Здорово нигеры!'
-                }]
-            }, {
-                name: 'Ann',
-                role: 'deputy',
-                avatar: null,
-                messages: [{
-                    date: '13/10/2013',
-                    text: 'hihihihi hello'
-                }, {
-                    date: '11/09/2013',
-                    text: 'Здорово нигеры!'
-                }, {
-                    date: '11/11/2013',
-                    text: 'HI BITCHES!'
-                }]
-            }]
-        };
-    },
-    mounted: function mounted() {
-        this.getMessages();
-    },
-    updated: function updated() {
-        var _this = this;
-
-        setTimeout(function () {
-            var elem = document.getElementById('sidenav-overlay');
-            if (elem !== null) {
-                elem.addEventListener('click', function () {
-                    _this.left = -5;
-                });
-            }
-        }, 300);
-    },
-
-    methods: {
-        getMessages: function getMessages() {
-            this.transportMessages();
-            return this.messagesUnread;
-        },
-        openDialog: function openDialog() {
-            (0, _jquery2.default)('#dialog_window').modal('open');
-        },
-        move: function move() {
-            if (this.left === -5) {
-                this.left = 300;
-            } else {
-                this.left = -5;
-            }
-        },
-        transportMessages: function transportMessages() {
-            this.$emit('transport-messages', this.messagesUnread);
-        }
-    }
-});
-
-exports.default = UserMenu;
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports) {
-
-module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnread.length > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnread.length }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
 
 /***/ })
 /******/ ]);

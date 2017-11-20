@@ -27,20 +27,10 @@
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                    <div class="file-field input-field col s12">
-                                        {{ form.image.errors }}
-                                        <div class="btn">
-                                            <span>{{ form.image.label }}</span>
-                                            {{ form.image }}
-                                        </div>
-                                        <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-group">
                                     <div class="input-field col s12">
-                                        Место для вписывания тегов
+                                        <div class="__tags-field">
+                                            Место для вписывания тегов
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="input-group">
@@ -64,18 +54,31 @@
                                         {{ form.annotation }}                                        
                                     </div>
                                 </div>
+                               
                                 <div class="input-group">
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s7">
                                         {{ form.content.errors }}
                                         {{ form.content.label_tag }}
                                         {{ form.content }}                                        
+                                    </div>
+                                    <div class="file-field input-field col s5">
+                                        {{ form.image.errors }}
+                                        <div class="__preview-image">
+                                            <div class="btn">
+                                                <span>{{ form.image.label }}</span>
+                                                {{ form.image }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col s6">
-                                <a class="left amber darken-3 __margin-left_m  btn-hovered waves-effect waves-light btn-large" href="{% url 'blog:index' %}">
+                                <a class="left amber darken-3 __margin-left_s  btn-hovered waves-effect waves-light btn-large" href="{% url 'blog:index' %}">
                                     Отмена
                                     <i class="material-icons right dp48">clear</i>
                                 </a>

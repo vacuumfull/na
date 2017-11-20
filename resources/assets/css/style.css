@@ -639,7 +639,6 @@ i.material-icons.__icon-margin_xs{
     background-color: white;
 }
 
-
 .__rate_icons{
     font-size: 40px;
     cursor: pointer;
@@ -684,6 +683,26 @@ i.material-icons.__icon-margin_xs{
 }
 .rating .__rate_icons i {
     color: #f3e13f;
+}
+div[data-field-id~='id_content']{
+    margin-top: 80px;
+}
+.__preview-image{
+    padding-top: 250px;
+}
+.__tags-field{
+    min-height: 80px;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+.__location-field{
+    min-height: 160px;
+}
+
+.__remove-field{
+    position: absolute;
+    right: 70px;
+    margin-top: 55px;
 }
 
 p.__message {

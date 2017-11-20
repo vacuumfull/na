@@ -18,11 +18,9 @@ new Vue({
         'comment-component': Comment
     },
     data: {
-        left: -5,
         userInfo: {
             name: ""
         },
-        dialogInfo: {},
         messagesUnread: {},
     },
     mounted(){

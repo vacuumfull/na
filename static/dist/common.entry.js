@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 20);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -33169,134 +33169,7 @@ exports.default = LeftModal;
 module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div class=\"modal-content\">\n        <h4>Диалог с <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s12\">\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n        </div>\n\n        <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n            &nbsp;&nbsp;Отправить\n            <i class=\"material-icons right dp48\">send</i>\n        </a>\n    </div>\n    <div class=\"modal-footer\">\n        <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>"
 
 /***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _vue = __webpack_require__(1);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(0);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _DialogComponent = __webpack_require__(7);
-
-var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
-
-var _LeftMessagesComponent = __webpack_require__(10);
-
-var _LeftMessagesComponent2 = _interopRequireDefault(_LeftMessagesComponent);
-
-var _LeftModalComponent = __webpack_require__(12);
-
-var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
-
-var _UserMenuComponent = __webpack_require__(57);
-
-var _UserMenuComponent2 = _interopRequireDefault(_UserMenuComponent);
-
-__webpack_require__(19);
-
-__webpack_require__(20);
-
-__webpack_require__(21);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-new _vue2.default({
-    el: '#index',
-    components: {
-        'dialog-component': _DialogComponent2.default,
-        'left-messages': _LeftMessagesComponent2.default,
-        'left-modal': _LeftModalComponent2.default,
-        'user-menu': _UserMenuComponent2.default
-    },
-    data: {
-        userInfo: {
-            name: ""
-        },
-        messagesUnread: {}
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)(".button-collapse").sideNav();
-    },
-
-    methods: {
-        link: function link(string) {
-            window.location = window.location.origin + string;
-        },
-        openModal: function openModal(userInfo) {
-            this.userInfo = userInfo;
-        },
-        transportUserMessages: function transportUserMessages(messagesUnread) {
-            this.messagesUnread = messagesUnread;
-        }
-    }
-});
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33318,7 +33191,7 @@ var _materializeCss = __webpack_require__(2);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _userMenu = __webpack_require__(58);
+var _userMenu = __webpack_require__(15);
 
 var _userMenu2 = _interopRequireDefault(_userMenu);
 
@@ -33398,10 +33271,102 @@ var UserMenu = _vue2.default.extend({
 exports.default = UserMenu;
 
 /***/ }),
-/* 58 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnread.length > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnread.length }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _vue = __webpack_require__(1);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _DialogComponent = __webpack_require__(7);
+
+var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
+
+var _LeftMessagesComponent = __webpack_require__(10);
+
+var _LeftMessagesComponent2 = _interopRequireDefault(_LeftMessagesComponent);
+
+var _LeftModalComponent = __webpack_require__(12);
+
+var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
+
+var _UserMenuComponent = __webpack_require__(14);
+
+var _UserMenuComponent2 = _interopRequireDefault(_UserMenuComponent);
+
+__webpack_require__(21);
+
+__webpack_require__(22);
+
+__webpack_require__(23);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+new _vue2.default({
+    el: '#index',
+    components: {
+        'dialog-component': _DialogComponent2.default,
+        'left-messages': _LeftMessagesComponent2.default,
+        'left-modal': _LeftModalComponent2.default,
+        'user-menu': _UserMenuComponent2.default
+    },
+    data: {
+        userInfo: {
+            name: ""
+        },
+        messagesUnread: {}
+    },
+    mounted: function mounted() {
+        (0, _jquery2.default)(".button-collapse").sideNav();
+    },
+
+    methods: {
+        link: function link(string) {
+            window.location = window.location.origin + string;
+        },
+        openModal: function openModal(userInfo) {
+            this.userInfo = userInfo;
+        },
+        transportUserMessages: function transportUserMessages(messagesUnread) {
+            this.messagesUnread = messagesUnread;
+        }
+    }
+});
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
