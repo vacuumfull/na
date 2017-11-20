@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Datepicker from 'vuejs-datepicker';
+import moment from 'moment';
 import $ from 'jquery';
 import Dialog from './components/DialogComponent';
 import LeftMessages from './components/LeftMessagesComponent';
@@ -29,7 +30,6 @@ new Vue({
         messagesUnread: {},
     },
     mounted(){
-        console.dir(Datepicker)
         this.init()
         setTimeout(() => {
             let mapInput = document.querySelectorAll('#map-coordinates > div > div > input')[0];
@@ -50,7 +50,10 @@ new Vue({
             $('#id_description').addClass('materialize-textarea');
             $('.__worktime textarea').addClass('materialize-textarea');
             $('.__remove-field label').text('Удалить место');
-            this.date = new Date()
+        },
+        customFormatter(date) {
+            
+            return;
         },
         openModal(userInfo){
             this.userInfo = userInfo;
@@ -65,7 +68,8 @@ new Vue({
             this.messagesUnread = messagesUnread;
         },
         setDate(date){
-            document.getElementById('id_date').value = date;
+            this.date = moment(date).format('YYYY-MM-D')
+            document.getElementById('id_date').value = this.date;
         }
     }
 });

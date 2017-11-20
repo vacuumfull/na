@@ -21,7 +21,7 @@
                                 </div>
                                 <div class="input-group input-daterange">
                                     <div class="input-field col s3">
-                                         <datepicker placeholder="Дата событияз" v-model="date" v-on:closed="setDate(date)"></datepicker>
+                                         <datepicker placeholder="Дата события" language="ru"  v-model="date"  v-on:closed="setDate(date)"></datepicker>
                                          {{ form.date.errors }}
                                     </div>
                                     <div class="input-field col s3 __hidden">
@@ -37,26 +37,26 @@
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                        <div class="input-field col s4">
-                                            {{ form.locations.errors }}
-                                            {{ form.locations }}
-                                            {{ form.locations.label_tag }}
-                                        </div>
+                                    <div class="input-field col s4">
+                                        {{ form.locations.errors }}
+                                        {{ form.locations }}
+                                        {{ form.locations.label_tag }}
                                     </div>
-                                    <div class="input-group">
-                                        <div class="input-field col s4">
-                                            {{ form.bands.errors }}
-                                            {{ form.bands }}
-                                            {{ form.bands.label_tag }}
-                                        </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s4">
+                                        {{ form.bands.errors }}
+                                        {{ form.bands }}
+                                        {{ form.bands.label_tag }}
                                     </div>
-                                    <div class="input-group">
-                                        <div class="input-field col s4">
-                                            {{ form.bands.errors }}
-                                            {{ form.musicians }}
-                                            {{ form.musicians.label_tag }}
-                                        </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s4">
+                                        {{ form.bands.errors }}
+                                        {{ form.musicians }}
+                                        {{ form.musicians.label_tag }}
                                     </div>
+                                </div>
                                 <div class="input-group">
                                     <div class="input-field col s12">
                                         <div class="__tags-field">

@@ -42,6 +42,7 @@
     "lodash": "^4.17.4",
     "lodash-webpack-plugin": "^0.11.4",
     "materialize-css": "^0.100.2",
+    "moment": "^2.19.2",
     "phantomjs-prebuilt": "^2.1.14",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.18.2",
