@@ -37462,17 +37462,26 @@ var Dialog = _vue2.default.extend({
                 fileReader.readAsDataURL(fileToLoad);
             }
         },
+        getSess: function getSess() {
+            return document.getElementById('session_id').innerHTML;
+        },
         sendMessage: function sendMessage() {
             var self = this,
-                uri = '/api/1/message',
+                uri = '/api/1/message/',
                 params = {
-                getter: self.getter,
-                message: self.message
+                sessionid: self.getSess(),
+                content: self.message,
+                login: 'almamater'
             };
             if (self.getter === null) {
                 return self.successAction('Выберите получателя!');
             }
-            _jquery2.default.post(uri, params).done(function (data) {}).fail(function (error) {
+            _jquery2.default.post(uri, params).done(function (data) {
+                if (data.success) {
+                    self.message = "";
+                    self.successAction('Сообщение отправлено!');
+                }
+            }).fail(function (error) {
                 console.error(error);
             });
         },

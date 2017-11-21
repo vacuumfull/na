@@ -96,18 +96,25 @@ const Dialog = Vue.extend({
                 fileReader.readAsDataURL(fileToLoad);
             }
         },
+        getSess(){
+            return document.getElementById('session_id').innerHTML;
+         },  
         sendMessage(){
             let self = this,
-                uri = '/api/1/message',
+                uri = '/api/1/message/',
                 params = {
-                    getter: self.getter,
-                    message: self.message
+                    sessionid: self.getSess(),
+                    content: self.message,
+                    login: 'almamater'
                 }
             if (self.getter === null){
                 return self.successAction('Выберите получателя!')
             }
             $.post(uri, params).done((data) => {
-
+                if (data.success){
+                    self.message = "";
+                    self.successAction('Сообщение отправлено!')
+                }
             }).fail((error) => {
                 console.error(error);
             });

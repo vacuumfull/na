@@ -74,3 +74,21 @@ RESPONSE:
 `{"success": "Comment success append"}`
 
 `{"error": "error string"}`
+
+
+### Send messages
+
+REQUEST:
+
+`POST /api/1/messages/`
+params:
+
+* login - getter login
+* content - message content 
+* sessionid - user session cookies from browser
+
+RESPONSE:
+
+`{"success": "Message success append"}`
+
+`{"error": "error string"}`

@@ -7,9 +7,24 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
+
 import blog.api
 import event.api
 import place.api
+import message.api
+
+
+def get_users(request, sessionid: str):
+    """Get users"""
+    user = _get_user(sessionid)
+
+    if not user:
+        result = JsonResponse({'error': 'User must be authenticated!'})
+
+    usernames = User.objects.values('username')
+    list_users = [entry['username'] for entry in usernames]
+    
+    return JsonResponse(list_users, safe=False)
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -95,6 +110,37 @@ def send_comment(request):
     return JsonResponse(result)
 
 
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_message(request):
+    sessionid = request.POST.get('sessionid')
+    login = request.POST.get('login')
+    content = request.POST.get('content', '')
+    from_user = _get_user(sessionid)
+    to_user = _get_message_getter(login)
+    last_message = request.session.get('last_message')
+    result = {}
+
+    if not from_user:
+        result = {'error': 'User must be authenticated!'}
+
+    if not content.strip():
+        result = {'error': 'Content not be empty!'}
+
+    if last_message:
+        last_message = datetime.strptime(last_message, r'%x %X')
+        if datetime.now() - last_message < timedelta(seconds=15):
+            result = {'error': 'Too many query per minutes!'}
+
+    request.session['last_message'] = datetime.now().strftime(r'%x %X')
+    if not result.get('error'):
+        getattr(_load_module('message'), 'send_message')(content, from_user, to_user)
+        result = {'success': 'Message success append'}
+
+    return JsonResponse(result)
+
+
+
 def _get_user(sessionid):
     """Get user info from sessionid token."""
     session = SessionStore(sessionid)
@@ -106,12 +152,22 @@ def _get_user(sessionid):
     return user
 
 
+def _get_message_getter(login):
+    try:
+        user = User.objects.get(username=login)
+    except User.DoesNotExists:
+        user = None
+
+    return user
+
+
 def _load_module(module_name: str) -> object:
     """Load module api from string."""
     module_dict = {
         'blog': blog.api,
         'event': event.api,
         'place': place.api,
+        'message': message.api
     }
 
     return module_dict[module_name]
