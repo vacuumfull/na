@@ -16,26 +16,7 @@ const Dialog = Vue.extend({
             isSelected: false,
             selected: null,
             users: [
-                {
-                    name: "Vasya",
-                    role: "deputy"
-                },
-                {
-                    name: "Kyle",
-                    role: "musician"
-                },
-                {
-                    name: "Fedor",
-                    role: "musician"
-                },
-                {
-                    name: "Bondarchuk",
-                    role: "organizer"
-                },
-                {
-                    name: "Alice",
-                    role: "admin"
-                },
+                
             ],
             messages: []
         }
@@ -114,6 +95,9 @@ const Dialog = Vue.extend({
                 if (data.success){
                     self.message = "";
                     self.successAction('Сообщение отправлено!')
+                }
+                if (data.error){
+                    console.error(data.error)
                 }
             }).fail((error) => {
                 console.error(error);

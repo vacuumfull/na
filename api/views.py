@@ -36,6 +36,15 @@ def get_rating(request, sessionid: str, app: str, key: int):
 
     return JsonResponse(result)
 
+def get_messages_unread(request, sessionid:str):
+    """Get unread user messages"""
+    user = _get_user(sessionid)
+
+    result = {}
+    result = getattr(_load_module('message'), 'get_unread_messages')(user)
+
+    return JsonResponse(result, safe=False)
+
 
 @csrf_exempt
 @require_http_methods(['POST'])

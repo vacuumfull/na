@@ -13,6 +13,14 @@ from uuslug import uuslug
 
 class MessageManager(models.Manager):
 
+    def unread(self, to_user):
+        """All unread messages"""
+        rows = Message.objects.filter(read=False, deleted=False, to_user=to_user).values('content', 'from_user', 'created_at')
+        rows.order_by('created_at')
+        result = list(rows)
+    
+        return result
+
     def user_history(self, from_user: User, to_user: User, offset: int=0):
         """All published post."""
         result = Message.objects.filter(read=True, deleted=False,
@@ -37,7 +45,7 @@ class Message(models.Model):
     objects = MessageManager()
 
     def __str__(self):
-        return "{}: {}".format(self.from_user, self.content)
+        return "{}: {}".format(self.user, self.content)
 
     class Meta:
         ordering = ['created_at', 'from_user']
