@@ -30,10 +30,10 @@ class MessageManager(models.Manager):
         return result
 
 
-    def user_history(self, from_user: User, to_user: User, offset: int=0):
+    def user_history(self, dialog:int, offset:int=0):
         """All published post."""
         result = Message.objects.filter(read=True, deleted=False,
-                                        from_user=from_user, to_user=to_user)[offset:offset+20]
+                                        dialog_id=dialog)[offset:offset+20]
         result.order_by('created_at')
         return result 
 
