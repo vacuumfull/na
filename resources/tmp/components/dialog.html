@@ -4,7 +4,7 @@
         <h4 v-if="isSelected" class="black-text">Диалог c <span class="purple-text text-darken-4">{{ getter }}</span></h4>
         <div class="dialog-field">
             <div class="row">
-                <div class="col s4 __border_right">
+                <div class="col s5 __border_right">
                     <div class="__filter __padding-right_l">
                         <div class="input-group">
                             <div class="input-field user-search">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col s8">
+                <div class="col s7">
                     <div class="__messages-window">
                         <div v-if="selected !== null" >
                             <p v-for="message in selected" class="__margin-top_xs __margin-bottom_xs">

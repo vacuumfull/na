@@ -17,6 +17,10 @@ table.__left > thead> tr > th.__left{
     min-height: 445px;
 }
 
+.collection .collection-item {
+    padding: 10px 10px;
+}
+
 .__left-dialog_btn{
     position: absolute;
     top: 219px;

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 143);
+/******/ 	return __webpack_require__(__webpack_require__.s = 146);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -9888,9 +9888,2653 @@ return jQuery;
 /***/ }),
 
 /***/ 10:
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s4 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in  messages\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s8\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
+ * http://hammerjs.github.io/
+ *
+ * Copyright (c) 2016 Jorik Tangelder;
+ * Licensed under the MIT license */
+(function(window, document, exportName, undefined) {
+  'use strict';
+
+var VENDOR_PREFIXES = ['', 'webkit', 'Moz', 'MS', 'ms', 'o'];
+var TEST_ELEMENT = document.createElement('div');
+
+var TYPE_FUNCTION = 'function';
+
+var round = Math.round;
+var abs = Math.abs;
+var now = Date.now;
+
+/**
+ * set a timeout with a given scope
+ * @param {Function} fn
+ * @param {Number} timeout
+ * @param {Object} context
+ * @returns {number}
+ */
+function setTimeoutContext(fn, timeout, context) {
+    return setTimeout(bindFn(fn, context), timeout);
+}
+
+/**
+ * if the argument is an array, we want to execute the fn on each entry
+ * if it aint an array we don't want to do a thing.
+ * this is used by all the methods that accept a single and array argument.
+ * @param {*|Array} arg
+ * @param {String} fn
+ * @param {Object} [context]
+ * @returns {Boolean}
+ */
+function invokeArrayArg(arg, fn, context) {
+    if (Array.isArray(arg)) {
+        each(arg, context[fn], context);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * walk objects and arrays
+ * @param {Object} obj
+ * @param {Function} iterator
+ * @param {Object} context
+ */
+function each(obj, iterator, context) {
+    var i;
+
+    if (!obj) {
+        return;
+    }
+
+    if (obj.forEach) {
+        obj.forEach(iterator, context);
+    } else if (obj.length !== undefined) {
+        i = 0;
+        while (i < obj.length) {
+            iterator.call(context, obj[i], i, obj);
+            i++;
+        }
+    } else {
+        for (i in obj) {
+            obj.hasOwnProperty(i) && iterator.call(context, obj[i], i, obj);
+        }
+    }
+}
+
+/**
+ * wrap a method with a deprecation warning and stack trace
+ * @param {Function} method
+ * @param {String} name
+ * @param {String} message
+ * @returns {Function} A new function wrapping the supplied method.
+ */
+function deprecate(method, name, message) {
+    var deprecationMessage = 'DEPRECATED METHOD: ' + name + '\n' + message + ' AT \n';
+    return function() {
+        var e = new Error('get-stack-trace');
+        var stack = e && e.stack ? e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+            .replace(/^\s+at\s+/gm, '')
+            .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@') : 'Unknown Stack Trace';
+
+        var log = window.console && (window.console.warn || window.console.log);
+        if (log) {
+            log.call(window.console, deprecationMessage, stack);
+        }
+        return method.apply(this, arguments);
+    };
+}
+
+/**
+ * extend object.
+ * means that properties in dest will be overwritten by the ones in src.
+ * @param {Object} target
+ * @param {...Object} objects_to_assign
+ * @returns {Object} target
+ */
+var assign;
+if (typeof Object.assign !== 'function') {
+    assign = function assign(target) {
+        if (target === undefined || target === null) {
+            throw new TypeError('Cannot convert undefined or null to object');
+        }
+
+        var output = Object(target);
+        for (var index = 1; index < arguments.length; index++) {
+            var source = arguments[index];
+            if (source !== undefined && source !== null) {
+                for (var nextKey in source) {
+                    if (source.hasOwnProperty(nextKey)) {
+                        output[nextKey] = source[nextKey];
+                    }
+                }
+            }
+        }
+        return output;
+    };
+} else {
+    assign = Object.assign;
+}
+
+/**
+ * extend object.
+ * means that properties in dest will be overwritten by the ones in src.
+ * @param {Object} dest
+ * @param {Object} src
+ * @param {Boolean} [merge=false]
+ * @returns {Object} dest
+ */
+var extend = deprecate(function extend(dest, src, merge) {
+    var keys = Object.keys(src);
+    var i = 0;
+    while (i < keys.length) {
+        if (!merge || (merge && dest[keys[i]] === undefined)) {
+            dest[keys[i]] = src[keys[i]];
+        }
+        i++;
+    }
+    return dest;
+}, 'extend', 'Use `assign`.');
+
+/**
+ * merge the values from src in the dest.
+ * means that properties that exist in dest will not be overwritten by src
+ * @param {Object} dest
+ * @param {Object} src
+ * @returns {Object} dest
+ */
+var merge = deprecate(function merge(dest, src) {
+    return extend(dest, src, true);
+}, 'merge', 'Use `assign`.');
+
+/**
+ * simple class inheritance
+ * @param {Function} child
+ * @param {Function} base
+ * @param {Object} [properties]
+ */
+function inherit(child, base, properties) {
+    var baseP = base.prototype,
+        childP;
+
+    childP = child.prototype = Object.create(baseP);
+    childP.constructor = child;
+    childP._super = baseP;
+
+    if (properties) {
+        assign(childP, properties);
+    }
+}
+
+/**
+ * simple function bind
+ * @param {Function} fn
+ * @param {Object} context
+ * @returns {Function}
+ */
+function bindFn(fn, context) {
+    return function boundFn() {
+        return fn.apply(context, arguments);
+    };
+}
+
+/**
+ * let a boolean value also be a function that must return a boolean
+ * this first item in args will be used as the context
+ * @param {Boolean|Function} val
+ * @param {Array} [args]
+ * @returns {Boolean}
+ */
+function boolOrFn(val, args) {
+    if (typeof val == TYPE_FUNCTION) {
+        return val.apply(args ? args[0] || undefined : undefined, args);
+    }
+    return val;
+}
+
+/**
+ * use the val2 when val1 is undefined
+ * @param {*} val1
+ * @param {*} val2
+ * @returns {*}
+ */
+function ifUndefined(val1, val2) {
+    return (val1 === undefined) ? val2 : val1;
+}
+
+/**
+ * addEventListener with multiple events at once
+ * @param {EventTarget} target
+ * @param {String} types
+ * @param {Function} handler
+ */
+function addEventListeners(target, types, handler) {
+    each(splitStr(types), function(type) {
+        target.addEventListener(type, handler, false);
+    });
+}
+
+/**
+ * removeEventListener with multiple events at once
+ * @param {EventTarget} target
+ * @param {String} types
+ * @param {Function} handler
+ */
+function removeEventListeners(target, types, handler) {
+    each(splitStr(types), function(type) {
+        target.removeEventListener(type, handler, false);
+    });
+}
+
+/**
+ * find if a node is in the given parent
+ * @method hasParent
+ * @param {HTMLElement} node
+ * @param {HTMLElement} parent
+ * @return {Boolean} found
+ */
+function hasParent(node, parent) {
+    while (node) {
+        if (node == parent) {
+            return true;
+        }
+        node = node.parentNode;
+    }
+    return false;
+}
+
+/**
+ * small indexOf wrapper
+ * @param {String} str
+ * @param {String} find
+ * @returns {Boolean} found
+ */
+function inStr(str, find) {
+    return str.indexOf(find) > -1;
+}
+
+/**
+ * split string on whitespace
+ * @param {String} str
+ * @returns {Array} words
+ */
+function splitStr(str) {
+    return str.trim().split(/\s+/g);
+}
+
+/**
+ * find if a array contains the object using indexOf or a simple polyFill
+ * @param {Array} src
+ * @param {String} find
+ * @param {String} [findByKey]
+ * @return {Boolean|Number} false when not found, or the index
+ */
+function inArray(src, find, findByKey) {
+    if (src.indexOf && !findByKey) {
+        return src.indexOf(find);
+    } else {
+        var i = 0;
+        while (i < src.length) {
+            if ((findByKey && src[i][findByKey] == find) || (!findByKey && src[i] === find)) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+}
+
+/**
+ * convert array-like objects to real arrays
+ * @param {Object} obj
+ * @returns {Array}
+ */
+function toArray(obj) {
+    return Array.prototype.slice.call(obj, 0);
+}
+
+/**
+ * unique array with objects based on a key (like 'id') or just by the array's value
+ * @param {Array} src [{id:1},{id:2},{id:1}]
+ * @param {String} [key]
+ * @param {Boolean} [sort=False]
+ * @returns {Array} [{id:1},{id:2}]
+ */
+function uniqueArray(src, key, sort) {
+    var results = [];
+    var values = [];
+    var i = 0;
+
+    while (i < src.length) {
+        var val = key ? src[i][key] : src[i];
+        if (inArray(values, val) < 0) {
+            results.push(src[i]);
+        }
+        values[i] = val;
+        i++;
+    }
+
+    if (sort) {
+        if (!key) {
+            results = results.sort();
+        } else {
+            results = results.sort(function sortUniqueArray(a, b) {
+                return a[key] > b[key];
+            });
+        }
+    }
+
+    return results;
+}
+
+/**
+ * get the prefixed property
+ * @param {Object} obj
+ * @param {String} property
+ * @returns {String|Undefined} prefixed
+ */
+function prefixed(obj, property) {
+    var prefix, prop;
+    var camelProp = property[0].toUpperCase() + property.slice(1);
+
+    var i = 0;
+    while (i < VENDOR_PREFIXES.length) {
+        prefix = VENDOR_PREFIXES[i];
+        prop = (prefix) ? prefix + camelProp : property;
+
+        if (prop in obj) {
+            return prop;
+        }
+        i++;
+    }
+    return undefined;
+}
+
+/**
+ * get a unique id
+ * @returns {number} uniqueId
+ */
+var _uniqueId = 1;
+function uniqueId() {
+    return _uniqueId++;
+}
+
+/**
+ * get the window object of an element
+ * @param {HTMLElement} element
+ * @returns {DocumentView|Window}
+ */
+function getWindowForElement(element) {
+    var doc = element.ownerDocument || element;
+    return (doc.defaultView || doc.parentWindow || window);
+}
+
+var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
+
+var SUPPORT_TOUCH = ('ontouchstart' in window);
+var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
+var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
+
+var INPUT_TYPE_TOUCH = 'touch';
+var INPUT_TYPE_PEN = 'pen';
+var INPUT_TYPE_MOUSE = 'mouse';
+var INPUT_TYPE_KINECT = 'kinect';
+
+var COMPUTE_INTERVAL = 25;
+
+var INPUT_START = 1;
+var INPUT_MOVE = 2;
+var INPUT_END = 4;
+var INPUT_CANCEL = 8;
+
+var DIRECTION_NONE = 1;
+var DIRECTION_LEFT = 2;
+var DIRECTION_RIGHT = 4;
+var DIRECTION_UP = 8;
+var DIRECTION_DOWN = 16;
+
+var DIRECTION_HORIZONTAL = DIRECTION_LEFT | DIRECTION_RIGHT;
+var DIRECTION_VERTICAL = DIRECTION_UP | DIRECTION_DOWN;
+var DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
+
+var PROPS_XY = ['x', 'y'];
+var PROPS_CLIENT_XY = ['clientX', 'clientY'];
+
+/**
+ * create new input type manager
+ * @param {Manager} manager
+ * @param {Function} callback
+ * @returns {Input}
+ * @constructor
+ */
+function Input(manager, callback) {
+    var self = this;
+    this.manager = manager;
+    this.callback = callback;
+    this.element = manager.element;
+    this.target = manager.options.inputTarget;
+
+    // smaller wrapper around the handler, for the scope and the enabled state of the manager,
+    // so when disabled the input events are completely bypassed.
+    this.domHandler = function(ev) {
+        if (boolOrFn(manager.options.enable, [manager])) {
+            self.handler(ev);
+        }
+    };
+
+    this.init();
+
+}
+
+Input.prototype = {
+    /**
+     * should handle the inputEvent data and trigger the callback
+     * @virtual
+     */
+    handler: function() { },
+
+    /**
+     * bind the events
+     */
+    init: function() {
+        this.evEl && addEventListeners(this.element, this.evEl, this.domHandler);
+        this.evTarget && addEventListeners(this.target, this.evTarget, this.domHandler);
+        this.evWin && addEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+    },
+
+    /**
+     * unbind the events
+     */
+    destroy: function() {
+        this.evEl && removeEventListeners(this.element, this.evEl, this.domHandler);
+        this.evTarget && removeEventListeners(this.target, this.evTarget, this.domHandler);
+        this.evWin && removeEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+    }
+};
+
+/**
+ * create new input type manager
+ * called by the Manager constructor
+ * @param {Hammer} manager
+ * @returns {Input}
+ */
+function createInputInstance(manager) {
+    var Type;
+    var inputClass = manager.options.inputClass;
+
+    if (inputClass) {
+        Type = inputClass;
+    } else if (SUPPORT_POINTER_EVENTS) {
+        Type = PointerEventInput;
+    } else if (SUPPORT_ONLY_TOUCH) {
+        Type = TouchInput;
+    } else if (!SUPPORT_TOUCH) {
+        Type = MouseInput;
+    } else {
+        Type = TouchMouseInput;
+    }
+    return new (Type)(manager, inputHandler);
+}
+
+/**
+ * handle input events
+ * @param {Manager} manager
+ * @param {String} eventType
+ * @param {Object} input
+ */
+function inputHandler(manager, eventType, input) {
+    var pointersLen = input.pointers.length;
+    var changedPointersLen = input.changedPointers.length;
+    var isFirst = (eventType & INPUT_START && (pointersLen - changedPointersLen === 0));
+    var isFinal = (eventType & (INPUT_END | INPUT_CANCEL) && (pointersLen - changedPointersLen === 0));
+
+    input.isFirst = !!isFirst;
+    input.isFinal = !!isFinal;
+
+    if (isFirst) {
+        manager.session = {};
+    }
+
+    // source event is the normalized value of the domEvents
+    // like 'touchstart, mouseup, pointerdown'
+    input.eventType = eventType;
+
+    // compute scale, rotation etc
+    computeInputData(manager, input);
+
+    // emit secret event
+    manager.emit('hammer.input', input);
+
+    manager.recognize(input);
+    manager.session.prevInput = input;
+}
+
+/**
+ * extend the data with some usable properties like scale, rotate, velocity etc
+ * @param {Object} manager
+ * @param {Object} input
+ */
+function computeInputData(manager, input) {
+    var session = manager.session;
+    var pointers = input.pointers;
+    var pointersLength = pointers.length;
+
+    // store the first input to calculate the distance and direction
+    if (!session.firstInput) {
+        session.firstInput = simpleCloneInputData(input);
+    }
+
+    // to compute scale and rotation we need to store the multiple touches
+    if (pointersLength > 1 && !session.firstMultiple) {
+        session.firstMultiple = simpleCloneInputData(input);
+    } else if (pointersLength === 1) {
+        session.firstMultiple = false;
+    }
+
+    var firstInput = session.firstInput;
+    var firstMultiple = session.firstMultiple;
+    var offsetCenter = firstMultiple ? firstMultiple.center : firstInput.center;
+
+    var center = input.center = getCenter(pointers);
+    input.timeStamp = now();
+    input.deltaTime = input.timeStamp - firstInput.timeStamp;
+
+    input.angle = getAngle(offsetCenter, center);
+    input.distance = getDistance(offsetCenter, center);
+
+    computeDeltaXY(session, input);
+    input.offsetDirection = getDirection(input.deltaX, input.deltaY);
+
+    var overallVelocity = getVelocity(input.deltaTime, input.deltaX, input.deltaY);
+    input.overallVelocityX = overallVelocity.x;
+    input.overallVelocityY = overallVelocity.y;
+    input.overallVelocity = (abs(overallVelocity.x) > abs(overallVelocity.y)) ? overallVelocity.x : overallVelocity.y;
+
+    input.scale = firstMultiple ? getScale(firstMultiple.pointers, pointers) : 1;
+    input.rotation = firstMultiple ? getRotation(firstMultiple.pointers, pointers) : 0;
+
+    input.maxPointers = !session.prevInput ? input.pointers.length : ((input.pointers.length >
+        session.prevInput.maxPointers) ? input.pointers.length : session.prevInput.maxPointers);
+
+    computeIntervalInputData(session, input);
+
+    // find the correct target
+    var target = manager.element;
+    if (hasParent(input.srcEvent.target, target)) {
+        target = input.srcEvent.target;
+    }
+    input.target = target;
+}
+
+function computeDeltaXY(session, input) {
+    var center = input.center;
+    var offset = session.offsetDelta || {};
+    var prevDelta = session.prevDelta || {};
+    var prevInput = session.prevInput || {};
+
+    if (input.eventType === INPUT_START || prevInput.eventType === INPUT_END) {
+        prevDelta = session.prevDelta = {
+            x: prevInput.deltaX || 0,
+            y: prevInput.deltaY || 0
+        };
+
+        offset = session.offsetDelta = {
+            x: center.x,
+            y: center.y
+        };
+    }
+
+    input.deltaX = prevDelta.x + (center.x - offset.x);
+    input.deltaY = prevDelta.y + (center.y - offset.y);
+}
+
+/**
+ * velocity is calculated every x ms
+ * @param {Object} session
+ * @param {Object} input
+ */
+function computeIntervalInputData(session, input) {
+    var last = session.lastInterval || input,
+        deltaTime = input.timeStamp - last.timeStamp,
+        velocity, velocityX, velocityY, direction;
+
+    if (input.eventType != INPUT_CANCEL && (deltaTime > COMPUTE_INTERVAL || last.velocity === undefined)) {
+        var deltaX = input.deltaX - last.deltaX;
+        var deltaY = input.deltaY - last.deltaY;
+
+        var v = getVelocity(deltaTime, deltaX, deltaY);
+        velocityX = v.x;
+        velocityY = v.y;
+        velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
+        direction = getDirection(deltaX, deltaY);
+
+        session.lastInterval = input;
+    } else {
+        // use latest velocity info if it doesn't overtake a minimum period
+        velocity = last.velocity;
+        velocityX = last.velocityX;
+        velocityY = last.velocityY;
+        direction = last.direction;
+    }
+
+    input.velocity = velocity;
+    input.velocityX = velocityX;
+    input.velocityY = velocityY;
+    input.direction = direction;
+}
+
+/**
+ * create a simple clone from the input used for storage of firstInput and firstMultiple
+ * @param {Object} input
+ * @returns {Object} clonedInputData
+ */
+function simpleCloneInputData(input) {
+    // make a simple copy of the pointers because we will get a reference if we don't
+    // we only need clientXY for the calculations
+    var pointers = [];
+    var i = 0;
+    while (i < input.pointers.length) {
+        pointers[i] = {
+            clientX: round(input.pointers[i].clientX),
+            clientY: round(input.pointers[i].clientY)
+        };
+        i++;
+    }
+
+    return {
+        timeStamp: now(),
+        pointers: pointers,
+        center: getCenter(pointers),
+        deltaX: input.deltaX,
+        deltaY: input.deltaY
+    };
+}
+
+/**
+ * get the center of all the pointers
+ * @param {Array} pointers
+ * @return {Object} center contains `x` and `y` properties
+ */
+function getCenter(pointers) {
+    var pointersLength = pointers.length;
+
+    // no need to loop when only one touch
+    if (pointersLength === 1) {
+        return {
+            x: round(pointers[0].clientX),
+            y: round(pointers[0].clientY)
+        };
+    }
+
+    var x = 0, y = 0, i = 0;
+    while (i < pointersLength) {
+        x += pointers[i].clientX;
+        y += pointers[i].clientY;
+        i++;
+    }
+
+    return {
+        x: round(x / pointersLength),
+        y: round(y / pointersLength)
+    };
+}
+
+/**
+ * calculate the velocity between two points. unit is in px per ms.
+ * @param {Number} deltaTime
+ * @param {Number} x
+ * @param {Number} y
+ * @return {Object} velocity `x` and `y`
+ */
+function getVelocity(deltaTime, x, y) {
+    return {
+        x: x / deltaTime || 0,
+        y: y / deltaTime || 0
+    };
+}
+
+/**
+ * get the direction between two points
+ * @param {Number} x
+ * @param {Number} y
+ * @return {Number} direction
+ */
+function getDirection(x, y) {
+    if (x === y) {
+        return DIRECTION_NONE;
+    }
+
+    if (abs(x) >= abs(y)) {
+        return x < 0 ? DIRECTION_LEFT : DIRECTION_RIGHT;
+    }
+    return y < 0 ? DIRECTION_UP : DIRECTION_DOWN;
+}
+
+/**
+ * calculate the absolute distance between two points
+ * @param {Object} p1 {x, y}
+ * @param {Object} p2 {x, y}
+ * @param {Array} [props] containing x and y keys
+ * @return {Number} distance
+ */
+function getDistance(p1, p2, props) {
+    if (!props) {
+        props = PROPS_XY;
+    }
+    var x = p2[props[0]] - p1[props[0]],
+        y = p2[props[1]] - p1[props[1]];
+
+    return Math.sqrt((x * x) + (y * y));
+}
+
+/**
+ * calculate the angle between two coordinates
+ * @param {Object} p1
+ * @param {Object} p2
+ * @param {Array} [props] containing x and y keys
+ * @return {Number} angle
+ */
+function getAngle(p1, p2, props) {
+    if (!props) {
+        props = PROPS_XY;
+    }
+    var x = p2[props[0]] - p1[props[0]],
+        y = p2[props[1]] - p1[props[1]];
+    return Math.atan2(y, x) * 180 / Math.PI;
+}
+
+/**
+ * calculate the rotation degrees between two pointersets
+ * @param {Array} start array of pointers
+ * @param {Array} end array of pointers
+ * @return {Number} rotation
+ */
+function getRotation(start, end) {
+    return getAngle(end[1], end[0], PROPS_CLIENT_XY) + getAngle(start[1], start[0], PROPS_CLIENT_XY);
+}
+
+/**
+ * calculate the scale factor between two pointersets
+ * no scale is 1, and goes down to 0 when pinched together, and bigger when pinched out
+ * @param {Array} start array of pointers
+ * @param {Array} end array of pointers
+ * @return {Number} scale
+ */
+function getScale(start, end) {
+    return getDistance(end[0], end[1], PROPS_CLIENT_XY) / getDistance(start[0], start[1], PROPS_CLIENT_XY);
+}
+
+var MOUSE_INPUT_MAP = {
+    mousedown: INPUT_START,
+    mousemove: INPUT_MOVE,
+    mouseup: INPUT_END
+};
+
+var MOUSE_ELEMENT_EVENTS = 'mousedown';
+var MOUSE_WINDOW_EVENTS = 'mousemove mouseup';
+
+/**
+ * Mouse events input
+ * @constructor
+ * @extends Input
+ */
+function MouseInput() {
+    this.evEl = MOUSE_ELEMENT_EVENTS;
+    this.evWin = MOUSE_WINDOW_EVENTS;
+
+    this.pressed = false; // mousedown state
+
+    Input.apply(this, arguments);
+}
+
+inherit(MouseInput, Input, {
+    /**
+     * handle mouse events
+     * @param {Object} ev
+     */
+    handler: function MEhandler(ev) {
+        var eventType = MOUSE_INPUT_MAP[ev.type];
+
+        // on start we want to have the left mouse button down
+        if (eventType & INPUT_START && ev.button === 0) {
+            this.pressed = true;
+        }
+
+        if (eventType & INPUT_MOVE && ev.which !== 1) {
+            eventType = INPUT_END;
+        }
+
+        // mouse must be down
+        if (!this.pressed) {
+            return;
+        }
+
+        if (eventType & INPUT_END) {
+            this.pressed = false;
+        }
+
+        this.callback(this.manager, eventType, {
+            pointers: [ev],
+            changedPointers: [ev],
+            pointerType: INPUT_TYPE_MOUSE,
+            srcEvent: ev
+        });
+    }
+});
+
+var POINTER_INPUT_MAP = {
+    pointerdown: INPUT_START,
+    pointermove: INPUT_MOVE,
+    pointerup: INPUT_END,
+    pointercancel: INPUT_CANCEL,
+    pointerout: INPUT_CANCEL
+};
+
+// in IE10 the pointer types is defined as an enum
+var IE10_POINTER_TYPE_ENUM = {
+    2: INPUT_TYPE_TOUCH,
+    3: INPUT_TYPE_PEN,
+    4: INPUT_TYPE_MOUSE,
+    5: INPUT_TYPE_KINECT // see https://twitter.com/jacobrossi/status/480596438489890816
+};
+
+var POINTER_ELEMENT_EVENTS = 'pointerdown';
+var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel';
+
+// IE10 has prefixed support, and case-sensitive
+if (window.MSPointerEvent && !window.PointerEvent) {
+    POINTER_ELEMENT_EVENTS = 'MSPointerDown';
+    POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
+}
+
+/**
+ * Pointer events input
+ * @constructor
+ * @extends Input
+ */
+function PointerEventInput() {
+    this.evEl = POINTER_ELEMENT_EVENTS;
+    this.evWin = POINTER_WINDOW_EVENTS;
+
+    Input.apply(this, arguments);
+
+    this.store = (this.manager.session.pointerEvents = []);
+}
+
+inherit(PointerEventInput, Input, {
+    /**
+     * handle mouse events
+     * @param {Object} ev
+     */
+    handler: function PEhandler(ev) {
+        var store = this.store;
+        var removePointer = false;
+
+        var eventTypeNormalized = ev.type.toLowerCase().replace('ms', '');
+        var eventType = POINTER_INPUT_MAP[eventTypeNormalized];
+        var pointerType = IE10_POINTER_TYPE_ENUM[ev.pointerType] || ev.pointerType;
+
+        var isTouch = (pointerType == INPUT_TYPE_TOUCH);
+
+        // get index of the event in the store
+        var storeIndex = inArray(store, ev.pointerId, 'pointerId');
+
+        // start and mouse must be down
+        if (eventType & INPUT_START && (ev.button === 0 || isTouch)) {
+            if (storeIndex < 0) {
+                store.push(ev);
+                storeIndex = store.length - 1;
+            }
+        } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
+            removePointer = true;
+        }
+
+        // it not found, so the pointer hasn't been down (so it's probably a hover)
+        if (storeIndex < 0) {
+            return;
+        }
+
+        // update the event in the store
+        store[storeIndex] = ev;
+
+        this.callback(this.manager, eventType, {
+            pointers: store,
+            changedPointers: [ev],
+            pointerType: pointerType,
+            srcEvent: ev
+        });
+
+        if (removePointer) {
+            // remove from the store
+            store.splice(storeIndex, 1);
+        }
+    }
+});
+
+var SINGLE_TOUCH_INPUT_MAP = {
+    touchstart: INPUT_START,
+    touchmove: INPUT_MOVE,
+    touchend: INPUT_END,
+    touchcancel: INPUT_CANCEL
+};
+
+var SINGLE_TOUCH_TARGET_EVENTS = 'touchstart';
+var SINGLE_TOUCH_WINDOW_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+/**
+ * Touch events input
+ * @constructor
+ * @extends Input
+ */
+function SingleTouchInput() {
+    this.evTarget = SINGLE_TOUCH_TARGET_EVENTS;
+    this.evWin = SINGLE_TOUCH_WINDOW_EVENTS;
+    this.started = false;
+
+    Input.apply(this, arguments);
+}
+
+inherit(SingleTouchInput, Input, {
+    handler: function TEhandler(ev) {
+        var type = SINGLE_TOUCH_INPUT_MAP[ev.type];
+
+        // should we handle the touch events?
+        if (type === INPUT_START) {
+            this.started = true;
+        }
+
+        if (!this.started) {
+            return;
+        }
+
+        var touches = normalizeSingleTouches.call(this, ev, type);
+
+        // when done, reset the started state
+        if (type & (INPUT_END | INPUT_CANCEL) && touches[0].length - touches[1].length === 0) {
+            this.started = false;
+        }
+
+        this.callback(this.manager, type, {
+            pointers: touches[0],
+            changedPointers: touches[1],
+            pointerType: INPUT_TYPE_TOUCH,
+            srcEvent: ev
+        });
+    }
+});
+
+/**
+ * @this {TouchInput}
+ * @param {Object} ev
+ * @param {Number} type flag
+ * @returns {undefined|Array} [all, changed]
+ */
+function normalizeSingleTouches(ev, type) {
+    var all = toArray(ev.touches);
+    var changed = toArray(ev.changedTouches);
+
+    if (type & (INPUT_END | INPUT_CANCEL)) {
+        all = uniqueArray(all.concat(changed), 'identifier', true);
+    }
+
+    return [all, changed];
+}
+
+var TOUCH_INPUT_MAP = {
+    touchstart: INPUT_START,
+    touchmove: INPUT_MOVE,
+    touchend: INPUT_END,
+    touchcancel: INPUT_CANCEL
+};
+
+var TOUCH_TARGET_EVENTS = 'touchstart touchmove touchend touchcancel';
+
+/**
+ * Multi-user touch events input
+ * @constructor
+ * @extends Input
+ */
+function TouchInput() {
+    this.evTarget = TOUCH_TARGET_EVENTS;
+    this.targetIds = {};
+
+    Input.apply(this, arguments);
+}
+
+inherit(TouchInput, Input, {
+    handler: function MTEhandler(ev) {
+        var type = TOUCH_INPUT_MAP[ev.type];
+        var touches = getTouches.call(this, ev, type);
+        if (!touches) {
+            return;
+        }
+
+        this.callback(this.manager, type, {
+            pointers: touches[0],
+            changedPointers: touches[1],
+            pointerType: INPUT_TYPE_TOUCH,
+            srcEvent: ev
+        });
+    }
+});
+
+/**
+ * @this {TouchInput}
+ * @param {Object} ev
+ * @param {Number} type flag
+ * @returns {undefined|Array} [all, changed]
+ */
+function getTouches(ev, type) {
+    var allTouches = toArray(ev.touches);
+    var targetIds = this.targetIds;
+
+    // when there is only one touch, the process can be simplified
+    if (type & (INPUT_START | INPUT_MOVE) && allTouches.length === 1) {
+        targetIds[allTouches[0].identifier] = true;
+        return [allTouches, allTouches];
+    }
+
+    var i,
+        targetTouches,
+        changedTouches = toArray(ev.changedTouches),
+        changedTargetTouches = [],
+        target = this.target;
+
+    // get target touches from touches
+    targetTouches = allTouches.filter(function(touch) {
+        return hasParent(touch.target, target);
+    });
+
+    // collect touches
+    if (type === INPUT_START) {
+        i = 0;
+        while (i < targetTouches.length) {
+            targetIds[targetTouches[i].identifier] = true;
+            i++;
+        }
+    }
+
+    // filter changed touches to only contain touches that exist in the collected target ids
+    i = 0;
+    while (i < changedTouches.length) {
+        if (targetIds[changedTouches[i].identifier]) {
+            changedTargetTouches.push(changedTouches[i]);
+        }
+
+        // cleanup removed touches
+        if (type & (INPUT_END | INPUT_CANCEL)) {
+            delete targetIds[changedTouches[i].identifier];
+        }
+        i++;
+    }
+
+    if (!changedTargetTouches.length) {
+        return;
+    }
+
+    return [
+        // merge targetTouches with changedTargetTouches so it contains ALL touches, including 'end' and 'cancel'
+        uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true),
+        changedTargetTouches
+    ];
+}
+
+/**
+ * Combined touch and mouse input
+ *
+ * Touch has a higher priority then mouse, and while touching no mouse events are allowed.
+ * This because touch devices also emit mouse events while doing a touch.
+ *
+ * @constructor
+ * @extends Input
+ */
+
+var DEDUP_TIMEOUT = 2500;
+var DEDUP_DISTANCE = 25;
+
+function TouchMouseInput() {
+    Input.apply(this, arguments);
+
+    var handler = bindFn(this.handler, this);
+    this.touch = new TouchInput(this.manager, handler);
+    this.mouse = new MouseInput(this.manager, handler);
+
+    this.primaryTouch = null;
+    this.lastTouches = [];
+}
+
+inherit(TouchMouseInput, Input, {
+    /**
+     * handle mouse and touch events
+     * @param {Hammer} manager
+     * @param {String} inputEvent
+     * @param {Object} inputData
+     */
+    handler: function TMEhandler(manager, inputEvent, inputData) {
+        var isTouch = (inputData.pointerType == INPUT_TYPE_TOUCH),
+            isMouse = (inputData.pointerType == INPUT_TYPE_MOUSE);
+
+        if (isMouse && inputData.sourceCapabilities && inputData.sourceCapabilities.firesTouchEvents) {
+            return;
+        }
+
+        // when we're in a touch event, record touches to  de-dupe synthetic mouse event
+        if (isTouch) {
+            recordTouches.call(this, inputEvent, inputData);
+        } else if (isMouse && isSyntheticEvent.call(this, inputData)) {
+            return;
+        }
+
+        this.callback(manager, inputEvent, inputData);
+    },
+
+    /**
+     * remove the event listeners
+     */
+    destroy: function destroy() {
+        this.touch.destroy();
+        this.mouse.destroy();
+    }
+});
+
+function recordTouches(eventType, eventData) {
+    if (eventType & INPUT_START) {
+        this.primaryTouch = eventData.changedPointers[0].identifier;
+        setLastTouch.call(this, eventData);
+    } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
+        setLastTouch.call(this, eventData);
+    }
+}
+
+function setLastTouch(eventData) {
+    var touch = eventData.changedPointers[0];
+
+    if (touch.identifier === this.primaryTouch) {
+        var lastTouch = {x: touch.clientX, y: touch.clientY};
+        this.lastTouches.push(lastTouch);
+        var lts = this.lastTouches;
+        var removeLastTouch = function() {
+            var i = lts.indexOf(lastTouch);
+            if (i > -1) {
+                lts.splice(i, 1);
+            }
+        };
+        setTimeout(removeLastTouch, DEDUP_TIMEOUT);
+    }
+}
+
+function isSyntheticEvent(eventData) {
+    var x = eventData.srcEvent.clientX, y = eventData.srcEvent.clientY;
+    for (var i = 0; i < this.lastTouches.length; i++) {
+        var t = this.lastTouches[i];
+        var dx = Math.abs(x - t.x), dy = Math.abs(y - t.y);
+        if (dx <= DEDUP_DISTANCE && dy <= DEDUP_DISTANCE) {
+            return true;
+        }
+    }
+    return false;
+}
+
+var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
+var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
+
+// magical touchAction value
+var TOUCH_ACTION_COMPUTE = 'compute';
+var TOUCH_ACTION_AUTO = 'auto';
+var TOUCH_ACTION_MANIPULATION = 'manipulation'; // not implemented
+var TOUCH_ACTION_NONE = 'none';
+var TOUCH_ACTION_PAN_X = 'pan-x';
+var TOUCH_ACTION_PAN_Y = 'pan-y';
+var TOUCH_ACTION_MAP = getTouchActionProps();
+
+/**
+ * Touch Action
+ * sets the touchAction property or uses the js alternative
+ * @param {Manager} manager
+ * @param {String} value
+ * @constructor
+ */
+function TouchAction(manager, value) {
+    this.manager = manager;
+    this.set(value);
+}
+
+TouchAction.prototype = {
+    /**
+     * set the touchAction value on the element or enable the polyfill
+     * @param {String} value
+     */
+    set: function(value) {
+        // find out the touch-action by the event handlers
+        if (value == TOUCH_ACTION_COMPUTE) {
+            value = this.compute();
+        }
+
+        if (NATIVE_TOUCH_ACTION && this.manager.element.style && TOUCH_ACTION_MAP[value]) {
+            this.manager.element.style[PREFIXED_TOUCH_ACTION] = value;
+        }
+        this.actions = value.toLowerCase().trim();
+    },
+
+    /**
+     * just re-set the touchAction value
+     */
+    update: function() {
+        this.set(this.manager.options.touchAction);
+    },
+
+    /**
+     * compute the value for the touchAction property based on the recognizer's settings
+     * @returns {String} value
+     */
+    compute: function() {
+        var actions = [];
+        each(this.manager.recognizers, function(recognizer) {
+            if (boolOrFn(recognizer.options.enable, [recognizer])) {
+                actions = actions.concat(recognizer.getTouchAction());
+            }
+        });
+        return cleanTouchActions(actions.join(' '));
+    },
+
+    /**
+     * this method is called on each input cycle and provides the preventing of the browser behavior
+     * @param {Object} input
+     */
+    preventDefaults: function(input) {
+        var srcEvent = input.srcEvent;
+        var direction = input.offsetDirection;
+
+        // if the touch action did prevented once this session
+        if (this.manager.session.prevented) {
+            srcEvent.preventDefault();
+            return;
+        }
+
+        var actions = this.actions;
+        var hasNone = inStr(actions, TOUCH_ACTION_NONE) && !TOUCH_ACTION_MAP[TOUCH_ACTION_NONE];
+        var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y) && !TOUCH_ACTION_MAP[TOUCH_ACTION_PAN_Y];
+        var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X) && !TOUCH_ACTION_MAP[TOUCH_ACTION_PAN_X];
+
+        if (hasNone) {
+            //do not prevent defaults if this is a tap gesture
+
+            var isTapPointer = input.pointers.length === 1;
+            var isTapMovement = input.distance < 2;
+            var isTapTouchTime = input.deltaTime < 250;
+
+            if (isTapPointer && isTapMovement && isTapTouchTime) {
+                return;
+            }
+        }
+
+        if (hasPanX && hasPanY) {
+            // `pan-x pan-y` means browser handles all scrolling/panning, do not prevent
+            return;
+        }
+
+        if (hasNone ||
+            (hasPanY && direction & DIRECTION_HORIZONTAL) ||
+            (hasPanX && direction & DIRECTION_VERTICAL)) {
+            return this.preventSrc(srcEvent);
+        }
+    },
+
+    /**
+     * call preventDefault to prevent the browser's default behavior (scrolling in most cases)
+     * @param {Object} srcEvent
+     */
+    preventSrc: function(srcEvent) {
+        this.manager.session.prevented = true;
+        srcEvent.preventDefault();
+    }
+};
+
+/**
+ * when the touchActions are collected they are not a valid value, so we need to clean things up. *
+ * @param {String} actions
+ * @returns {*}
+ */
+function cleanTouchActions(actions) {
+    // none
+    if (inStr(actions, TOUCH_ACTION_NONE)) {
+        return TOUCH_ACTION_NONE;
+    }
+
+    var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
+    var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
+
+    // if both pan-x and pan-y are set (different recognizers
+    // for different directions, e.g. horizontal pan but vertical swipe?)
+    // we need none (as otherwise with pan-x pan-y combined none of these
+    // recognizers will work, since the browser would handle all panning
+    if (hasPanX && hasPanY) {
+        return TOUCH_ACTION_NONE;
+    }
+
+    // pan-x OR pan-y
+    if (hasPanX || hasPanY) {
+        return hasPanX ? TOUCH_ACTION_PAN_X : TOUCH_ACTION_PAN_Y;
+    }
+
+    // manipulation
+    if (inStr(actions, TOUCH_ACTION_MANIPULATION)) {
+        return TOUCH_ACTION_MANIPULATION;
+    }
+
+    return TOUCH_ACTION_AUTO;
+}
+
+function getTouchActionProps() {
+    if (!NATIVE_TOUCH_ACTION) {
+        return false;
+    }
+    var touchMap = {};
+    var cssSupports = window.CSS && window.CSS.supports;
+    ['auto', 'manipulation', 'pan-y', 'pan-x', 'pan-x pan-y', 'none'].forEach(function(val) {
+
+        // If css.supports is not supported but there is native touch-action assume it supports
+        // all values. This is the case for IE 10 and 11.
+        touchMap[val] = cssSupports ? window.CSS.supports('touch-action', val) : true;
+    });
+    return touchMap;
+}
+
+/**
+ * Recognizer flow explained; *
+ * All recognizers have the initial state of POSSIBLE when a input session starts.
+ * The definition of a input session is from the first input until the last input, with all it's movement in it. *
+ * Example session for mouse-input: mousedown -> mousemove -> mouseup
+ *
+ * On each recognizing cycle (see Manager.recognize) the .recognize() method is executed
+ * which determines with state it should be.
+ *
+ * If the recognizer has the state FAILED, CANCELLED or RECOGNIZED (equals ENDED), it is reset to
+ * POSSIBLE to give it another change on the next cycle.
+ *
+ *               Possible
+ *                  |
+ *            +-----+---------------+
+ *            |                     |
+ *      +-----+-----+               |
+ *      |           |               |
+ *   Failed      Cancelled          |
+ *                          +-------+------+
+ *                          |              |
+ *                      Recognized       Began
+ *                                         |
+ *                                      Changed
+ *                                         |
+ *                                  Ended/Recognized
+ */
+var STATE_POSSIBLE = 1;
+var STATE_BEGAN = 2;
+var STATE_CHANGED = 4;
+var STATE_ENDED = 8;
+var STATE_RECOGNIZED = STATE_ENDED;
+var STATE_CANCELLED = 16;
+var STATE_FAILED = 32;
+
+/**
+ * Recognizer
+ * Every recognizer needs to extend from this class.
+ * @constructor
+ * @param {Object} options
+ */
+function Recognizer(options) {
+    this.options = assign({}, this.defaults, options || {});
+
+    this.id = uniqueId();
+
+    this.manager = null;
+
+    // default is enable true
+    this.options.enable = ifUndefined(this.options.enable, true);
+
+    this.state = STATE_POSSIBLE;
+
+    this.simultaneous = {};
+    this.requireFail = [];
+}
+
+Recognizer.prototype = {
+    /**
+     * @virtual
+     * @type {Object}
+     */
+    defaults: {},
+
+    /**
+     * set options
+     * @param {Object} options
+     * @return {Recognizer}
+     */
+    set: function(options) {
+        assign(this.options, options);
+
+        // also update the touchAction, in case something changed about the directions/enabled state
+        this.manager && this.manager.touchAction.update();
+        return this;
+    },
+
+    /**
+     * recognize simultaneous with an other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    recognizeWith: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'recognizeWith', this)) {
+            return this;
+        }
+
+        var simultaneous = this.simultaneous;
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        if (!simultaneous[otherRecognizer.id]) {
+            simultaneous[otherRecognizer.id] = otherRecognizer;
+            otherRecognizer.recognizeWith(this);
+        }
+        return this;
+    },
+
+    /**
+     * drop the simultaneous link. it doesnt remove the link on the other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    dropRecognizeWith: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'dropRecognizeWith', this)) {
+            return this;
+        }
+
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        delete this.simultaneous[otherRecognizer.id];
+        return this;
+    },
+
+    /**
+     * recognizer can only run when an other is failing
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    requireFailure: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'requireFailure', this)) {
+            return this;
+        }
+
+        var requireFail = this.requireFail;
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        if (inArray(requireFail, otherRecognizer) === -1) {
+            requireFail.push(otherRecognizer);
+            otherRecognizer.requireFailure(this);
+        }
+        return this;
+    },
+
+    /**
+     * drop the requireFailure link. it does not remove the link on the other recognizer.
+     * @param {Recognizer} otherRecognizer
+     * @returns {Recognizer} this
+     */
+    dropRequireFailure: function(otherRecognizer) {
+        if (invokeArrayArg(otherRecognizer, 'dropRequireFailure', this)) {
+            return this;
+        }
+
+        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
+        var index = inArray(this.requireFail, otherRecognizer);
+        if (index > -1) {
+            this.requireFail.splice(index, 1);
+        }
+        return this;
+    },
+
+    /**
+     * has require failures boolean
+     * @returns {boolean}
+     */
+    hasRequireFailures: function() {
+        return this.requireFail.length > 0;
+    },
+
+    /**
+     * if the recognizer can recognize simultaneous with an other recognizer
+     * @param {Recognizer} otherRecognizer
+     * @returns {Boolean}
+     */
+    canRecognizeWith: function(otherRecognizer) {
+        return !!this.simultaneous[otherRecognizer.id];
+    },
+
+    /**
+     * You should use `tryEmit` instead of `emit` directly to check
+     * that all the needed recognizers has failed before emitting.
+     * @param {Object} input
+     */
+    emit: function(input) {
+        var self = this;
+        var state = this.state;
+
+        function emit(event) {
+            self.manager.emit(event, input);
+        }
+
+        // 'panstart' and 'panmove'
+        if (state < STATE_ENDED) {
+            emit(self.options.event + stateStr(state));
+        }
+
+        emit(self.options.event); // simple 'eventName' events
+
+        if (input.additionalEvent) { // additional event(panleft, panright, pinchin, pinchout...)
+            emit(input.additionalEvent);
+        }
+
+        // panend and pancancel
+        if (state >= STATE_ENDED) {
+            emit(self.options.event + stateStr(state));
+        }
+    },
+
+    /**
+     * Check that all the require failure recognizers has failed,
+     * if true, it emits a gesture event,
+     * otherwise, setup the state to FAILED.
+     * @param {Object} input
+     */
+    tryEmit: function(input) {
+        if (this.canEmit()) {
+            return this.emit(input);
+        }
+        // it's failing anyway
+        this.state = STATE_FAILED;
+    },
+
+    /**
+     * can we emit?
+     * @returns {boolean}
+     */
+    canEmit: function() {
+        var i = 0;
+        while (i < this.requireFail.length) {
+            if (!(this.requireFail[i].state & (STATE_FAILED | STATE_POSSIBLE))) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    },
+
+    /**
+     * update the recognizer
+     * @param {Object} inputData
+     */
+    recognize: function(inputData) {
+        // make a new copy of the inputData
+        // so we can change the inputData without messing up the other recognizers
+        var inputDataClone = assign({}, inputData);
+
+        // is is enabled and allow recognizing?
+        if (!boolOrFn(this.options.enable, [this, inputDataClone])) {
+            this.reset();
+            this.state = STATE_FAILED;
+            return;
+        }
+
+        // reset when we've reached the end
+        if (this.state & (STATE_RECOGNIZED | STATE_CANCELLED | STATE_FAILED)) {
+            this.state = STATE_POSSIBLE;
+        }
+
+        this.state = this.process(inputDataClone);
+
+        // the recognizer has recognized a gesture
+        // so trigger an event
+        if (this.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED | STATE_CANCELLED)) {
+            this.tryEmit(inputDataClone);
+        }
+    },
+
+    /**
+     * return the state of the recognizer
+     * the actual recognizing happens in this method
+     * @virtual
+     * @param {Object} inputData
+     * @returns {Const} STATE
+     */
+    process: function(inputData) { }, // jshint ignore:line
+
+    /**
+     * return the preferred touch-action
+     * @virtual
+     * @returns {Array}
+     */
+    getTouchAction: function() { },
+
+    /**
+     * called when the gesture isn't allowed to recognize
+     * like when another is being recognized or it is disabled
+     * @virtual
+     */
+    reset: function() { }
+};
+
+/**
+ * get a usable string, used as event postfix
+ * @param {Const} state
+ * @returns {String} state
+ */
+function stateStr(state) {
+    if (state & STATE_CANCELLED) {
+        return 'cancel';
+    } else if (state & STATE_ENDED) {
+        return 'end';
+    } else if (state & STATE_CHANGED) {
+        return 'move';
+    } else if (state & STATE_BEGAN) {
+        return 'start';
+    }
+    return '';
+}
+
+/**
+ * direction cons to string
+ * @param {Const} direction
+ * @returns {String}
+ */
+function directionStr(direction) {
+    if (direction == DIRECTION_DOWN) {
+        return 'down';
+    } else if (direction == DIRECTION_UP) {
+        return 'up';
+    } else if (direction == DIRECTION_LEFT) {
+        return 'left';
+    } else if (direction == DIRECTION_RIGHT) {
+        return 'right';
+    }
+    return '';
+}
+
+/**
+ * get a recognizer by name if it is bound to a manager
+ * @param {Recognizer|String} otherRecognizer
+ * @param {Recognizer} recognizer
+ * @returns {Recognizer}
+ */
+function getRecognizerByNameIfManager(otherRecognizer, recognizer) {
+    var manager = recognizer.manager;
+    if (manager) {
+        return manager.get(otherRecognizer);
+    }
+    return otherRecognizer;
+}
+
+/**
+ * This recognizer is just used as a base for the simple attribute recognizers.
+ * @constructor
+ * @extends Recognizer
+ */
+function AttrRecognizer() {
+    Recognizer.apply(this, arguments);
+}
+
+inherit(AttrRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof AttrRecognizer
+     */
+    defaults: {
+        /**
+         * @type {Number}
+         * @default 1
+         */
+        pointers: 1
+    },
+
+    /**
+     * Used to check if it the recognizer receives valid input, like input.distance > 10.
+     * @memberof AttrRecognizer
+     * @param {Object} input
+     * @returns {Boolean} recognized
+     */
+    attrTest: function(input) {
+        var optionPointers = this.options.pointers;
+        return optionPointers === 0 || input.pointers.length === optionPointers;
+    },
+
+    /**
+     * Process the input and return the state for the recognizer
+     * @memberof AttrRecognizer
+     * @param {Object} input
+     * @returns {*} State
+     */
+    process: function(input) {
+        var state = this.state;
+        var eventType = input.eventType;
+
+        var isRecognized = state & (STATE_BEGAN | STATE_CHANGED);
+        var isValid = this.attrTest(input);
+
+        // on cancel input and we've recognized before, return STATE_CANCELLED
+        if (isRecognized && (eventType & INPUT_CANCEL || !isValid)) {
+            return state | STATE_CANCELLED;
+        } else if (isRecognized || isValid) {
+            if (eventType & INPUT_END) {
+                return state | STATE_ENDED;
+            } else if (!(state & STATE_BEGAN)) {
+                return STATE_BEGAN;
+            }
+            return state | STATE_CHANGED;
+        }
+        return STATE_FAILED;
+    }
+});
+
+/**
+ * Pan
+ * Recognized when the pointer is down and moved in the allowed direction.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function PanRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+
+    this.pX = null;
+    this.pY = null;
+}
+
+inherit(PanRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof PanRecognizer
+     */
+    defaults: {
+        event: 'pan',
+        threshold: 10,
+        pointers: 1,
+        direction: DIRECTION_ALL
+    },
+
+    getTouchAction: function() {
+        var direction = this.options.direction;
+        var actions = [];
+        if (direction & DIRECTION_HORIZONTAL) {
+            actions.push(TOUCH_ACTION_PAN_Y);
+        }
+        if (direction & DIRECTION_VERTICAL) {
+            actions.push(TOUCH_ACTION_PAN_X);
+        }
+        return actions;
+    },
+
+    directionTest: function(input) {
+        var options = this.options;
+        var hasMoved = true;
+        var distance = input.distance;
+        var direction = input.direction;
+        var x = input.deltaX;
+        var y = input.deltaY;
+
+        // lock to axis?
+        if (!(direction & options.direction)) {
+            if (options.direction & DIRECTION_HORIZONTAL) {
+                direction = (x === 0) ? DIRECTION_NONE : (x < 0) ? DIRECTION_LEFT : DIRECTION_RIGHT;
+                hasMoved = x != this.pX;
+                distance = Math.abs(input.deltaX);
+            } else {
+                direction = (y === 0) ? DIRECTION_NONE : (y < 0) ? DIRECTION_UP : DIRECTION_DOWN;
+                hasMoved = y != this.pY;
+                distance = Math.abs(input.deltaY);
+            }
+        }
+        input.direction = direction;
+        return hasMoved && distance > options.threshold && direction & options.direction;
+    },
+
+    attrTest: function(input) {
+        return AttrRecognizer.prototype.attrTest.call(this, input) &&
+            (this.state & STATE_BEGAN || (!(this.state & STATE_BEGAN) && this.directionTest(input)));
+    },
+
+    emit: function(input) {
+
+        this.pX = input.deltaX;
+        this.pY = input.deltaY;
+
+        var direction = directionStr(input.direction);
+
+        if (direction) {
+            input.additionalEvent = this.options.event + direction;
+        }
+        this._super.emit.call(this, input);
+    }
+});
+
+/**
+ * Pinch
+ * Recognized when two or more pointers are moving toward (zoom-in) or away from each other (zoom-out).
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function PinchRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(PinchRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof PinchRecognizer
+     */
+    defaults: {
+        event: 'pinch',
+        threshold: 0,
+        pointers: 2
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_NONE];
+    },
+
+    attrTest: function(input) {
+        return this._super.attrTest.call(this, input) &&
+            (Math.abs(input.scale - 1) > this.options.threshold || this.state & STATE_BEGAN);
+    },
+
+    emit: function(input) {
+        if (input.scale !== 1) {
+            var inOut = input.scale < 1 ? 'in' : 'out';
+            input.additionalEvent = this.options.event + inOut;
+        }
+        this._super.emit.call(this, input);
+    }
+});
+
+/**
+ * Press
+ * Recognized when the pointer is down for x ms without any movement.
+ * @constructor
+ * @extends Recognizer
+ */
+function PressRecognizer() {
+    Recognizer.apply(this, arguments);
+
+    this._timer = null;
+    this._input = null;
+}
+
+inherit(PressRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof PressRecognizer
+     */
+    defaults: {
+        event: 'press',
+        pointers: 1,
+        time: 251, // minimal time of the pointer to be pressed
+        threshold: 9 // a minimal movement is ok, but keep it low
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_AUTO];
+    },
+
+    process: function(input) {
+        var options = this.options;
+        var validPointers = input.pointers.length === options.pointers;
+        var validMovement = input.distance < options.threshold;
+        var validTime = input.deltaTime > options.time;
+
+        this._input = input;
+
+        // we only allow little movement
+        // and we've reached an end event, so a tap is possible
+        if (!validMovement || !validPointers || (input.eventType & (INPUT_END | INPUT_CANCEL) && !validTime)) {
+            this.reset();
+        } else if (input.eventType & INPUT_START) {
+            this.reset();
+            this._timer = setTimeoutContext(function() {
+                this.state = STATE_RECOGNIZED;
+                this.tryEmit();
+            }, options.time, this);
+        } else if (input.eventType & INPUT_END) {
+            return STATE_RECOGNIZED;
+        }
+        return STATE_FAILED;
+    },
+
+    reset: function() {
+        clearTimeout(this._timer);
+    },
+
+    emit: function(input) {
+        if (this.state !== STATE_RECOGNIZED) {
+            return;
+        }
+
+        if (input && (input.eventType & INPUT_END)) {
+            this.manager.emit(this.options.event + 'up', input);
+        } else {
+            this._input.timeStamp = now();
+            this.manager.emit(this.options.event, this._input);
+        }
+    }
+});
+
+/**
+ * Rotate
+ * Recognized when two or more pointer are moving in a circular motion.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function RotateRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(RotateRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof RotateRecognizer
+     */
+    defaults: {
+        event: 'rotate',
+        threshold: 0,
+        pointers: 2
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_NONE];
+    },
+
+    attrTest: function(input) {
+        return this._super.attrTest.call(this, input) &&
+            (Math.abs(input.rotation) > this.options.threshold || this.state & STATE_BEGAN);
+    }
+});
+
+/**
+ * Swipe
+ * Recognized when the pointer is moving fast (velocity), with enough distance in the allowed direction.
+ * @constructor
+ * @extends AttrRecognizer
+ */
+function SwipeRecognizer() {
+    AttrRecognizer.apply(this, arguments);
+}
+
+inherit(SwipeRecognizer, AttrRecognizer, {
+    /**
+     * @namespace
+     * @memberof SwipeRecognizer
+     */
+    defaults: {
+        event: 'swipe',
+        threshold: 10,
+        velocity: 0.3,
+        direction: DIRECTION_HORIZONTAL | DIRECTION_VERTICAL,
+        pointers: 1
+    },
+
+    getTouchAction: function() {
+        return PanRecognizer.prototype.getTouchAction.call(this);
+    },
+
+    attrTest: function(input) {
+        var direction = this.options.direction;
+        var velocity;
+
+        if (direction & (DIRECTION_HORIZONTAL | DIRECTION_VERTICAL)) {
+            velocity = input.overallVelocity;
+        } else if (direction & DIRECTION_HORIZONTAL) {
+            velocity = input.overallVelocityX;
+        } else if (direction & DIRECTION_VERTICAL) {
+            velocity = input.overallVelocityY;
+        }
+
+        return this._super.attrTest.call(this, input) &&
+            direction & input.offsetDirection &&
+            input.distance > this.options.threshold &&
+            input.maxPointers == this.options.pointers &&
+            abs(velocity) > this.options.velocity && input.eventType & INPUT_END;
+    },
+
+    emit: function(input) {
+        var direction = directionStr(input.offsetDirection);
+        if (direction) {
+            this.manager.emit(this.options.event + direction, input);
+        }
+
+        this.manager.emit(this.options.event, input);
+    }
+});
+
+/**
+ * A tap is ecognized when the pointer is doing a small tap/click. Multiple taps are recognized if they occur
+ * between the given interval and position. The delay option can be used to recognize multi-taps without firing
+ * a single tap.
+ *
+ * The eventData from the emitted event contains the property `tapCount`, which contains the amount of
+ * multi-taps being recognized.
+ * @constructor
+ * @extends Recognizer
+ */
+function TapRecognizer() {
+    Recognizer.apply(this, arguments);
+
+    // previous time and center,
+    // used for tap counting
+    this.pTime = false;
+    this.pCenter = false;
+
+    this._timer = null;
+    this._input = null;
+    this.count = 0;
+}
+
+inherit(TapRecognizer, Recognizer, {
+    /**
+     * @namespace
+     * @memberof PinchRecognizer
+     */
+    defaults: {
+        event: 'tap',
+        pointers: 1,
+        taps: 1,
+        interval: 300, // max time between the multi-tap taps
+        time: 250, // max time of the pointer to be down (like finger on the screen)
+        threshold: 9, // a minimal movement is ok, but keep it low
+        posThreshold: 10 // a multi-tap can be a bit off the initial position
+    },
+
+    getTouchAction: function() {
+        return [TOUCH_ACTION_MANIPULATION];
+    },
+
+    process: function(input) {
+        var options = this.options;
+
+        var validPointers = input.pointers.length === options.pointers;
+        var validMovement = input.distance < options.threshold;
+        var validTouchTime = input.deltaTime < options.time;
+
+        this.reset();
+
+        if ((input.eventType & INPUT_START) && (this.count === 0)) {
+            return this.failTimeout();
+        }
+
+        // we only allow little movement
+        // and we've reached an end event, so a tap is possible
+        if (validMovement && validTouchTime && validPointers) {
+            if (input.eventType != INPUT_END) {
+                return this.failTimeout();
+            }
+
+            var validInterval = this.pTime ? (input.timeStamp - this.pTime < options.interval) : true;
+            var validMultiTap = !this.pCenter || getDistance(this.pCenter, input.center) < options.posThreshold;
+
+            this.pTime = input.timeStamp;
+            this.pCenter = input.center;
+
+            if (!validMultiTap || !validInterval) {
+                this.count = 1;
+            } else {
+                this.count += 1;
+            }
+
+            this._input = input;
+
+            // if tap count matches we have recognized it,
+            // else it has began recognizing...
+            var tapCount = this.count % options.taps;
+            if (tapCount === 0) {
+                // no failing requirements, immediately trigger the tap event
+                // or wait as long as the multitap interval to trigger
+                if (!this.hasRequireFailures()) {
+                    return STATE_RECOGNIZED;
+                } else {
+                    this._timer = setTimeoutContext(function() {
+                        this.state = STATE_RECOGNIZED;
+                        this.tryEmit();
+                    }, options.interval, this);
+                    return STATE_BEGAN;
+                }
+            }
+        }
+        return STATE_FAILED;
+    },
+
+    failTimeout: function() {
+        this._timer = setTimeoutContext(function() {
+            this.state = STATE_FAILED;
+        }, this.options.interval, this);
+        return STATE_FAILED;
+    },
+
+    reset: function() {
+        clearTimeout(this._timer);
+    },
+
+    emit: function() {
+        if (this.state == STATE_RECOGNIZED) {
+            this._input.tapCount = this.count;
+            this.manager.emit(this.options.event, this._input);
+        }
+    }
+});
+
+/**
+ * Simple way to create a manager with a default set of recognizers.
+ * @param {HTMLElement} element
+ * @param {Object} [options]
+ * @constructor
+ */
+function Hammer(element, options) {
+    options = options || {};
+    options.recognizers = ifUndefined(options.recognizers, Hammer.defaults.preset);
+    return new Manager(element, options);
+}
+
+/**
+ * @const {string}
+ */
+Hammer.VERSION = '2.0.7';
+
+/**
+ * default settings
+ * @namespace
+ */
+Hammer.defaults = {
+    /**
+     * set if DOM events are being triggered.
+     * But this is slower and unused by simple implementations, so disabled by default.
+     * @type {Boolean}
+     * @default false
+     */
+    domEvents: false,
+
+    /**
+     * The value for the touchAction property/fallback.
+     * When set to `compute` it will magically set the correct value based on the added recognizers.
+     * @type {String}
+     * @default compute
+     */
+    touchAction: TOUCH_ACTION_COMPUTE,
+
+    /**
+     * @type {Boolean}
+     * @default true
+     */
+    enable: true,
+
+    /**
+     * EXPERIMENTAL FEATURE -- can be removed/changed
+     * Change the parent input target element.
+     * If Null, then it is being set the to main element.
+     * @type {Null|EventTarget}
+     * @default null
+     */
+    inputTarget: null,
+
+    /**
+     * force an input class
+     * @type {Null|Function}
+     * @default null
+     */
+    inputClass: null,
+
+    /**
+     * Default recognizer setup when calling `Hammer()`
+     * When creating a new Manager these will be skipped.
+     * @type {Array}
+     */
+    preset: [
+        // RecognizerClass, options, [recognizeWith, ...], [requireFailure, ...]
+        [RotateRecognizer, {enable: false}],
+        [PinchRecognizer, {enable: false}, ['rotate']],
+        [SwipeRecognizer, {direction: DIRECTION_HORIZONTAL}],
+        [PanRecognizer, {direction: DIRECTION_HORIZONTAL}, ['swipe']],
+        [TapRecognizer],
+        [TapRecognizer, {event: 'doubletap', taps: 2}, ['tap']],
+        [PressRecognizer]
+    ],
+
+    /**
+     * Some CSS properties can be used to improve the working of Hammer.
+     * Add them to this method and they will be set when creating a new Manager.
+     * @namespace
+     */
+    cssProps: {
+        /**
+         * Disables text selection to improve the dragging gesture. Mainly for desktop browsers.
+         * @type {String}
+         * @default 'none'
+         */
+        userSelect: 'none',
+
+        /**
+         * Disable the Windows Phone grippers when pressing an element.
+         * @type {String}
+         * @default 'none'
+         */
+        touchSelect: 'none',
+
+        /**
+         * Disables the default callout shown when you touch and hold a touch target.
+         * On iOS, when you touch and hold a touch target such as a link, Safari displays
+         * a callout containing information about the link. This property allows you to disable that callout.
+         * @type {String}
+         * @default 'none'
+         */
+        touchCallout: 'none',
+
+        /**
+         * Specifies whether zooming is enabled. Used by IE10>
+         * @type {String}
+         * @default 'none'
+         */
+        contentZooming: 'none',
+
+        /**
+         * Specifies that an entire element should be draggable instead of its contents. Mainly for desktop browsers.
+         * @type {String}
+         * @default 'none'
+         */
+        userDrag: 'none',
+
+        /**
+         * Overrides the highlight color shown when the user taps a link or a JavaScript
+         * clickable element in iOS. This property obeys the alpha value, if specified.
+         * @type {String}
+         * @default 'rgba(0,0,0,0)'
+         */
+        tapHighlightColor: 'rgba(0,0,0,0)'
+    }
+};
+
+var STOP = 1;
+var FORCED_STOP = 2;
+
+/**
+ * Manager
+ * @param {HTMLElement} element
+ * @param {Object} [options]
+ * @constructor
+ */
+function Manager(element, options) {
+    this.options = assign({}, Hammer.defaults, options || {});
+
+    this.options.inputTarget = this.options.inputTarget || element;
+
+    this.handlers = {};
+    this.session = {};
+    this.recognizers = [];
+    this.oldCssProps = {};
+
+    this.element = element;
+    this.input = createInputInstance(this);
+    this.touchAction = new TouchAction(this, this.options.touchAction);
+
+    toggleCssProps(this, true);
+
+    each(this.options.recognizers, function(item) {
+        var recognizer = this.add(new (item[0])(item[1]));
+        item[2] && recognizer.recognizeWith(item[2]);
+        item[3] && recognizer.requireFailure(item[3]);
+    }, this);
+}
+
+Manager.prototype = {
+    /**
+     * set options
+     * @param {Object} options
+     * @returns {Manager}
+     */
+    set: function(options) {
+        assign(this.options, options);
+
+        // Options that need a little more setup
+        if (options.touchAction) {
+            this.touchAction.update();
+        }
+        if (options.inputTarget) {
+            // Clean up existing event listeners and reinitialize
+            this.input.destroy();
+            this.input.target = options.inputTarget;
+            this.input.init();
+        }
+        return this;
+    },
+
+    /**
+     * stop recognizing for this session.
+     * This session will be discarded, when a new [input]start event is fired.
+     * When forced, the recognizer cycle is stopped immediately.
+     * @param {Boolean} [force]
+     */
+    stop: function(force) {
+        this.session.stopped = force ? FORCED_STOP : STOP;
+    },
+
+    /**
+     * run the recognizers!
+     * called by the inputHandler function on every movement of the pointers (touches)
+     * it walks through all the recognizers and tries to detect the gesture that is being made
+     * @param {Object} inputData
+     */
+    recognize: function(inputData) {
+        var session = this.session;
+        if (session.stopped) {
+            return;
+        }
+
+        // run the touch-action polyfill
+        this.touchAction.preventDefaults(inputData);
+
+        var recognizer;
+        var recognizers = this.recognizers;
+
+        // this holds the recognizer that is being recognized.
+        // so the recognizer's state needs to be BEGAN, CHANGED, ENDED or RECOGNIZED
+        // if no recognizer is detecting a thing, it is set to `null`
+        var curRecognizer = session.curRecognizer;
+
+        // reset when the last recognizer is recognized
+        // or when we're in a new session
+        if (!curRecognizer || (curRecognizer && curRecognizer.state & STATE_RECOGNIZED)) {
+            curRecognizer = session.curRecognizer = null;
+        }
+
+        var i = 0;
+        while (i < recognizers.length) {
+            recognizer = recognizers[i];
+
+            // find out if we are allowed try to recognize the input for this one.
+            // 1.   allow if the session is NOT forced stopped (see the .stop() method)
+            // 2.   allow if we still haven't recognized a gesture in this session, or the this recognizer is the one
+            //      that is being recognized.
+            // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
+            //      this can be setup with the `recognizeWith()` method on the recognizer.
+            if (session.stopped !== FORCED_STOP && ( // 1
+                    !curRecognizer || recognizer == curRecognizer || // 2
+                    recognizer.canRecognizeWith(curRecognizer))) { // 3
+                recognizer.recognize(inputData);
+            } else {
+                recognizer.reset();
+            }
+
+            // if the recognizer has been recognizing the input as a valid gesture, we want to store this one as the
+            // current active recognizer. but only if we don't already have an active recognizer
+            if (!curRecognizer && recognizer.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED)) {
+                curRecognizer = session.curRecognizer = recognizer;
+            }
+            i++;
+        }
+    },
+
+    /**
+     * get a recognizer by its event name.
+     * @param {Recognizer|String} recognizer
+     * @returns {Recognizer|Null}
+     */
+    get: function(recognizer) {
+        if (recognizer instanceof Recognizer) {
+            return recognizer;
+        }
+
+        var recognizers = this.recognizers;
+        for (var i = 0; i < recognizers.length; i++) {
+            if (recognizers[i].options.event == recognizer) {
+                return recognizers[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * add a recognizer to the manager
+     * existing recognizers with the same event name will be removed
+     * @param {Recognizer} recognizer
+     * @returns {Recognizer|Manager}
+     */
+    add: function(recognizer) {
+        if (invokeArrayArg(recognizer, 'add', this)) {
+            return this;
+        }
+
+        // remove existing
+        var existing = this.get(recognizer.options.event);
+        if (existing) {
+            this.remove(existing);
+        }
+
+        this.recognizers.push(recognizer);
+        recognizer.manager = this;
+
+        this.touchAction.update();
+        return recognizer;
+    },
+
+    /**
+     * remove a recognizer by name or instance
+     * @param {Recognizer|String} recognizer
+     * @returns {Manager}
+     */
+    remove: function(recognizer) {
+        if (invokeArrayArg(recognizer, 'remove', this)) {
+            return this;
+        }
+
+        recognizer = this.get(recognizer);
+
+        // let's make sure this recognizer exists
+        if (recognizer) {
+            var recognizers = this.recognizers;
+            var index = inArray(recognizers, recognizer);
+
+            if (index !== -1) {
+                recognizers.splice(index, 1);
+                this.touchAction.update();
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * bind event
+     * @param {String} events
+     * @param {Function} handler
+     * @returns {EventEmitter} this
+     */
+    on: function(events, handler) {
+        if (events === undefined) {
+            return;
+        }
+        if (handler === undefined) {
+            return;
+        }
+
+        var handlers = this.handlers;
+        each(splitStr(events), function(event) {
+            handlers[event] = handlers[event] || [];
+            handlers[event].push(handler);
+        });
+        return this;
+    },
+
+    /**
+     * unbind event, leave emit blank to remove all handlers
+     * @param {String} events
+     * @param {Function} [handler]
+     * @returns {EventEmitter} this
+     */
+    off: function(events, handler) {
+        if (events === undefined) {
+            return;
+        }
+
+        var handlers = this.handlers;
+        each(splitStr(events), function(event) {
+            if (!handler) {
+                delete handlers[event];
+            } else {
+                handlers[event] && handlers[event].splice(inArray(handlers[event], handler), 1);
+            }
+        });
+        return this;
+    },
+
+    /**
+     * emit event to the listeners
+     * @param {String} event
+     * @param {Object} data
+     */
+    emit: function(event, data) {
+        // we also want to trigger dom events
+        if (this.options.domEvents) {
+            triggerDomEvent(event, data);
+        }
+
+        // no handlers, so skip it all
+        var handlers = this.handlers[event] && this.handlers[event].slice();
+        if (!handlers || !handlers.length) {
+            return;
+        }
+
+        data.type = event;
+        data.preventDefault = function() {
+            data.srcEvent.preventDefault();
+        };
+
+        var i = 0;
+        while (i < handlers.length) {
+            handlers[i](data);
+            i++;
+        }
+    },
+
+    /**
+     * destroy the manager and unbinds all events
+     * it doesn't unbind dom events, that is the user own responsibility
+     */
+    destroy: function() {
+        this.element && toggleCssProps(this, false);
+
+        this.handlers = {};
+        this.session = {};
+        this.input.destroy();
+        this.element = null;
+    }
+};
+
+/**
+ * add/remove the css properties as defined in manager.options.cssProps
+ * @param {Manager} manager
+ * @param {Boolean} add
+ */
+function toggleCssProps(manager, add) {
+    var element = manager.element;
+    if (!element.style) {
+        return;
+    }
+    var prop;
+    each(manager.options.cssProps, function(value, name) {
+        prop = prefixed(element.style, name);
+        if (add) {
+            manager.oldCssProps[prop] = element.style[prop];
+            element.style[prop] = value;
+        } else {
+            element.style[prop] = manager.oldCssProps[prop] || '';
+        }
+    });
+    if (!add) {
+        manager.oldCssProps = {};
+    }
+}
+
+/**
+ * trigger dom event
+ * @param {String} event
+ * @param {Object} data
+ */
+function triggerDomEvent(event, data) {
+    var gestureEvent = document.createEvent('Event');
+    gestureEvent.initEvent(event, true, true);
+    gestureEvent.gesture = data;
+    data.target.dispatchEvent(gestureEvent);
+}
+
+assign(Hammer, {
+    INPUT_START: INPUT_START,
+    INPUT_MOVE: INPUT_MOVE,
+    INPUT_END: INPUT_END,
+    INPUT_CANCEL: INPUT_CANCEL,
+
+    STATE_POSSIBLE: STATE_POSSIBLE,
+    STATE_BEGAN: STATE_BEGAN,
+    STATE_CHANGED: STATE_CHANGED,
+    STATE_ENDED: STATE_ENDED,
+    STATE_RECOGNIZED: STATE_RECOGNIZED,
+    STATE_CANCELLED: STATE_CANCELLED,
+    STATE_FAILED: STATE_FAILED,
+
+    DIRECTION_NONE: DIRECTION_NONE,
+    DIRECTION_LEFT: DIRECTION_LEFT,
+    DIRECTION_RIGHT: DIRECTION_RIGHT,
+    DIRECTION_UP: DIRECTION_UP,
+    DIRECTION_DOWN: DIRECTION_DOWN,
+    DIRECTION_HORIZONTAL: DIRECTION_HORIZONTAL,
+    DIRECTION_VERTICAL: DIRECTION_VERTICAL,
+    DIRECTION_ALL: DIRECTION_ALL,
+
+    Manager: Manager,
+    Input: Input,
+    TouchAction: TouchAction,
+
+    TouchInput: TouchInput,
+    MouseInput: MouseInput,
+    PointerEventInput: PointerEventInput,
+    TouchMouseInput: TouchMouseInput,
+    SingleTouchInput: SingleTouchInput,
+
+    Recognizer: Recognizer,
+    AttrRecognizer: AttrRecognizer,
+    Tap: TapRecognizer,
+    Pan: PanRecognizer,
+    Swipe: SwipeRecognizer,
+    Pinch: PinchRecognizer,
+    Rotate: RotateRecognizer,
+    Press: PressRecognizer,
+
+    on: addEventListeners,
+    off: removeEventListeners,
+    each: each,
+    merge: merge,
+    extend: extend,
+    assign: assign,
+    inherit: inherit,
+    bindFn: bindFn,
+    prefixed: prefixed
+});
+
+// this prevents errors when Hammer is loaded in the presence of an AMD
+//  style loader but by script tag, not by the loader.
+var freeGlobal = (typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : {})); // jshint ignore:line
+freeGlobal.Hammer = Hammer;
+
+if (true) {
+    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+        return Hammer;
+    }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+} else if (typeof module != 'undefined' && module.exports) {
+    module.exports = Hammer;
+} else {
+    window[exportName] = Hammer;
+}
+
+})(window, document, 'Hammer');
+
 
 /***/ }),
 
@@ -9912,7 +12556,193 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _leftMessages = __webpack_require__(12);
+var _materializeCss = __webpack_require__(3);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+var _StorageMixin = __webpack_require__(12);
+
+var _StorageMixin2 = _interopRequireDefault(_StorageMixin);
+
+var _dialog = __webpack_require__(13);
+
+var _dialog2 = _interopRequireDefault(_dialog);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Dialog = _vue2.default.extend({
+    template: _dialog2.default,
+    props: ['user-role', 'messages-unread'],
+    mixins: [_StorageMixin2.default],
+    data: function data() {
+        return {
+            message: "",
+            getter: null,
+            isSelected: false,
+            selected: null,
+            users: [],
+            messages: []
+        };
+    },
+
+    watch: {
+        messagesUnread: function messagesUnread(val) {
+            this.messages = val;
+        }
+    },
+    mounted: function mounted() {
+        (0, _jquery2.default)('select').material_select();
+        (0, _jquery2.default)('#dialog_window').modal();
+    },
+
+    methods: {
+        openDialog: function openDialog() {
+            (0, _jquery2.default)('#dialog_window').modal('open');
+        },
+        openMessages: function openMessages(author) {
+            this.selected = author.messages;
+            this.getter = author.name;
+            this.isSelected = true;
+        },
+        successAction: function successAction(message) {
+            _materializeCss2.default.toast(message, 4000);
+        },
+        getUsers: function getUsers() {
+            var uri = "/api/1/users",
+                self = this;
+            _jquery2.default.get(uri).done(function (data) {
+                self.users = data.response;
+                self.storageSave('users', self.users);
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        selectGetter: function selectGetter(name) {
+            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
+        },
+        search: function search(event) {},
+        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
+            var filesSelected = event.target.files;
+            if (filesSelected.length > 0) {
+                var fileToLoad = filesSelected[0];
+                var fileReader = new FileReader();
+
+                fileReader.onload = function (fileLoadedEvent) {
+                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
+                    var newImage = document.createElement('img');
+                    newImage.src = srcData;
+                    newImage.className = "responsive-img";
+                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
+                };
+                fileReader.readAsDataURL(fileToLoad);
+            }
+        },
+        getSess: function getSess() {
+            return document.getElementById('session_id').innerHTML;
+        },
+        sendMessage: function sendMessage() {
+            var self = this,
+                uri = '/api/1/message/',
+                params = {
+                sessionid: self.getSess(),
+                content: self.message,
+                login: 'almamater'
+            };
+            if (self.getter === null) {
+                return self.successAction('Выберите получателя!');
+            }
+            _jquery2.default.post(uri, params).done(function (data) {
+                if (data.success) {
+                    self.message = "";
+                    self.successAction('Сообщение отправлено!');
+                }
+                if (data.error) {
+                    console.error(data.error);
+                }
+            }).fail(function (error) {
+                console.error(error);
+            });
+        },
+        closeModal: function closeModal() {
+            (0, _jquery2.default)('#dialog_window').modal('close');
+        }
+    }
+});
+
+exports.default = Dialog;
+
+/***/ }),
+
+/***/ 12:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            storage: localStorage
+        };
+    },
+
+    methods: {
+        storageSave: function storageSave(key, info) {
+            console.log('hi');
+            try {
+                this.storage.setItem(key, info);
+            } catch (e) {
+                if (e == QUOTA_EXCEEDED_ERR) {
+                    console.error('Quota exceeded!');
+                }
+            }
+        },
+        storageGet: function storageGet(key) {
+            return this.storage.getItem(key);
+        },
+        storageRemove: function storageRemove(key) {
+            this.storage.removeItem(key);
+        },
+        storageKey: function storageKey(n) {
+            return this.storage.key(n);
+        },
+        storageClear: function storageClear() {
+            this.storage.clear();
+        }
+    }
+};
+
+/***/ }),
+
+/***/ 13:
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"sender in  messages\">\n                                <a v-on:click=\"openMessages(sender)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"sender.avatar === null\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"sender.avatar !== null\"><img class=\"responsive-img __small-avatar circle\" :src='sender.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ sender.name }} <span  class=\"__sender-role\">{{ sender.role }}</span></span>\n                                    <span class=\"badge right new \">{{ sender.messages.length }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div v-if=\"selected !== null\" >\n                            <p v-for=\"message in selected\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ message.date }}:</span><span>{{ message.text }}</span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+
+/***/ }),
+
+/***/ 14:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(2);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _leftMessages = __webpack_require__(15);
 
 var _leftMessages2 = _interopRequireDefault(_leftMessages);
 
@@ -9964,98 +12794,7 @@ exports.default = LeftMessages;
 
 /***/ }),
 
-/***/ 12:
-/***/ (function(module, exports) {
-
-module.exports = "<div>\n    <li>\n        <a v-on:click=\"openField\" class=\"waves-effect\" href=\"#!\"><i class=\"material-icons\">chat</i>Cообщение</a>\n    </li>\n    <li v-if=\"showField\" class=\"__padding-left_xl __padding-right_xl\">\n        <div class=\"input-group\">\n            <div class=\"input-field user-search\">\n                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                <label>кому</label>\n            </div>\n        </div>\n        <ul class=\"__select_users\" >\n            <li v-for=\"user in users\">\n                <a href=\"#!\" v-on:click=\"selectGetter($event)\">{{ user.name }}</a>\n            </li>\n        </ul>\n    </li>\n    <li v-if=\"showField\"><div class=\"divider\"></div></li>\n</div>\n"
-
-/***/ }),
-
-/***/ 13:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vue = __webpack_require__(2);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _leftModal = __webpack_require__(14);
-
-var _leftModal2 = _interopRequireDefault(_leftModal);
-
-var _materializeCss = __webpack_require__(3);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var LeftModal = _vue2.default.extend({
-    template: _leftModal2.default,
-    props: ['user-info'],
-    data: function data() {
-        return {
-            message: '',
-            getter: ""
-        };
-    },
-
-    watch: {
-        userInfo: function userInfo(val) {
-            if (val['name'] !== '') {
-                this.getter = val['name'];
-                this.openModal();
-            }
-        }
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)('#left_message_window').modal();
-    },
-
-    methods: {
-        sendMessage: function sendMessage() {
-            var uri = '/api/1/message',
-                self = this;
-            if (self.message.length === 0) {
-                return;
-            }
-            _jquery2.default.post(uri, { message: self.message }).done(function (data) {
-                self.successAction("Сообщение успешно отправлено!");
-                (0, _jquery2.default)('#left_message_window').modal('close');
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        openModal: function openModal() {
-            (0, _jquery2.default)('#left_message_window').modal('open');
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        }
-    }
-});
-
-exports.default = LeftModal;
-
-/***/ }),
-
-/***/ 14:
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div class=\"modal-content\">\n        <h4>Диалог с <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s12\">\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n        </div>\n\n        <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n            &nbsp;&nbsp;Отправить\n            <i class=\"material-icons right dp48\">send</i>\n        </a>\n    </div>\n    <div class=\"modal-footer\">\n        <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>"
-
-/***/ }),
-
-/***/ 143:
+/***/ 146:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10069,27 +12808,27 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _DialogComponent = __webpack_require__(8);
+var _DialogComponent = __webpack_require__(11);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
 
-var _LeftMessagesComponent = __webpack_require__(11);
+var _LeftMessagesComponent = __webpack_require__(14);
 
 var _LeftMessagesComponent2 = _interopRequireDefault(_LeftMessagesComponent);
 
-var _LeftModalComponent = __webpack_require__(13);
+var _LeftModalComponent = __webpack_require__(16);
 
 var _LeftModalComponent2 = _interopRequireDefault(_LeftModalComponent);
 
-var _UserMenuComponent = __webpack_require__(15);
+var _UserMenuComponent = __webpack_require__(18);
 
 var _UserMenuComponent2 = _interopRequireDefault(_UserMenuComponent);
 
-var _RateComponent = __webpack_require__(144);
+var _RateComponent = __webpack_require__(147);
 
 var _RateComponent2 = _interopRequireDefault(_RateComponent);
 
-var _CommentComponent = __webpack_require__(146);
+var _CommentComponent = __webpack_require__(149);
 
 var _CommentComponent2 = _interopRequireDefault(_CommentComponent);
 
@@ -10130,7 +12869,7 @@ new _vue2.default({
 
 /***/ }),
 
-/***/ 144:
+/***/ 147:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10152,7 +12891,7 @@ var _materializeCss = __webpack_require__(3);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _rating = __webpack_require__(145);
+var _rating = __webpack_require__(148);
 
 var _rating2 = _interopRequireDefault(_rating);
 
@@ -10241,14 +12980,14 @@ exports.default = Rate;
 
 /***/ }),
 
-/***/ 145:
+/***/ 148:
 /***/ (function(module, exports) {
 
 module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
 
 /***/ }),
 
-/***/ 146:
+/***/ 149:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10266,7 +13005,7 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _comments = __webpack_require__(147);
+var _comments = __webpack_require__(150);
 
 var _comments2 = _interopRequireDefault(_comments);
 
@@ -10348,14 +13087,105 @@ exports.default = Comment;
 
 /***/ }),
 
-/***/ 147:
+/***/ 15:
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n    <li>\n        <a v-on:click=\"openField\" class=\"waves-effect\" href=\"#!\"><i class=\"material-icons\">chat</i>Cообщение</a>\n    </li>\n    <li v-if=\"showField\" class=\"__padding-left_xl __padding-right_xl\">\n        <div class=\"input-group\">\n            <div class=\"input-field user-search\">\n                <input type=\"text\" v-on:keyup=\"search($event)\"  autofocus>\n                <label>кому</label>\n            </div>\n        </div>\n        <ul class=\"__select_users\" >\n            <li v-for=\"user in users\">\n                <a href=\"#!\" v-on:click=\"selectGetter($event)\">{{ user.name }}</a>\n            </li>\n        </ul>\n    </li>\n    <li v-if=\"showField\"><div class=\"divider\"></div></li>\n</div>\n"
+
+/***/ }),
+
+/***/ 150:
 /***/ (function(module, exports) {
 
 module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
 
 /***/ }),
 
-/***/ 15:
+/***/ 16:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vue = __webpack_require__(2);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _leftModal = __webpack_require__(17);
+
+var _leftModal2 = _interopRequireDefault(_leftModal);
+
+var _materializeCss = __webpack_require__(3);
+
+var _materializeCss2 = _interopRequireDefault(_materializeCss);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LeftModal = _vue2.default.extend({
+    template: _leftModal2.default,
+    props: ['user-info'],
+    data: function data() {
+        return {
+            message: '',
+            getter: ""
+        };
+    },
+
+    watch: {
+        userInfo: function userInfo(val) {
+            if (val['name'] !== '') {
+                this.getter = val['name'];
+                this.openModal();
+            }
+        }
+    },
+    mounted: function mounted() {
+        (0, _jquery2.default)('#left_message_window').modal();
+    },
+
+    methods: {
+        sendMessage: function sendMessage() {
+            var uri = '/api/1/message',
+                self = this;
+            if (self.message.length === 0) {
+                return;
+            }
+            _jquery2.default.post(uri, { message: self.message }).done(function (data) {
+                self.successAction("Сообщение успешно отправлено!");
+                (0, _jquery2.default)('#left_message_window').modal('close');
+            }).fail(function (error) {
+                console.log(error);
+            });
+        },
+        openModal: function openModal() {
+            (0, _jquery2.default)('#left_message_window').modal('open');
+        },
+        successAction: function successAction(message) {
+            _materializeCss2.default.toast(message, 4000);
+        }
+    }
+});
+
+exports.default = LeftModal;
+
+/***/ }),
+
+/***/ 17:
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"left_message_window\" class=\"modal\">\n    <div class=\"modal-content\">\n        <h4>Диалог с <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s12\">\n\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n        </div>\n\n        <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\">\n            &nbsp;&nbsp;Отправить\n            <i class=\"material-icons right dp48\">send</i>\n        </a>\n    </div>\n    <div class=\"modal-footer\">\n        <a href=\"#!\" class=\"modal-action modal-close __close-btn black-text\"><i class=\"material-icons right dp48\">clear</i></a>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ 18:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10377,7 +13207,7 @@ var _materializeCss = __webpack_require__(3);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
-var _userMenu = __webpack_require__(16);
+var _userMenu = __webpack_require__(19);
 
 var _userMenu2 = _interopRequireDefault(_userMenu);
 
@@ -10458,7 +13288,7 @@ exports.default = UserMenu;
 
 /***/ }),
 
-/***/ 16:
+/***/ 19:
 /***/ (function(module, exports) {
 
 module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnread.length > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnread.length }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
@@ -10468,8 +13298,8 @@ module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:cli
 /***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {/*!
- * Vue.js v2.4.4
+/* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
+ * Vue.js v2.5.2
  * (c) 2014-2017 Evan You
  * Released under the MIT License.
  */
@@ -10519,7 +13349,14 @@ function isObject (obj) {
   return obj !== null && typeof obj === 'object'
 }
 
+/**
+ * Get the raw type string of a value e.g. [object Object]
+ */
 var _toString = Object.prototype.toString;
+
+function toRawType (value) {
+  return _toString.call(value).slice(8, -1)
+}
 
 /**
  * Strict object type check. Only returns true
@@ -10537,7 +13374,7 @@ function isRegExp (v) {
  * Check if val is a valid array index.
  */
 function isValidArrayIndex (val) {
-  var n = parseFloat(val);
+  var n = parseFloat(String(val));
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
@@ -10587,7 +13424,7 @@ var isBuiltInTag = makeMap('slot,component', true);
 /**
  * Check if a attribute is a reserved attribute.
  */
-var isReservedAttribute = makeMap('key,ref,slot,is');
+var isReservedAttribute = makeMap('key,ref,slot,slot-scope,is');
 
 /**
  * Remove an item from an array
@@ -10797,7 +13634,8 @@ var LIFECYCLE_HOOKS = [
   'beforeDestroy',
   'destroyed',
   'activated',
-  'deactivated'
+  'deactivated',
+  'errorCaptured'
 ];
 
 /*  */
@@ -10932,120 +13770,6 @@ function parsePath (path) {
 
 /*  */
 
-var warn = noop;
-var tip = noop;
-var formatComponentName = (null); // work around flow check
-
-{
-  var hasConsole = typeof console !== 'undefined';
-  var classifyRE = /(?:^|[-_])(\w)/g;
-  var classify = function (str) { return str
-    .replace(classifyRE, function (c) { return c.toUpperCase(); })
-    .replace(/[-_]/g, ''); };
-
-  warn = function (msg, vm) {
-    var trace = vm ? generateComponentTrace(vm) : '';
-
-    if (config.warnHandler) {
-      config.warnHandler.call(null, msg, vm, trace);
-    } else if (hasConsole && (!config.silent)) {
-      console.error(("[Vue warn]: " + msg + trace));
-    }
-  };
-
-  tip = function (msg, vm) {
-    if (hasConsole && (!config.silent)) {
-      console.warn("[Vue tip]: " + msg + (
-        vm ? generateComponentTrace(vm) : ''
-      ));
-    }
-  };
-
-  formatComponentName = function (vm, includeFile) {
-    if (vm.$root === vm) {
-      return '<Root>'
-    }
-    var name = typeof vm === 'string'
-      ? vm
-      : typeof vm === 'function' && vm.options
-        ? vm.options.name
-        : vm._isVue
-          ? vm.$options.name || vm.$options._componentTag
-          : vm.name;
-
-    var file = vm._isVue && vm.$options.__file;
-    if (!name && file) {
-      var match = file.match(/([^/\\]+)\.vue$/);
-      name = match && match[1];
-    }
-
-    return (
-      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
-      (file && includeFile !== false ? (" at " + file) : '')
-    )
-  };
-
-  var repeat = function (str, n) {
-    var res = '';
-    while (n) {
-      if (n % 2 === 1) { res += str; }
-      if (n > 1) { str += str; }
-      n >>= 1;
-    }
-    return res
-  };
-
-  var generateComponentTrace = function (vm) {
-    if (vm._isVue && vm.$parent) {
-      var tree = [];
-      var currentRecursiveSequence = 0;
-      while (vm) {
-        if (tree.length > 0) {
-          var last = tree[tree.length - 1];
-          if (last.constructor === vm.constructor) {
-            currentRecursiveSequence++;
-            vm = vm.$parent;
-            continue
-          } else if (currentRecursiveSequence > 0) {
-            tree[tree.length - 1] = [last, currentRecursiveSequence];
-            currentRecursiveSequence = 0;
-          }
-        }
-        tree.push(vm);
-        vm = vm.$parent;
-      }
-      return '\n\nfound in\n\n' + tree
-        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
-            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
-            : formatComponentName(vm))); })
-        .join('\n')
-    } else {
-      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
-    }
-  };
-}
-
-/*  */
-
-function handleError (err, vm, info) {
-  if (config.errorHandler) {
-    config.errorHandler.call(null, err, vm, info);
-  } else {
-    {
-      warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
-    }
-    /* istanbul ignore else */
-    if (inBrowser && typeof console !== 'undefined') {
-      console.error(err);
-    } else {
-      throw err
-    }
-  }
-}
-
-/*  */
-/* globals MutationObserver */
-
 // can we use __proto__?
 var hasProto = '__proto__' in {};
 
@@ -11105,94 +13829,8 @@ var hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys);
 
-/**
- * Defer a task to execute it asynchronously.
- */
-var nextTick = (function () {
-  var callbacks = [];
-  var pending = false;
-  var timerFunc;
-
-  function nextTickHandler () {
-    pending = false;
-    var copies = callbacks.slice(0);
-    callbacks.length = 0;
-    for (var i = 0; i < copies.length; i++) {
-      copies[i]();
-    }
-  }
-
-  // the nextTick behavior leverages the microtask queue, which can be accessed
-  // via either native Promise.then or MutationObserver.
-  // MutationObserver has wider support, however it is seriously bugged in
-  // UIWebView in iOS >= 9.3.3 when triggered in touch event handlers. It
-  // completely stops working after triggering a few times... so, if native
-  // Promise is available, we will use it:
-  /* istanbul ignore if */
-  if (typeof Promise !== 'undefined' && isNative(Promise)) {
-    var p = Promise.resolve();
-    var logError = function (err) { console.error(err); };
-    timerFunc = function () {
-      p.then(nextTickHandler).catch(logError);
-      // in problematic UIWebViews, Promise.then doesn't completely break, but
-      // it can get stuck in a weird state where callbacks are pushed into the
-      // microtask queue but the queue isn't being flushed, until the browser
-      // needs to do some other work, e.g. handle a timer. Therefore we can
-      // "force" the microtask queue to be flushed by adding an empty timer.
-      if (isIOS) { setTimeout(noop); }
-    };
-  } else if (!isIE && typeof MutationObserver !== 'undefined' && (
-    isNative(MutationObserver) ||
-    // PhantomJS and iOS 7.x
-    MutationObserver.toString() === '[object MutationObserverConstructor]'
-  )) {
-    // use MutationObserver where native Promise is not available,
-    // e.g. PhantomJS, iOS7, Android 4.4
-    var counter = 1;
-    var observer = new MutationObserver(nextTickHandler);
-    var textNode = document.createTextNode(String(counter));
-    observer.observe(textNode, {
-      characterData: true
-    });
-    timerFunc = function () {
-      counter = (counter + 1) % 2;
-      textNode.data = String(counter);
-    };
-  } else {
-    // fallback to setTimeout
-    /* istanbul ignore next */
-    timerFunc = function () {
-      setTimeout(nextTickHandler, 0);
-    };
-  }
-
-  return function queueNextTick (cb, ctx) {
-    var _resolve;
-    callbacks.push(function () {
-      if (cb) {
-        try {
-          cb.call(ctx);
-        } catch (e) {
-          handleError(e, ctx, 'nextTick');
-        }
-      } else if (_resolve) {
-        _resolve(ctx);
-      }
-    });
-    if (!pending) {
-      pending = true;
-      timerFunc();
-    }
-    if (!cb && typeof Promise !== 'undefined') {
-      return new Promise(function (resolve, reject) {
-        _resolve = resolve;
-      })
-    }
-  }
-})();
-
 var _Set;
-/* istanbul ignore if */
+/* istanbul ignore if */ // $flow-disable-line
 if (typeof Set !== 'undefined' && isNative(Set)) {
   // use native Set when available.
   _Set = Set;
@@ -11214,6 +13852,100 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
     return Set;
   }());
+}
+
+/*  */
+
+var warn = noop;
+var tip = noop;
+var generateComponentTrace = (noop); // work around flow check
+var formatComponentName = (noop);
+
+{
+  var hasConsole = typeof console !== 'undefined';
+  var classifyRE = /(?:^|[-_])(\w)/g;
+  var classify = function (str) { return str
+    .replace(classifyRE, function (c) { return c.toUpperCase(); })
+    .replace(/[-_]/g, ''); };
+
+  warn = function (msg, vm) {
+    var trace = vm ? generateComponentTrace(vm) : '';
+
+    if (config.warnHandler) {
+      config.warnHandler.call(null, msg, vm, trace);
+    } else if (hasConsole && (!config.silent)) {
+      console.error(("[Vue warn]: " + msg + trace));
+    }
+  };
+
+  tip = function (msg, vm) {
+    if (hasConsole && (!config.silent)) {
+      console.warn("[Vue tip]: " + msg + (
+        vm ? generateComponentTrace(vm) : ''
+      ));
+    }
+  };
+
+  formatComponentName = function (vm, includeFile) {
+    if (vm.$root === vm) {
+      return '<Root>'
+    }
+    var options = typeof vm === 'function' && vm.cid != null
+      ? vm.options
+      : vm._isVue
+        ? vm.$options || vm.constructor.options
+        : vm || {};
+    var name = options.name || options._componentTag;
+    var file = options.__file;
+    if (!name && file) {
+      var match = file.match(/([^/\\]+)\.vue$/);
+      name = match && match[1];
+    }
+
+    return (
+      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
+      (file && includeFile !== false ? (" at " + file) : '')
+    )
+  };
+
+  var repeat = function (str, n) {
+    var res = '';
+    while (n) {
+      if (n % 2 === 1) { res += str; }
+      if (n > 1) { str += str; }
+      n >>= 1;
+    }
+    return res
+  };
+
+  generateComponentTrace = function (vm) {
+    if (vm._isVue && vm.$parent) {
+      var tree = [];
+      var currentRecursiveSequence = 0;
+      while (vm) {
+        if (tree.length > 0) {
+          var last = tree[tree.length - 1];
+          if (last.constructor === vm.constructor) {
+            currentRecursiveSequence++;
+            vm = vm.$parent;
+            continue
+          } else if (currentRecursiveSequence > 0) {
+            tree[tree.length - 1] = [last, currentRecursiveSequence];
+            currentRecursiveSequence = 0;
+          }
+        }
+        tree.push(vm);
+        vm = vm.$parent;
+      }
+      return '\n\nfound in\n\n' + tree
+        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
+            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
+            : formatComponentName(vm))); })
+        .join('\n')
+    } else {
+      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
+    }
+  };
 }
 
 /*  */
@@ -11265,6 +13997,101 @@ function pushTarget (_target) {
 
 function popTarget () {
   Dep.target = targetStack.pop();
+}
+
+/*  */
+
+var VNode = function VNode (
+  tag,
+  data,
+  children,
+  text,
+  elm,
+  context,
+  componentOptions,
+  asyncFactory
+) {
+  this.tag = tag;
+  this.data = data;
+  this.children = children;
+  this.text = text;
+  this.elm = elm;
+  this.ns = undefined;
+  this.context = context;
+  this.functionalContext = undefined;
+  this.functionalOptions = undefined;
+  this.functionalScopeId = undefined;
+  this.key = data && data.key;
+  this.componentOptions = componentOptions;
+  this.componentInstance = undefined;
+  this.parent = undefined;
+  this.raw = false;
+  this.isStatic = false;
+  this.isRootInsert = true;
+  this.isComment = false;
+  this.isCloned = false;
+  this.isOnce = false;
+  this.asyncFactory = asyncFactory;
+  this.asyncMeta = undefined;
+  this.isAsyncPlaceholder = false;
+};
+
+var prototypeAccessors = { child: { configurable: true } };
+
+// DEPRECATED: alias for componentInstance for backwards compat.
+/* istanbul ignore next */
+prototypeAccessors.child.get = function () {
+  return this.componentInstance
+};
+
+Object.defineProperties( VNode.prototype, prototypeAccessors );
+
+var createEmptyVNode = function (text) {
+  if ( text === void 0 ) text = '';
+
+  var node = new VNode();
+  node.text = text;
+  node.isComment = true;
+  return node
+};
+
+function createTextVNode (val) {
+  return new VNode(undefined, undefined, undefined, String(val))
+}
+
+// optimized shallow clone
+// used for static nodes and slot nodes because they may be reused across
+// multiple renders, cloning them avoids errors when DOM manipulations rely
+// on their elm reference.
+function cloneVNode (vnode, deep) {
+  var cloned = new VNode(
+    vnode.tag,
+    vnode.data,
+    vnode.children,
+    vnode.text,
+    vnode.elm,
+    vnode.context,
+    vnode.componentOptions,
+    vnode.asyncFactory
+  );
+  cloned.ns = vnode.ns;
+  cloned.isStatic = vnode.isStatic;
+  cloned.key = vnode.key;
+  cloned.isComment = vnode.isComment;
+  cloned.isCloned = true;
+  if (deep && vnode.children) {
+    cloned.children = cloneVNodes(vnode.children);
+  }
+  return cloned
+}
+
+function cloneVNodes (vnodes, deep) {
+  var len = vnodes.length;
+  var res = new Array(len);
+  for (var i = 0; i < len; i++) {
+    res[i] = cloneVNode(vnodes[i], deep);
+  }
+  return res
 }
 
 /*
@@ -11352,7 +14179,7 @@ var Observer = function Observer (value) {
 Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
   for (var i = 0; i < keys.length; i++) {
-    defineReactive$$1(obj, keys[i], obj[keys[i]]);
+    defineReactive(obj, keys[i], obj[keys[i]]);
   }
 };
 
@@ -11395,7 +14222,7 @@ function copyAugment (target, src, keys) {
  * or the existing observer if the value already has one.
  */
 function observe (value, asRootData) {
-  if (!isObject(value)) {
+  if (!isObject(value) || value instanceof VNode) {
     return
   }
   var ob;
@@ -11419,7 +14246,7 @@ function observe (value, asRootData) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive$$1 (
+function defineReactive (
   obj,
   key,
   val,
@@ -11502,7 +14329,7 @@ function set (target, key, val) {
     target[key] = val;
     return val
   }
-  defineReactive$$1(ob.value, key, val);
+  defineReactive(ob.value, key, val);
   ob.dep.notify();
   return val
 }
@@ -11685,11 +14512,19 @@ LIFECYCLE_HOOKS.forEach(function (hook) {
  * a three-way merge between constructor options, instance
  * options and parent options.
  */
-function mergeAssets (parentVal, childVal) {
+function mergeAssets (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
   var res = Object.create(parentVal || null);
-  return childVal
-    ? extend(res, childVal)
-    : res
+  if (childVal) {
+    "development" !== 'production' && assertObjectType(key, childVal, vm);
+    return extend(res, childVal)
+  } else {
+    return res
+  }
 }
 
 ASSET_TYPES.forEach(function (type) {
@@ -11702,22 +14537,30 @@ ASSET_TYPES.forEach(function (type) {
  * Watchers hashes should not overwrite one
  * another, so we merge them as arrays.
  */
-strats.watch = function (parentVal, childVal) {
+strats.watch = function (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
   // work around Firefox's Object.prototype.watch...
   if (parentVal === nativeWatch) { parentVal = undefined; }
   if (childVal === nativeWatch) { childVal = undefined; }
   /* istanbul ignore if */
   if (!childVal) { return Object.create(parentVal || null) }
+  {
+    assertObjectType(key, childVal, vm);
+  }
   if (!parentVal) { return childVal }
   var ret = {};
   extend(ret, parentVal);
-  for (var key in childVal) {
-    var parent = ret[key];
-    var child = childVal[key];
+  for (var key$1 in childVal) {
+    var parent = ret[key$1];
+    var child = childVal[key$1];
     if (parent && !Array.isArray(parent)) {
       parent = [parent];
     }
-    ret[key] = parent
+    ret[key$1] = parent
       ? parent.concat(child)
       : Array.isArray(child) ? child : [child];
   }
@@ -11730,7 +14573,15 @@ strats.watch = function (parentVal, childVal) {
 strats.props =
 strats.methods =
 strats.inject =
-strats.computed = function (parentVal, childVal) {
+strats.computed = function (
+  parentVal,
+  childVal,
+  vm,
+  key
+) {
+  if (childVal && "development" !== 'production') {
+    assertObjectType(key, childVal, vm);
+  }
   if (!parentVal) { return childVal }
   var ret = Object.create(null);
   extend(ret, parentVal);
@@ -11767,7 +14618,7 @@ function checkComponents (options) {
  * Ensure all props option syntax are normalized into the
  * Object-based format.
  */
-function normalizeProps (options) {
+function normalizeProps (options, vm) {
   var props = options.props;
   if (!props) { return }
   var res = {};
@@ -11791,6 +14642,12 @@ function normalizeProps (options) {
         ? val
         : { type: val };
     }
+  } else {
+    warn(
+      "Invalid value for option \"props\": expected an Array or an Object, " +
+      "but got " + (toRawType(props)) + ".",
+      vm
+    );
   }
   options.props = res;
 }
@@ -11798,13 +14655,26 @@ function normalizeProps (options) {
 /**
  * Normalize all injections into Object-based format
  */
-function normalizeInject (options) {
+function normalizeInject (options, vm) {
   var inject = options.inject;
+  var normalized = options.inject = {};
   if (Array.isArray(inject)) {
-    var normalized = options.inject = {};
     for (var i = 0; i < inject.length; i++) {
-      normalized[inject[i]] = inject[i];
+      normalized[inject[i]] = { from: inject[i] };
     }
+  } else if (isPlainObject(inject)) {
+    for (var key in inject) {
+      var val = inject[key];
+      normalized[key] = isPlainObject(val)
+        ? extend({ from: key }, val)
+        : { from: val };
+    }
+  } else if ("development" !== 'production' && inject) {
+    warn(
+      "Invalid value for option \"inject\": expected an Array or an Object, " +
+      "but got " + (toRawType(inject)) + ".",
+      vm
+    );
   }
 }
 
@@ -11820,6 +14690,16 @@ function normalizeDirectives (options) {
         dirs[key] = { bind: def, update: def };
       }
     }
+  }
+}
+
+function assertObjectType (name, value, vm) {
+  if (!isPlainObject(value)) {
+    warn(
+      "Invalid value for option \"" + name + "\": expected an Object, " +
+      "but got " + (toRawType(value)) + ".",
+      vm
+    );
   }
 }
 
@@ -11840,8 +14720,8 @@ function mergeOptions (
     child = child.options;
   }
 
-  normalizeProps(child);
-  normalizeInject(child);
+  normalizeProps(child, vm);
+  normalizeInject(child, vm);
   normalizeDirectives(child);
   var extendsFrom = child.extends;
   if (extendsFrom) {
@@ -12005,9 +14885,9 @@ function assertProp (
   }
   if (!valid) {
     warn(
-      'Invalid prop: type check failed for prop "' + name + '".' +
-      ' Expected ' + expectedTypes.map(capitalize).join(', ') +
-      ', got ' + Object.prototype.toString.call(value).slice(8, -1) + '.',
+      "Invalid prop: type check failed for prop \"" + name + "\"." +
+      " Expected " + (expectedTypes.map(capitalize).join(', ')) +
+      ", got " + (toRawType(value)) + ".",
       vm
     );
     return
@@ -12073,6 +14953,165 @@ function isType (type, fn) {
 
 /*  */
 
+function handleError (err, vm, info) {
+  if (vm) {
+    var cur = vm;
+    while ((cur = cur.$parent)) {
+      var hooks = cur.$options.errorCaptured;
+      if (hooks) {
+        for (var i = 0; i < hooks.length; i++) {
+          try {
+            var capture = hooks[i].call(cur, err, vm, info) === false;
+            if (capture) { return }
+          } catch (e) {
+            globalHandleError(e, cur, 'errorCaptured hook');
+          }
+        }
+      }
+    }
+  }
+  globalHandleError(err, vm, info);
+}
+
+function globalHandleError (err, vm, info) {
+  if (config.errorHandler) {
+    try {
+      return config.errorHandler.call(null, err, vm, info)
+    } catch (e) {
+      logError(e, null, 'config.errorHandler');
+    }
+  }
+  logError(err, vm, info);
+}
+
+function logError (err, vm, info) {
+  {
+    warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
+  }
+  /* istanbul ignore else */
+  if (inBrowser && typeof console !== 'undefined') {
+    console.error(err);
+  } else {
+    throw err
+  }
+}
+
+/*  */
+/* globals MessageChannel */
+
+var callbacks = [];
+var pending = false;
+
+function flushCallbacks () {
+  pending = false;
+  var copies = callbacks.slice(0);
+  callbacks.length = 0;
+  for (var i = 0; i < copies.length; i++) {
+    copies[i]();
+  }
+}
+
+// Here we have async deferring wrappers using both micro and macro tasks.
+// In < 2.4 we used micro tasks everywhere, but there are some scenarios where
+// micro tasks have too high a priority and fires in between supposedly
+// sequential events (e.g. #4521, #6690) or even between bubbling of the same
+// event (#6566). However, using macro tasks everywhere also has subtle problems
+// when state is changed right before repaint (e.g. #6813, out-in transitions).
+// Here we use micro task by default, but expose a way to force macro task when
+// needed (e.g. in event handlers attached by v-on).
+var microTimerFunc;
+var macroTimerFunc;
+var useMacroTask = false;
+
+// Determine (macro) Task defer implementation.
+// Technically setImmediate should be the ideal choice, but it's only available
+// in IE. The only polyfill that consistently queues the callback after all DOM
+// events triggered in the same loop is by using MessageChannel.
+/* istanbul ignore if */
+if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
+  macroTimerFunc = function () {
+    setImmediate(flushCallbacks);
+  };
+} else if (typeof MessageChannel !== 'undefined' && (
+  isNative(MessageChannel) ||
+  // PhantomJS
+  MessageChannel.toString() === '[object MessageChannelConstructor]'
+)) {
+  var channel = new MessageChannel();
+  var port = channel.port2;
+  channel.port1.onmessage = flushCallbacks;
+  macroTimerFunc = function () {
+    port.postMessage(1);
+  };
+} else {
+  /* istanbul ignore next */
+  macroTimerFunc = function () {
+    setTimeout(flushCallbacks, 0);
+  };
+}
+
+// Determine MicroTask defer implementation.
+/* istanbul ignore next, $flow-disable-line */
+if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  var p = Promise.resolve();
+  microTimerFunc = function () {
+    p.then(flushCallbacks);
+    // in problematic UIWebViews, Promise.then doesn't completely break, but
+    // it can get stuck in a weird state where callbacks are pushed into the
+    // microtask queue but the queue isn't being flushed, until the browser
+    // needs to do some other work, e.g. handle a timer. Therefore we can
+    // "force" the microtask queue to be flushed by adding an empty timer.
+    if (isIOS) { setTimeout(noop); }
+  };
+} else {
+  // fallback to macro
+  microTimerFunc = macroTimerFunc;
+}
+
+/**
+ * Wrap a function so that if any code inside triggers state change,
+ * the changes are queued using a Task instead of a MicroTask.
+ */
+function withMacroTask (fn) {
+  return fn._withTask || (fn._withTask = function () {
+    useMacroTask = true;
+    var res = fn.apply(null, arguments);
+    useMacroTask = false;
+    return res
+  })
+}
+
+function nextTick (cb, ctx) {
+  var _resolve;
+  callbacks.push(function () {
+    if (cb) {
+      try {
+        cb.call(ctx);
+      } catch (e) {
+        handleError(e, ctx, 'nextTick');
+      }
+    } else if (_resolve) {
+      _resolve(ctx);
+    }
+  });
+  if (!pending) {
+    pending = true;
+    if (useMacroTask) {
+      macroTimerFunc();
+    } else {
+      microTimerFunc();
+    }
+  }
+  // $flow-disable-line
+  if (!cb && typeof Promise !== 'undefined') {
+    return new Promise(function (resolve) {
+      _resolve = resolve;
+    })
+  }
+}
+
+/*  */
+
 var mark;
 var measure;
 
@@ -12111,8 +15150,10 @@ var initProxy;
   var warnNonPresent = function (target, key) {
     warn(
       "Property or method \"" + key + "\" is not defined on the instance but " +
-      "referenced during render. Make sure to declare reactive data " +
-      "properties in the data option.",
+      'referenced during render. Make sure that this property is reactive, ' +
+      'either in the data option, or for class-based components, by ' +
+      'initializing the property. ' +
+      'See: https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties.',
       target
     );
   };
@@ -12122,7 +15163,7 @@ var initProxy;
     Proxy.toString().match(/native code/);
 
   if (hasProxy) {
-    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');
+    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact');
     config.keyCodes = new Proxy(config.keyCodes, {
       set: function set (target, key, value) {
         if (isBuiltInModifier(key)) {
@@ -12172,99 +15213,6 @@ var initProxy;
 
 /*  */
 
-var VNode = function VNode (
-  tag,
-  data,
-  children,
-  text,
-  elm,
-  context,
-  componentOptions,
-  asyncFactory
-) {
-  this.tag = tag;
-  this.data = data;
-  this.children = children;
-  this.text = text;
-  this.elm = elm;
-  this.ns = undefined;
-  this.context = context;
-  this.functionalContext = undefined;
-  this.key = data && data.key;
-  this.componentOptions = componentOptions;
-  this.componentInstance = undefined;
-  this.parent = undefined;
-  this.raw = false;
-  this.isStatic = false;
-  this.isRootInsert = true;
-  this.isComment = false;
-  this.isCloned = false;
-  this.isOnce = false;
-  this.asyncFactory = asyncFactory;
-  this.asyncMeta = undefined;
-  this.isAsyncPlaceholder = false;
-};
-
-var prototypeAccessors = { child: {} };
-
-// DEPRECATED: alias for componentInstance for backwards compat.
-/* istanbul ignore next */
-prototypeAccessors.child.get = function () {
-  return this.componentInstance
-};
-
-Object.defineProperties( VNode.prototype, prototypeAccessors );
-
-var createEmptyVNode = function (text) {
-  if ( text === void 0 ) text = '';
-
-  var node = new VNode();
-  node.text = text;
-  node.isComment = true;
-  return node
-};
-
-function createTextVNode (val) {
-  return new VNode(undefined, undefined, undefined, String(val))
-}
-
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
-function cloneVNode (vnode, deep) {
-  var cloned = new VNode(
-    vnode.tag,
-    vnode.data,
-    vnode.children,
-    vnode.text,
-    vnode.elm,
-    vnode.context,
-    vnode.componentOptions,
-    vnode.asyncFactory
-  );
-  cloned.ns = vnode.ns;
-  cloned.isStatic = vnode.isStatic;
-  cloned.key = vnode.key;
-  cloned.isComment = vnode.isComment;
-  cloned.isCloned = true;
-  if (deep && vnode.children) {
-    cloned.children = cloneVNodes(vnode.children);
-  }
-  return cloned
-}
-
-function cloneVNodes (vnodes, deep) {
-  var len = vnodes.length;
-  var res = new Array(len);
-  for (var i = 0; i < len; i++) {
-    res[i] = cloneVNode(vnodes[i], deep);
-  }
-  return res
-}
-
-/*  */
-
 var normalizeEvent = cached(function (name) {
   var passive = name.charAt(0) === '&';
   name = passive ? name.slice(1) : name;
@@ -12272,10 +15220,8 @@ var normalizeEvent = cached(function (name) {
   name = once$$1 ? name.slice(1) : name;
   var capture = name.charAt(0) === '!';
   name = capture ? name.slice(1) : name;
-  var plain = !(passive || once$$1 || capture);
   return {
     name: name,
-    plain: plain,
     once: once$$1,
     capture: capture,
     passive: passive
@@ -12301,11 +15247,6 @@ function createFnInvoker (fns) {
   return invoker
 }
 
-// #6552
-function prioritizePlainEvents (a, b) {
-  return a.plain ? -1 : b.plain ? 1 : 0
-}
-
 function updateListeners (
   on,
   oldOn,
@@ -12314,13 +15255,10 @@ function updateListeners (
   vm
 ) {
   var name, cur, old, event;
-  var toAdd = [];
-  var hasModifier = false;
   for (name in on) {
     cur = on[name];
     old = oldOn[name];
     event = normalizeEvent(name);
-    if (!event.plain) { hasModifier = true; }
     if (isUndef(cur)) {
       "development" !== 'production' && warn(
         "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
@@ -12330,18 +15268,10 @@ function updateListeners (
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur);
       }
-      event.handler = cur;
-      toAdd.push(event);
+      add(event.name, cur, event.once, event.capture, event.passive);
     } else if (cur !== old) {
       old.fns = cur;
       on[name] = old;
-    }
-  }
-  if (toAdd.length) {
-    if (hasModifier) { toAdd.sort(prioritizePlainEvents); }
-    for (var i = 0; i < toAdd.length; i++) {
-      var event$1 = toAdd[i];
-      add(event$1.name, event$1.handler, event$1.once, event$1.capture, event$1.passive);
     }
   }
   for (name in oldOn) {
@@ -12493,20 +15423,29 @@ function isTextNode (node) {
 
 function normalizeArrayChildren (children, nestedIndex) {
   var res = [];
-  var i, c, last;
+  var i, c, lastIndex, last;
   for (i = 0; i < children.length; i++) {
     c = children[i];
     if (isUndef(c) || typeof c === 'boolean') { continue }
-    last = res[res.length - 1];
+    lastIndex = res.length - 1;
+    last = res[lastIndex];
     //  nested
     if (Array.isArray(c)) {
-      res.push.apply(res, normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i)));
+      if (c.length > 0) {
+        c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
+        // merge adjacent text nodes
+        if (isTextNode(c[0]) && isTextNode(last)) {
+          res[lastIndex] = createTextVNode(last.text + (c[0]).text);
+          c.shift();
+        }
+        res.push.apply(res, c);
+      }
     } else if (isPrimitive(c)) {
       if (isTextNode(last)) {
         // merge adjacent text nodes
         // this is necessary for SSR hydration because text nodes are
         // essentially merged when rendered to HTML strings
-        (last).text += String(c);
+        res[lastIndex] = createTextVNode(last.text + c);
       } else if (c !== '') {
         // convert primitive to vnode
         res.push(createTextVNode(c));
@@ -12514,7 +15453,7 @@ function normalizeArrayChildren (children, nestedIndex) {
     } else {
       if (isTextNode(c) && isTextNode(last)) {
         // merge adjacent text nodes
-        res[res.length - 1] = createTextVNode(last.text + c.text);
+        res[lastIndex] = createTextVNode(last.text + c.text);
       } else {
         // default key for nested array children (likely generated by v-for)
         if (isTrue(children._isVList) &&
@@ -12533,7 +15472,10 @@ function normalizeArrayChildren (children, nestedIndex) {
 /*  */
 
 function ensureCtor (comp, base) {
-  if (comp.__esModule && comp.default) {
+  if (
+    comp.__esModule ||
+    (hasSymbol && comp[Symbol.toStringTag] === 'Module')
+  ) {
     comp = comp.default;
   }
   return isObject(comp)
@@ -12689,8 +15631,8 @@ function initEvents (vm) {
 
 var target;
 
-function add (event, fn, once$$1) {
-  if (once$$1) {
+function add (event, fn, once) {
+  if (once) {
     target.$once(event, fn);
   } else {
     target.$on(event, fn);
@@ -12993,6 +15935,10 @@ function lifecycleMixin (Vue) {
     if (vm.$el) {
       vm.$el.__vue__ = null;
     }
+    // release circular reference (#6759)
+    if (vm.$vnode) {
+      vm.$vnode.parent = null;
+    }
   };
 }
 
@@ -13036,12 +15982,12 @@ function mountComponent (
       mark(startTag);
       var vnode = vm._render();
       mark(endTag);
-      measure((name + " render"), startTag, endTag);
+      measure(("vue " + name + " render"), startTag, endTag);
 
       mark(startTag);
       vm._update(vnode, hydrating);
       mark(endTag);
-      measure((name + " patch"), startTag, endTag);
+      measure(("vue " + name + " patch"), startTag, endTag);
     };
   } else {
     updateComponent = function () {
@@ -13599,16 +16545,6 @@ function initState (vm) {
   }
 }
 
-function checkOptionType (vm, name) {
-  var option = vm.$options[name];
-  if (!isPlainObject(option)) {
-    warn(
-      ("component option \"" + name + "\" should be an object."),
-      vm
-    );
-  }
-}
-
 function initProps (vm, propsOptions) {
   var propsData = vm.$options.propsData || {};
   var props = vm._props = {};
@@ -13623,13 +16559,15 @@ function initProps (vm, propsOptions) {
     var value = validateProp(key, propsOptions, propsData, vm);
     /* istanbul ignore else */
     {
-      if (isReservedAttribute(key) || config.isReservedAttr(key)) {
+      var hyphenatedKey = hyphenate(key);
+      if (isReservedAttribute(hyphenatedKey) ||
+          config.isReservedAttr(hyphenatedKey)) {
         warn(
-          ("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
+          ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
           vm
         );
       }
-      defineReactive$$1(props, key, value, function () {
+      defineReactive(props, key, value, function () {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
             "Avoid mutating a prop directly since the value will be " +
@@ -13697,7 +16635,7 @@ function initData (vm) {
 
 function getData (data, vm) {
   try {
-    return data.call(vm)
+    return data.call(vm, vm)
   } catch (e) {
     handleError(e, vm, "data()");
     return {}
@@ -13707,7 +16645,6 @@ function getData (data, vm) {
 var computedWatcherOptions = { lazy: true };
 
 function initComputed (vm, computed) {
-  "development" !== 'production' && checkOptionType(vm, 'computed');
   var watchers = vm._computedWatchers = Object.create(null);
   // computed properties are just getters during SSR
   var isSSR = isServerRendering();
@@ -13796,7 +16733,6 @@ function createComputedGetter (key) {
 }
 
 function initMethods (vm, methods) {
-  "development" !== 'production' && checkOptionType(vm, 'methods');
   var props = vm.$options.props;
   for (var key in methods) {
     {
@@ -13825,7 +16761,6 @@ function initMethods (vm, methods) {
 }
 
 function initWatch (vm, watch) {
-  "development" !== 'production' && checkOptionType(vm, 'watch');
   for (var key in watch) {
     var handler = watch[key];
     if (Array.isArray(handler)) {
@@ -13919,7 +16854,7 @@ function initInjections (vm) {
     Object.keys(result).forEach(function (key) {
       /* istanbul ignore else */
       {
-        defineReactive$$1(vm, key, result[key], function () {
+        defineReactive(vm, key, result[key], function () {
           warn(
             "Avoid mutating an injected value directly since the changes will be " +
             "overwritten whenever the provided component re-renders. " +
@@ -13946,7 +16881,7 @@ function resolveInject (inject, vm) {
 
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      var provideKey = inject[key];
+      var provideKey = inject[key].from;
       var source = vm;
       while (source) {
         if (source._provided && provideKey in source._provided) {
@@ -13955,8 +16890,15 @@ function resolveInject (inject, vm) {
         }
         source = source.$parent;
       }
-      if ("development" !== 'production' && !source) {
-        warn(("Injection \"" + key + "\" not found"), vm);
+      if (!source) {
+        if ('default' in inject[key]) {
+          var provideDefault = inject[key].default;
+          result[key] = typeof provideDefault === 'function'
+            ? provideDefault.call(vm)
+            : provideDefault;
+        } else {
+          warn(("Injection \"" + key + "\" not found"), vm);
+        }
       }
     }
     return result
@@ -13965,15 +16907,327 @@ function resolveInject (inject, vm) {
 
 /*  */
 
+/**
+ * Runtime helper for rendering v-for lists.
+ */
+function renderList (
+  val,
+  render
+) {
+  var ret, i, l, keys, key;
+  if (Array.isArray(val) || typeof val === 'string') {
+    ret = new Array(val.length);
+    for (i = 0, l = val.length; i < l; i++) {
+      ret[i] = render(val[i], i);
+    }
+  } else if (typeof val === 'number') {
+    ret = new Array(val);
+    for (i = 0; i < val; i++) {
+      ret[i] = render(i + 1, i);
+    }
+  } else if (isObject(val)) {
+    keys = Object.keys(val);
+    ret = new Array(keys.length);
+    for (i = 0, l = keys.length; i < l; i++) {
+      key = keys[i];
+      ret[i] = render(val[key], key, i);
+    }
+  }
+  if (isDef(ret)) {
+    (ret)._isVList = true;
+  }
+  return ret
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering <slot>
+ */
+function renderSlot (
+  name,
+  fallback,
+  props,
+  bindObject
+) {
+  var scopedSlotFn = this.$scopedSlots[name];
+  if (scopedSlotFn) { // scoped slot
+    props = props || {};
+    if (bindObject) {
+      if ("development" !== 'production' && !isObject(bindObject)) {
+        warn(
+          'slot v-bind without argument expects an Object',
+          this
+        );
+      }
+      props = extend(extend({}, bindObject), props);
+    }
+    return scopedSlotFn(props) || fallback
+  } else {
+    var slotNodes = this.$slots[name];
+    // warn duplicate slot usage
+    if (slotNodes && "development" !== 'production') {
+      slotNodes._rendered && warn(
+        "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
+        "- this will likely cause render errors.",
+        this
+      );
+      slotNodes._rendered = true;
+    }
+    return slotNodes || fallback
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for resolving filters
+ */
+function resolveFilter (id) {
+  return resolveAsset(this.$options, 'filters', id, true) || identity
+}
+
+/*  */
+
+/**
+ * Runtime helper for checking keyCodes from config.
+ * exposed as Vue.prototype._k
+ * passing in eventKeyName as last argument separately for backwards compat
+ */
+function checkKeyCodes (
+  eventKeyCode,
+  key,
+  builtInAlias,
+  eventKeyName
+) {
+  var keyCodes = config.keyCodes[key] || builtInAlias;
+  if (keyCodes) {
+    if (Array.isArray(keyCodes)) {
+      return keyCodes.indexOf(eventKeyCode) === -1
+    } else {
+      return keyCodes !== eventKeyCode
+    }
+  } else if (eventKeyName) {
+    return hyphenate(eventKeyName) !== key
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for merging v-bind="object" into a VNode's data.
+ */
+function bindObjectProps (
+  data,
+  tag,
+  value,
+  asProp,
+  isSync
+) {
+  if (value) {
+    if (!isObject(value)) {
+      "development" !== 'production' && warn(
+        'v-bind without argument expects an Object or Array value',
+        this
+      );
+    } else {
+      if (Array.isArray(value)) {
+        value = toObject(value);
+      }
+      var hash;
+      var loop = function ( key ) {
+        if (
+          key === 'class' ||
+          key === 'style' ||
+          isReservedAttribute(key)
+        ) {
+          hash = data;
+        } else {
+          var type = data.attrs && data.attrs.type;
+          hash = asProp || config.mustUseProp(tag, type, key)
+            ? data.domProps || (data.domProps = {})
+            : data.attrs || (data.attrs = {});
+        }
+        if (!(key in hash)) {
+          hash[key] = value[key];
+
+          if (isSync) {
+            var on = data.on || (data.on = {});
+            on[("update:" + key)] = function ($event) {
+              value[key] = $event;
+            };
+          }
+        }
+      };
+
+      for (var key in value) loop( key );
+    }
+  }
+  return data
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering static trees.
+ */
+function renderStatic (
+  index,
+  isInFor
+) {
+  // static trees can be rendered once and cached on the contructor options
+  // so every instance shares the same cached trees
+  var renderFns = this.$options.staticRenderFns;
+  var cached = renderFns.cached || (renderFns.cached = []);
+  var tree = cached[index];
+  // if has already-rendered static tree and not inside v-for,
+  // we can reuse the same tree by doing a shallow clone.
+  if (tree && !isInFor) {
+    return Array.isArray(tree)
+      ? cloneVNodes(tree)
+      : cloneVNode(tree)
+  }
+  // otherwise, render a fresh tree.
+  tree = cached[index] = renderFns[index].call(this._renderProxy, null, this);
+  markStatic(tree, ("__static__" + index), false);
+  return tree
+}
+
+/**
+ * Runtime helper for v-once.
+ * Effectively it means marking the node as static with a unique key.
+ */
+function markOnce (
+  tree,
+  index,
+  key
+) {
+  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
+  return tree
+}
+
+function markStatic (
+  tree,
+  key,
+  isOnce
+) {
+  if (Array.isArray(tree)) {
+    for (var i = 0; i < tree.length; i++) {
+      if (tree[i] && typeof tree[i] !== 'string') {
+        markStaticNode(tree[i], (key + "_" + i), isOnce);
+      }
+    }
+  } else {
+    markStaticNode(tree, key, isOnce);
+  }
+}
+
+function markStaticNode (node, key, isOnce) {
+  node.isStatic = true;
+  node.key = key;
+  node.isOnce = isOnce;
+}
+
+/*  */
+
+function bindObjectListeners (data, value) {
+  if (value) {
+    if (!isPlainObject(value)) {
+      "development" !== 'production' && warn(
+        'v-on without argument expects an Object value',
+        this
+      );
+    } else {
+      var on = data.on = data.on ? extend({}, data.on) : {};
+      for (var key in value) {
+        var existing = on[key];
+        var ours = value[key];
+        on[key] = existing ? [].concat(existing, ours) : ours;
+      }
+    }
+  }
+  return data
+}
+
+/*  */
+
+function installRenderHelpers (target) {
+  target._o = markOnce;
+  target._n = toNumber;
+  target._s = toString;
+  target._l = renderList;
+  target._t = renderSlot;
+  target._q = looseEqual;
+  target._i = looseIndexOf;
+  target._m = renderStatic;
+  target._f = resolveFilter;
+  target._k = checkKeyCodes;
+  target._b = bindObjectProps;
+  target._v = createTextVNode;
+  target._e = createEmptyVNode;
+  target._u = resolveScopedSlots;
+  target._g = bindObjectListeners;
+}
+
+/*  */
+
+function FunctionalRenderContext (
+  data,
+  props,
+  children,
+  parent,
+  Ctor
+) {
+  var options = Ctor.options;
+  this.data = data;
+  this.props = props;
+  this.children = children;
+  this.parent = parent;
+  this.listeners = data.on || emptyObject;
+  this.injections = resolveInject(options.inject, parent);
+  this.slots = function () { return resolveSlots(children, parent); };
+
+  // ensure the createElement function in functional components
+  // gets a unique context - this is necessary for correct named slot check
+  var contextVm = Object.create(parent);
+  var isCompiled = isTrue(options._compiled);
+  var needNormalization = !isCompiled;
+
+  // support for compiled functional template
+  if (isCompiled) {
+    // exposing $options for renderStatic()
+    this.$options = options;
+    // pre-resolve slots for renderSlot()
+    this.$slots = this.slots();
+    this.$scopedSlots = data.scopedSlots || emptyObject;
+  }
+
+  if (options._scopeId) {
+    this._c = function (a, b, c, d) {
+      var vnode = createElement(contextVm, a, b, c, d, needNormalization);
+      if (vnode) {
+        vnode.functionalScopeId = options._scopeId;
+        vnode.functionalContext = parent;
+      }
+      return vnode
+    };
+  } else {
+    this._c = function (a, b, c, d) { return createElement(contextVm, a, b, c, d, needNormalization); };
+  }
+}
+
+installRenderHelpers(FunctionalRenderContext.prototype);
+
 function createFunctionalComponent (
   Ctor,
   propsData,
   data,
-  context,
+  contextVm,
   children
 ) {
+  var options = Ctor.options;
   var props = {};
-  var propOptions = Ctor.options.props;
+  var propOptions = options.props;
   if (isDef(propOptions)) {
     for (var key in propOptions) {
       props[key] = validateProp(key, propOptions, propsData || emptyObject);
@@ -13982,26 +17236,25 @@ function createFunctionalComponent (
     if (isDef(data.attrs)) { mergeProps(props, data.attrs); }
     if (isDef(data.props)) { mergeProps(props, data.props); }
   }
-  // ensure the createElement function in functional components
-  // gets a unique context - this is necessary for correct named slot check
-  var _context = Object.create(context);
-  var h = function (a, b, c, d) { return createElement(_context, a, b, c, d, true); };
-  var vnode = Ctor.options.render.call(null, h, {
-    data: data,
-    props: props,
-    children: children,
-    parent: context,
-    listeners: data.on || emptyObject,
-    injections: resolveInject(Ctor.options.inject, context),
-    slots: function () { return resolveSlots(children, context); }
-  });
+
+  var renderContext = new FunctionalRenderContext(
+    data,
+    props,
+    children,
+    contextVm,
+    Ctor
+  );
+
+  var vnode = options.render.call(null, renderContext._c, renderContext);
+
   if (vnode instanceof VNode) {
-    vnode.functionalContext = context;
-    vnode.functionalOptions = Ctor.options;
+    vnode.functionalContext = contextVm;
+    vnode.functionalOptions = options;
     if (data.slot) {
       (vnode.data || (vnode.data = {})).slot = data.slot;
     }
   }
+
   return vnode
 }
 
@@ -14346,258 +17599,31 @@ function _createElement (
   }
 }
 
-function applyNS (vnode, ns) {
+function applyNS (vnode, ns, force) {
   vnode.ns = ns;
   if (vnode.tag === 'foreignObject') {
     // use default namespace inside foreignObject
-    return
+    ns = undefined;
+    force = true;
   }
   if (isDef(vnode.children)) {
     for (var i = 0, l = vnode.children.length; i < l; i++) {
       var child = vnode.children[i];
-      if (isDef(child.tag) && isUndef(child.ns)) {
-        applyNS(child, ns);
+      if (isDef(child.tag) && (isUndef(child.ns) || isTrue(force))) {
+        applyNS(child, ns, force);
       }
     }
   }
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering v-for lists.
- */
-function renderList (
-  val,
-  render
-) {
-  var ret, i, l, keys, key;
-  if (Array.isArray(val) || typeof val === 'string') {
-    ret = new Array(val.length);
-    for (i = 0, l = val.length; i < l; i++) {
-      ret[i] = render(val[i], i);
-    }
-  } else if (typeof val === 'number') {
-    ret = new Array(val);
-    for (i = 0; i < val; i++) {
-      ret[i] = render(i + 1, i);
-    }
-  } else if (isObject(val)) {
-    keys = Object.keys(val);
-    ret = new Array(keys.length);
-    for (i = 0, l = keys.length; i < l; i++) {
-      key = keys[i];
-      ret[i] = render(val[key], key, i);
-    }
-  }
-  if (isDef(ret)) {
-    (ret)._isVList = true;
-  }
-  return ret
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering <slot>
- */
-function renderSlot (
-  name,
-  fallback,
-  props,
-  bindObject
-) {
-  var scopedSlotFn = this.$scopedSlots[name];
-  if (scopedSlotFn) { // scoped slot
-    props = props || {};
-    if (bindObject) {
-      props = extend(extend({}, bindObject), props);
-    }
-    return scopedSlotFn(props) || fallback
-  } else {
-    var slotNodes = this.$slots[name];
-    // warn duplicate slot usage
-    if (slotNodes && "development" !== 'production') {
-      slotNodes._rendered && warn(
-        "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
-        "- this will likely cause render errors.",
-        this
-      );
-      slotNodes._rendered = true;
-    }
-    return slotNodes || fallback
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for resolving filters
- */
-function resolveFilter (id) {
-  return resolveAsset(this.$options, 'filters', id, true) || identity
-}
-
-/*  */
-
-/**
- * Runtime helper for checking keyCodes from config.
- */
-function checkKeyCodes (
-  eventKeyCode,
-  key,
-  builtInAlias
-) {
-  var keyCodes = config.keyCodes[key] || builtInAlias;
-  if (Array.isArray(keyCodes)) {
-    return keyCodes.indexOf(eventKeyCode) === -1
-  } else {
-    return keyCodes !== eventKeyCode
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for merging v-bind="object" into a VNode's data.
- */
-function bindObjectProps (
-  data,
-  tag,
-  value,
-  asProp,
-  isSync
-) {
-  if (value) {
-    if (!isObject(value)) {
-      "development" !== 'production' && warn(
-        'v-bind without argument expects an Object or Array value',
-        this
-      );
-    } else {
-      if (Array.isArray(value)) {
-        value = toObject(value);
-      }
-      var hash;
-      var loop = function ( key ) {
-        if (
-          key === 'class' ||
-          key === 'style' ||
-          isReservedAttribute(key)
-        ) {
-          hash = data;
-        } else {
-          var type = data.attrs && data.attrs.type;
-          hash = asProp || config.mustUseProp(tag, type, key)
-            ? data.domProps || (data.domProps = {})
-            : data.attrs || (data.attrs = {});
-        }
-        if (!(key in hash)) {
-          hash[key] = value[key];
-
-          if (isSync) {
-            var on = data.on || (data.on = {});
-            on[("update:" + key)] = function ($event) {
-              value[key] = $event;
-            };
-          }
-        }
-      };
-
-      for (var key in value) loop( key );
-    }
-  }
-  return data
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering static trees.
- */
-function renderStatic (
-  index,
-  isInFor
-) {
-  var tree = this._staticTrees[index];
-  // if has already-rendered static tree and not inside v-for,
-  // we can reuse the same tree by doing a shallow clone.
-  if (tree && !isInFor) {
-    return Array.isArray(tree)
-      ? cloneVNodes(tree)
-      : cloneVNode(tree)
-  }
-  // otherwise, render a fresh tree.
-  tree = this._staticTrees[index] =
-    this.$options.staticRenderFns[index].call(this._renderProxy);
-  markStatic(tree, ("__static__" + index), false);
-  return tree
-}
-
-/**
- * Runtime helper for v-once.
- * Effectively it means marking the node as static with a unique key.
- */
-function markOnce (
-  tree,
-  index,
-  key
-) {
-  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
-  return tree
-}
-
-function markStatic (
-  tree,
-  key,
-  isOnce
-) {
-  if (Array.isArray(tree)) {
-    for (var i = 0; i < tree.length; i++) {
-      if (tree[i] && typeof tree[i] !== 'string') {
-        markStaticNode(tree[i], (key + "_" + i), isOnce);
-      }
-    }
-  } else {
-    markStaticNode(tree, key, isOnce);
-  }
-}
-
-function markStaticNode (node, key, isOnce) {
-  node.isStatic = true;
-  node.key = key;
-  node.isOnce = isOnce;
-}
-
-/*  */
-
-function bindObjectListeners (data, value) {
-  if (value) {
-    if (!isPlainObject(value)) {
-      "development" !== 'production' && warn(
-        'v-on without argument expects an Object value',
-        this
-      );
-    } else {
-      var on = data.on = data.on ? extend({}, data.on) : {};
-      for (var key in value) {
-        var existing = on[key];
-        var ours = value[key];
-        on[key] = existing ? [].concat(ours, existing) : ours;
-      }
-    }
-  }
-  return data
 }
 
 /*  */
 
 function initRender (vm) {
   vm._vnode = null; // the root of the child tree
-  vm._staticTrees = null;
-  var parentVnode = vm.$vnode = vm.$options._parentVnode; // the placeholder node in parent tree
+  var options = vm.$options;
+  var parentVnode = vm.$vnode = options._parentVnode; // the placeholder node in parent tree
   var renderContext = parentVnode && parentVnode.context;
-  vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext);
+  vm.$slots = resolveSlots(options._renderChildren, renderContext);
   vm.$scopedSlots = emptyObject;
   // bind the createElement fn to this instance
   // so that we get proper render context inside it.
@@ -14614,16 +17640,19 @@ function initRender (vm) {
 
   /* istanbul ignore else */
   {
-    defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
+    defineReactive(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
       !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
     }, true);
-    defineReactive$$1(vm, '$listeners', vm.$options._parentListeners || emptyObject, function () {
+    defineReactive(vm, '$listeners', options._parentListeners || emptyObject, function () {
       !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
     }, true);
   }
 }
 
 function renderMixin (Vue) {
+  // install runtime convenience helpers
+  installRenderHelpers(Vue.prototype);
+
   Vue.prototype.$nextTick = function (fn) {
     return nextTick(fn, this)
   };
@@ -14632,7 +17661,6 @@ function renderMixin (Vue) {
     var vm = this;
     var ref = vm.$options;
     var render = ref.render;
-    var staticRenderFns = ref.staticRenderFns;
     var _parentVnode = ref._parentVnode;
 
     if (vm._isMounted) {
@@ -14648,9 +17676,6 @@ function renderMixin (Vue) {
 
     vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject;
 
-    if (staticRenderFns && !vm._staticTrees) {
-      vm._staticTrees = [];
-    }
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
     vm.$vnode = _parentVnode;
@@ -14659,14 +17684,21 @@ function renderMixin (Vue) {
     try {
       vnode = render.call(vm._renderProxy, vm.$createElement);
     } catch (e) {
-      handleError(e, vm, "render function");
+      handleError(e, vm, "render");
       // return error render result,
       // or previous vnode to prevent render error causing blank component
       /* istanbul ignore else */
       {
-        vnode = vm.$options.renderError
-          ? vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)
-          : vm._vnode;
+        if (vm.$options.renderError) {
+          try {
+            vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
+          } catch (e) {
+            handleError(e, vm, "renderError");
+            vnode = vm._vnode;
+          }
+        } else {
+          vnode = vm._vnode;
+        }
       }
     }
     // return empty vnode in case the render function errored out
@@ -14684,25 +17716,6 @@ function renderMixin (Vue) {
     vnode.parent = _parentVnode;
     return vnode
   };
-
-  // internal render helpers.
-  // these are exposed on the instance prototype to reduce generated render
-  // code size.
-  Vue.prototype._o = markOnce;
-  Vue.prototype._n = toNumber;
-  Vue.prototype._s = toString;
-  Vue.prototype._l = renderList;
-  Vue.prototype._t = renderSlot;
-  Vue.prototype._q = looseEqual;
-  Vue.prototype._i = looseIndexOf;
-  Vue.prototype._m = renderStatic;
-  Vue.prototype._f = resolveFilter;
-  Vue.prototype._k = checkKeyCodes;
-  Vue.prototype._b = bindObjectProps;
-  Vue.prototype._v = createTextVNode;
-  Vue.prototype._e = createEmptyVNode;
-  Vue.prototype._u = resolveScopedSlots;
-  Vue.prototype._g = bindObjectListeners;
 }
 
 /*  */
@@ -14718,7 +17731,7 @@ function initMixin (Vue) {
     var startTag, endTag;
     /* istanbul ignore if */
     if ("development" !== 'production' && config.performance && mark) {
-      startTag = "vue-perf-init:" + (vm._uid);
+      startTag = "vue-perf-start:" + (vm._uid);
       endTag = "vue-perf-end:" + (vm._uid);
       mark(startTag);
     }
@@ -14757,7 +17770,7 @@ function initMixin (Vue) {
     if ("development" !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false);
       mark(endTag);
-      measure(((vm._name) + " init"), startTag, endTag);
+      measure(("vue " + (vm._name) + " init"), startTag, endTag);
     }
 
     if (vm.$options.el) {
@@ -15023,8 +18036,6 @@ function initAssetRegisters (Vue) {
 
 /*  */
 
-var patternTypes = [String, RegExp, Array];
-
 function getComponentName (opts) {
   return opts && (opts.Ctor.options.name || opts.tag)
 }
@@ -15041,26 +18052,36 @@ function matches (pattern, name) {
   return false
 }
 
-function pruneCache (cache, current, filter) {
+function pruneCache (keepAliveInstance, filter) {
+  var cache = keepAliveInstance.cache;
+  var keys = keepAliveInstance.keys;
+  var _vnode = keepAliveInstance._vnode;
   for (var key in cache) {
     var cachedNode = cache[key];
     if (cachedNode) {
       var name = getComponentName(cachedNode.componentOptions);
       if (name && !filter(name)) {
-        if (cachedNode !== current) {
-          pruneCacheEntry(cachedNode);
-        }
-        cache[key] = null;
+        pruneCacheEntry(cache, key, keys, _vnode);
       }
     }
   }
 }
 
-function pruneCacheEntry (vnode) {
-  if (vnode) {
-    vnode.componentInstance.$destroy();
+function pruneCacheEntry (
+  cache,
+  key,
+  keys,
+  current
+) {
+  var cached$$1 = cache[key];
+  if (cached$$1 && cached$$1 !== current) {
+    cached$$1.componentInstance.$destroy();
   }
+  cache[key] = null;
+  remove(keys, key);
 }
+
+var patternTypes = [String, RegExp, Array];
 
 var KeepAlive = {
   name: 'keep-alive',
@@ -15068,27 +18089,29 @@ var KeepAlive = {
 
   props: {
     include: patternTypes,
-    exclude: patternTypes
+    exclude: patternTypes,
+    max: [String, Number]
   },
 
   created: function created () {
     this.cache = Object.create(null);
+    this.keys = [];
   },
 
   destroyed: function destroyed () {
     var this$1 = this;
 
     for (var key in this$1.cache) {
-      pruneCacheEntry(this$1.cache[key]);
+      pruneCacheEntry(this$1.cache, key, this$1.keys);
     }
   },
 
   watch: {
     include: function include (val) {
-      pruneCache(this.cache, this._vnode, function (name) { return matches(val, name); });
+      pruneCache(this, function (name) { return matches(val, name); });
     },
     exclude: function exclude (val) {
-      pruneCache(this.cache, this._vnode, function (name) { return !matches(val, name); });
+      pruneCache(this, function (name) { return !matches(val, name); });
     }
   },
 
@@ -15104,16 +18127,29 @@ var KeepAlive = {
       )) {
         return vnode
       }
+
+      var ref = this;
+      var cache = ref.cache;
+      var keys = ref.keys;
       var key = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
         : vnode.key;
-      if (this.cache[key]) {
-        vnode.componentInstance = this.cache[key].componentInstance;
+      if (cache[key]) {
+        vnode.componentInstance = cache[key].componentInstance;
+        // make current key freshest
+        remove(keys, key);
+        keys.push(key);
       } else {
-        this.cache[key] = vnode;
+        cache[key] = vnode;
+        keys.push(key);
+        // prune oldest entry
+        if (this.max && keys.length > parseInt(this.max)) {
+          pruneCacheEntry(cache, keys[0], keys, this._vnode);
+        }
       }
+
       vnode.data.keepAlive = true;
     }
     return vnode
@@ -15146,7 +18182,7 @@ function initGlobalAPI (Vue) {
     warn: warn,
     extend: extend,
     mergeOptions: mergeOptions,
-    defineReactive: defineReactive$$1
+    defineReactive: defineReactive
   };
 
   Vue.set = set;
@@ -15183,7 +18219,7 @@ Object.defineProperty(Vue$3.prototype, '$ssrContext', {
   }
 });
 
-Vue$3.version = '2.4.4';
+Vue$3.version = '2.5.2';
 
 /*  */
 
@@ -15593,13 +18629,13 @@ function createPatchFunction (backend) {
   }
 
   function createRmCb (childElm, listeners) {
-    function remove$$1 () {
-      if (--remove$$1.listeners === 0) {
+    function remove () {
+      if (--remove.listeners === 0) {
         removeNode(childElm);
       }
     }
-    remove$$1.listeners = listeners;
-    return remove$$1
+    remove.listeners = listeners;
+    return remove
   }
 
   function removeNode (el) {
@@ -15628,7 +18664,14 @@ function createPatchFunction (backend) {
         if (
           !inPre &&
           !vnode.ns &&
-          !(config.ignoredElements.length && config.ignoredElements.indexOf(tag) > -1) &&
+          !(
+            config.ignoredElements.length &&
+            config.ignoredElements.some(function (ignore) {
+              return isRegExp(ignore)
+                ? ignore.test(tag)
+                : ignore === tag
+            })
+          ) &&
           config.isUnknownElement(tag)
         ) {
           warn(
@@ -15771,16 +18814,21 @@ function createPatchFunction (backend) {
   // of going through the normal attribute patching process.
   function setScope (vnode) {
     var i;
-    var ancestor = vnode;
-    while (ancestor) {
-      if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
-        nodeOps.setAttribute(vnode.elm, i, '');
+    if (isDef(i = vnode.functionalScopeId)) {
+      nodeOps.setAttribute(vnode.elm, i, '');
+    } else {
+      var ancestor = vnode;
+      while (ancestor) {
+        if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
+          nodeOps.setAttribute(vnode.elm, i, '');
+        }
+        ancestor = ancestor.parent;
       }
-      ancestor = ancestor.parent;
     }
     // for slot content they should also get the scopeId from the host instance.
     if (isDef(i = activeInstance) &&
       i !== vnode.context &&
+      i !== vnode.functionalContext &&
       isDef(i = i.$options._scopeId)
     ) {
       nodeOps.setAttribute(vnode.elm, i, '');
@@ -15859,7 +18907,7 @@ function createPatchFunction (backend) {
     var newEndIdx = newCh.length - 1;
     var newStartVnode = newCh[0];
     var newEndVnode = newCh[newEndIdx];
-    var oldKeyToIdx, idxInOld, elmToMove, refElm;
+    var oldKeyToIdx, idxInOld, vnodeToMove, refElm;
 
     // removeOnly is a special flag used only by <transition-group>
     // to ensure removed elements stay in correct relative positions
@@ -15897,18 +18945,18 @@ function createPatchFunction (backend) {
         if (isUndef(idxInOld)) { // New element
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
         } else {
-          elmToMove = oldCh[idxInOld];
+          vnodeToMove = oldCh[idxInOld];
           /* istanbul ignore if */
-          if ("development" !== 'production' && !elmToMove) {
+          if ("development" !== 'production' && !vnodeToMove) {
             warn(
               'It seems there are duplicate keys that is causing an update error. ' +
               'Make sure each v-for item has a unique key.'
             );
           }
-          if (sameVnode(elmToMove, newStartVnode)) {
-            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
+          if (sameVnode(vnodeToMove, newStartVnode)) {
+            patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue);
             oldCh[idxInOld] = undefined;
-            canMove && nodeOps.insertBefore(parentElm, elmToMove.elm, oldStartVnode.elm);
+            canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm);
           } else {
             // same key but different element. treat as new element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
@@ -16189,6 +19237,8 @@ function createPatchFunction (backend) {
                   insert.fns[i$2]();
                 }
               }
+            } else {
+              registerRef(ancestor);
             }
             ancestor = ancestor.parent;
           }
@@ -16352,8 +19402,9 @@ function updateAttrs (oldVnode, vnode) {
     }
   }
   // #4391: in IE9, setting type can reset value for input[type=radio]
+  // #6666: IE/Edge forces progress value down to 1 before setting a max
   /* istanbul ignore if */
-  if (isIE9 && attrs.value !== oldAttrs.value) {
+  if ((isIE9 || isEdge) && attrs.value !== oldAttrs.value) {
     setAttr(elm, 'value', attrs.value);
   }
   for (key in oldAttrs) {
@@ -16643,7 +19694,15 @@ function getBindingAttr (
   }
 }
 
-function getAndRemoveAttr (el, name) {
+// note: this only removes the attr from the Array (attrsList) so that it
+// doesn't get processed by processAttrs.
+// By default it does NOT remove it from the map (attrsMap) because the map is
+// needed during codegen.
+function getAndRemoveAttr (
+  el,
+  name,
+  removeFromMap
+) {
   var val;
   if ((val = el.attrsMap[name]) != null) {
     var list = el.attrsList;
@@ -16653,6 +19712,9 @@ function getAndRemoveAttr (el, name) {
         break
       }
     }
+  }
+  if (removeFromMap) {
+    delete el.attrsMap[name];
   }
   return val
 }
@@ -16698,25 +19760,26 @@ function genAssignmentCode (
   value,
   assignment
 ) {
-  var modelRs = parseModel(value);
-  if (modelRs.idx === null) {
+  var res = parseModel(value);
+  if (res.key === null) {
     return (value + "=" + assignment)
   } else {
-    return ("$set(" + (modelRs.exp) + ", " + (modelRs.idx) + ", " + assignment + ")")
+    return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
 
 /**
- * parse directive model to do the array update transform. a[idx] = val => $$a.splice($$idx, 1, val)
+ * Parse a v-model expression into a base path and a final key segment.
+ * Handles both dot-path and possible square brackets.
  *
- * for loop possible cases:
+ * Possible cases:
  *
  * - test
- * - test[idx]
- * - test[test1[idx]]
- * - test["a"][idx]
- * - xxx.test[a[a].test1[idx]]
- * - test.xxx.a["asa"][test1[idx]]
+ * - test[key]
+ * - test[test1[key]]
+ * - test["a"][key]
+ * - xxx.test[a[a].test1[key]]
+ * - test.xxx.a["asa"][test1[key]]
  *
  */
 
@@ -16727,17 +19790,28 @@ var index$1;
 var expressionPos;
 var expressionEndPos;
 
+
+
 function parseModel (val) {
-  str = val;
-  len = str.length;
-  index$1 = expressionPos = expressionEndPos = 0;
+  len = val.length;
 
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
-    return {
-      exp: val,
-      idx: null
+    index$1 = val.lastIndexOf('.');
+    if (index$1 > -1) {
+      return {
+        exp: val.slice(0, index$1),
+        key: '"' + val.slice(index$1 + 1) + '"'
+      }
+    } else {
+      return {
+        exp: val,
+        key: null
+      }
     }
   }
+
+  str = val;
+  index$1 = expressionPos = expressionEndPos = 0;
 
   while (!eof()) {
     chr = next();
@@ -16750,8 +19824,8 @@ function parseModel (val) {
   }
 
   return {
-    exp: val.substring(0, expressionPos),
-    idx: val.substring(expressionPos + 1, expressionEndPos)
+    exp: val.slice(0, expressionPos),
+    key: val.slice(expressionPos + 1, expressionEndPos)
   }
 }
 
@@ -16816,13 +19890,6 @@ function model (
   var type = el.attrsMap.type;
 
   {
-    var dynamicType = el.attrsMap['v-bind:type'] || el.attrsMap[':type'];
-    if (tag === 'input' && dynamicType) {
-      warn$1(
-        "<input :type=\"" + dynamicType + "\" v-model=\"" + value + "\">:\n" +
-        "v-model does not support dynamic input types. Use v-if branches instead."
-      );
-    }
     // inputs with type="file" are read only and setting the input's
     // value will throw an error.
     if (tag === 'input' && type === 'file') {
@@ -16879,7 +19946,7 @@ function genCheckboxModel (
           : (":_q(" + value + "," + trueValueBinding + ")")
       )
   );
-  addHandler(el, CHECKBOX_RADIO_TOKEN,
+  addHandler(el, 'change',
     "var $$a=" + value + "," +
         '$$el=$event.target,' +
         "$$c=$$el.checked?(" + trueValueBinding + "):(" + falseValueBinding + ");" +
@@ -16902,7 +19969,7 @@ function genRadioModel (
   var valueBinding = getBindingAttr(el, 'value') || 'null';
   valueBinding = number ? ("_n(" + valueBinding + ")") : valueBinding;
   addProp(el, 'checked', ("_q(" + value + "," + valueBinding + ")"));
-  addHandler(el, CHECKBOX_RADIO_TOKEN, genAssignmentCode(value, valueBinding), null, true);
+  addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true);
 }
 
 function genSelect (
@@ -16966,23 +20033,33 @@ function genDefaultModel (
 // the whole point is ensuring the v-model callback gets called before
 // user-attached handlers.
 function normalizeEvents (on) {
-  var event;
   /* istanbul ignore if */
   if (isDef(on[RANGE_TOKEN])) {
     // IE input[type=range] only supports `change` event
-    event = isIE ? 'change' : 'input';
+    var event = isIE ? 'change' : 'input';
     on[event] = [].concat(on[RANGE_TOKEN], on[event] || []);
     delete on[RANGE_TOKEN];
   }
+  // This was originally intended to fix #4521 but no longer necessary
+  // after 2.5. Keeping it for backwards compat with generated code from < 2.4
+  /* istanbul ignore if */
   if (isDef(on[CHECKBOX_RADIO_TOKEN])) {
-    // Chrome fires microtasks in between click/change, leads to #4521
-    event = isChrome ? 'click' : 'change';
-    on[event] = [].concat(on[CHECKBOX_RADIO_TOKEN], on[event] || []);
+    on.change = [].concat(on[CHECKBOX_RADIO_TOKEN], on.change || []);
     delete on[CHECKBOX_RADIO_TOKEN];
   }
 }
 
 var target$1;
+
+function createOnceHandler (handler, event, capture) {
+  var _target = target$1; // save current target element in closure
+  return function onceHandler () {
+    var res = handler.apply(null, arguments);
+    if (res !== null) {
+      remove$2(event, onceHandler, capture, _target);
+    }
+  }
+}
 
 function add$1 (
   event,
@@ -16991,18 +20068,8 @@ function add$1 (
   capture,
   passive
 ) {
-  if (once$$1) {
-    var oldHandler = handler;
-    var _target = target$1; // save current target element in closure
-    handler = function (ev) {
-      var res = arguments.length === 1
-        ? oldHandler(ev)
-        : oldHandler.apply(null, arguments);
-      if (res !== null) {
-        remove$2(event, handler, capture, _target);
-      }
-    };
-  }
+  handler = withMacroTask(handler);
+  if (once$$1) { handler = createOnceHandler(handler, event, capture); }
   target$1.addEventListener(
     event,
     handler,
@@ -17018,7 +20085,11 @@ function remove$2 (
   capture,
   _target
 ) {
-  (_target || target$1).removeEventListener(event, handler, capture);
+  (_target || target$1).removeEventListener(
+    event,
+    handler._withTask || handler,
+    capture
+  );
 }
 
 function updateDOMListeners (oldVnode, vnode) {
@@ -17065,6 +20136,11 @@ function updateDOMProps (oldVnode, vnode) {
     if (key === 'textContent' || key === 'innerHTML') {
       if (vnode.children) { vnode.children.length = 0; }
       if (cur === oldProps[key]) { continue }
+      // #6601 work around Chrome version <= 55 bug where single textNode
+      // replaced by innerHTML/textContent retains its parentNode property
+      if (elm.childNodes.length === 1) {
+        elm.removeChild(elm.childNodes[0]);
+      }
     }
 
     if (key === 'value') {
@@ -17073,7 +20149,7 @@ function updateDOMProps (oldVnode, vnode) {
       elm._value = cur;
       // avoid resetting cursor position when value is the same
       var strCur = isUndef(cur) ? '' : String(cur);
-      if (shouldUpdateValue(elm, vnode, strCur)) {
+      if (shouldUpdateValue(elm, strCur)) {
         elm.value = strCur;
       }
     } else {
@@ -17085,13 +20161,9 @@ function updateDOMProps (oldVnode, vnode) {
 // check platforms/web/util/attrs.js acceptValue
 
 
-function shouldUpdateValue (
-  elm,
-  vnode,
-  checkVal
-) {
+function shouldUpdateValue (elm, checkVal) {
   return (!elm.composing && (
-    vnode.tag === 'option' ||
+    elm.tagName === 'OPTION' ||
     isDirty(elm, checkVal) ||
     isInputChanged(elm, checkVal)
   ))
@@ -17346,20 +20418,20 @@ function removeClass (el, cls) {
 
 /*  */
 
-function resolveTransition (def$$1) {
-  if (!def$$1) {
+function resolveTransition (def) {
+  if (!def) {
     return
   }
   /* istanbul ignore else */
-  if (typeof def$$1 === 'object') {
+  if (typeof def === 'object') {
     var res = {};
-    if (def$$1.css !== false) {
-      extend(res, autoCssTransition(def$$1.name || 'v'));
+    if (def.css !== false) {
+      extend(res, autoCssTransition(def.name || 'v'));
     }
-    extend(res, def$$1);
+    extend(res, def);
     return res
-  } else if (typeof def$$1 === 'string') {
-    return autoCssTransition(def$$1)
+  } else if (typeof def === 'string') {
+    return autoCssTransition(def)
   }
 }
 
@@ -17400,9 +20472,11 @@ if (hasTransition) {
 }
 
 // binding to window is necessary to make hot reload work in IE in strict mode
-var raf = inBrowser && window.requestAnimationFrame
-  ? window.requestAnimationFrame.bind(window)
-  : setTimeout;
+var raf = inBrowser
+  ? window.requestAnimationFrame
+    ? window.requestAnimationFrame.bind(window)
+    : setTimeout
+  : /* istanbul ignore next */ function (fn) { return fn(); };
 
 function nextFrame (fn) {
   raf(function () {
@@ -18218,7 +21292,7 @@ var Transition = {
     ) {
       // replace old child transition data with fresh one
       // important for dynamic transitions!
-      var oldData = oldChild && (oldChild.data.transition = extend({}, data));
+      var oldData = oldChild.data.transition = extend({}, data);
       // handle transition mode
       if (mode === 'out-in') {
         // return placeholder node and queue update when leave finishes
@@ -18335,8 +21409,9 @@ var TransitionGroup = {
     children.forEach(applyTranslation);
 
     // force reflow to put everything in position
-    var body = document.body;
-    var f = body.offsetHeight; // eslint-disable-line
+    // assign to this to avoid being removed in tree-shaking
+    // $flow-disable-line
+    this._reflow = document.body.offsetHeight;
 
     children.forEach(function (c) {
       if (c.data.moved) {
@@ -18444,7 +21519,7 @@ Vue$3.prototype.$mount = function (
 
 // devtools global hook
 /* istanbul ignore next */
-setTimeout(function () {
+Vue$3.nextTick(function () {
   if (config.devtools) {
     if (devtools) {
       devtools.emit('init', Vue$3);
@@ -18605,31 +21680,16 @@ var style$1 = {
   genData: genData$1
 };
 
-var modules$1 = [
-  klass$1,
-  style$1
-];
-
 /*  */
 
-function text (el, dir) {
-  if (dir.value) {
-    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
+var decoder;
+
+var he = {
+  decode: function decode (html) {
+    decoder = decoder || document.createElement('div');
+    decoder.innerHTML = html;
+    return decoder.textContent
   }
-}
-
-/*  */
-
-function html (el, dir) {
-  if (dir.value) {
-    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
-  }
-}
-
-var directives$1 = {
-  model: model,
-  text: text,
-  html: html
 };
 
 /*  */
@@ -18654,33 +21714,6 @@ var isNonPhrasingTag = makeMap(
   'optgroup,option,param,rp,rt,source,style,summary,tbody,td,tfoot,th,thead,' +
   'title,tr,track'
 );
-
-/*  */
-
-var baseOptions = {
-  expectHTML: true,
-  modules: modules$1,
-  directives: directives$1,
-  isPreTag: isPreTag,
-  isUnaryTag: isUnaryTag,
-  mustUseProp: mustUseProp,
-  canBeLeftOpenTag: canBeLeftOpenTag,
-  isReservedTag: isReservedTag,
-  getTagNamespace: getTagNamespace,
-  staticKeys: genStaticKeys(modules$1)
-};
-
-/*  */
-
-var decoder;
-
-var he = {
-  decode: function decode (html) {
-    decoder = decoder || document.createElement('div');
-    decoder.innerHTML = html;
-    return decoder.textContent
-  }
-};
 
 /**
  * Not type-checking this file because it's mostly vendor code.
@@ -19011,6 +22044,23 @@ var platformIsPreTag;
 var platformMustUseProp;
 var platformGetTagNamespace;
 
+
+
+function createASTElement (
+  tag,
+  attrs,
+  parent
+) {
+  return {
+    type: 1,
+    tag: tag,
+    attrsList: attrs,
+    attrsMap: makeAttrsMap(attrs),
+    parent: parent,
+    children: []
+  }
+}
+
 /**
  * Convert HTML string to AST.
  */
@@ -19073,14 +22123,7 @@ function parse (
         attrs = guardIESVGBug(attrs);
       }
 
-      var element = {
-        type: 1,
-        tag: tag,
-        attrsList: attrs,
-        attrsMap: makeAttrsMap(attrs),
-        parent: currentParent,
-        children: []
-      };
+      var element = createASTElement(tag, attrs, currentParent);
       if (ns) {
         element.ns = ns;
       }
@@ -19096,7 +22139,7 @@ function parse (
 
       // apply pre-transforms
       for (var i = 0; i < preTransforms.length; i++) {
-        preTransforms[i](element, options);
+        element = preTransforms[i](element, options) || element;
       }
 
       if (!inVPre) {
@@ -19110,23 +22153,13 @@ function parse (
       }
       if (inVPre) {
         processRawAttrs(element);
-      } else {
+      } else if (!element.processed) {
+        // structural directives
         processFor(element);
         processIf(element);
         processOnce(element);
-        processKey(element);
-
-        // determine whether this is a plain element after
-        // removing structural attributes
-        element.plain = !element.key && !attrs.length;
-
-        processRef(element);
-        processSlot(element);
-        processComponent(element);
-        for (var i$1 = 0; i$1 < transforms.length; i$1++) {
-          transforms[i$1](element, options);
-        }
-        processAttrs(element);
+        // element-scope stuff
+        processElement(element, options);
       }
 
       function checkRootConstraints (el) {
@@ -19184,8 +22217,8 @@ function parse (
         endPre(element);
       }
       // apply post-transforms
-      for (var i$2 = 0; i$2 < postTransforms.length; i$2++) {
-        postTransforms[i$2](element, options);
+      for (var i$1 = 0; i$1 < postTransforms.length; i$1++) {
+        postTransforms[i$1](element, options);
       }
     },
 
@@ -19277,6 +22310,22 @@ function processRawAttrs (el) {
     // non root node in pre blocks with no attributes
     el.plain = true;
   }
+}
+
+function processElement (element, options) {
+  processKey(element);
+
+  // determine whether this is a plain element after
+  // removing structural attributes
+  element.plain = !element.key && !element.attrsList.length;
+
+  processRef(element);
+  processSlot(element);
+  processComponent(element);
+  for (var i = 0; i < transforms.length; i++) {
+    element = transforms[i](element, options) || element;
+  }
+  processAttrs(element);
 }
 
 function processKey (el) {
@@ -19398,14 +22447,31 @@ function processSlot (el) {
       );
     }
   } else {
+    var slotScope;
+    if (el.tag === 'template') {
+      slotScope = getAndRemoveAttr(el, 'scope');
+      /* istanbul ignore if */
+      if ("development" !== 'production' && slotScope) {
+        warn$2(
+          "the \"scope\" attribute for scoped slots have been deprecated and " +
+          "replaced by \"slot-scope\" since 2.5. The new \"slot-scope\" attribute " +
+          "can also be used on plain elements in addition to <template> to " +
+          "denote scoped slots.",
+          true
+        );
+      }
+      el.slotScope = slotScope || getAndRemoveAttr(el, 'slot-scope');
+    } else if ((slotScope = getAndRemoveAttr(el, 'slot-scope'))) {
+      el.slotScope = slotScope;
+    }
     var slotTarget = getBindingAttr(el, 'slot');
     if (slotTarget) {
       el.slotTarget = slotTarget === '""' ? '"default"' : slotTarget;
       // preserve slot as an attribute for native shadow DOM compat
-      addAttr(el, 'slot', slotTarget);
-    }
-    if (el.tag === 'template') {
-      el.slotScope = getAndRemoveAttr(el, 'scope');
+      // only for non-scoped slots.
+      if (!el.slotScope) {
+        addAttr(el, 'slot', slotTarget);
+      }
     }
   }
 }
@@ -19576,6 +22642,116 @@ function checkForAliasModel (el, value) {
     _el = _el.parent;
   }
 }
+
+/*  */
+
+/**
+ * Expand input[v-model] with dyanmic type bindings into v-if-else chains
+ * Turn this:
+ *   <input v-model="data[type]" :type="type">
+ * into this:
+ *   <input v-if="type === 'checkbox'" type="checkbox" v-model="data[type]">
+ *   <input v-else-if="type === 'radio'" type="radio" v-model="data[type]">
+ *   <input v-else :type="type" v-model="data[type]">
+ */
+
+function preTransformNode (el, options) {
+  if (el.tag === 'input') {
+    var map = el.attrsMap;
+    if (map['v-model'] && (map['v-bind:type'] || map[':type'])) {
+      var typeBinding = getBindingAttr(el, 'type');
+      var ifCondition = getAndRemoveAttr(el, 'v-if', true);
+      var ifConditionExtra = ifCondition ? ("&&(" + ifCondition + ")") : "";
+      // 1. checkbox
+      var branch0 = cloneASTElement(el);
+      // process for on the main node
+      processFor(branch0);
+      addRawAttr(branch0, 'type', 'checkbox');
+      processElement(branch0, options);
+      branch0.processed = true; // prevent it from double-processed
+      branch0.if = "(" + typeBinding + ")==='checkbox'" + ifConditionExtra;
+      addIfCondition(branch0, {
+        exp: branch0.if,
+        block: branch0
+      });
+      // 2. add radio else-if condition
+      var branch1 = cloneASTElement(el);
+      getAndRemoveAttr(branch1, 'v-for', true);
+      addRawAttr(branch1, 'type', 'radio');
+      processElement(branch1, options);
+      addIfCondition(branch0, {
+        exp: "(" + typeBinding + ")==='radio'" + ifConditionExtra,
+        block: branch1
+      });
+      // 3. other
+      var branch2 = cloneASTElement(el);
+      getAndRemoveAttr(branch2, 'v-for', true);
+      addRawAttr(branch2, ':type', typeBinding);
+      processElement(branch2, options);
+      addIfCondition(branch0, {
+        exp: ifCondition,
+        block: branch2
+      });
+      return branch0
+    }
+  }
+}
+
+function cloneASTElement (el) {
+  return createASTElement(el.tag, el.attrsList.slice(), el.parent)
+}
+
+function addRawAttr (el, name, value) {
+  el.attrsMap[name] = value;
+  el.attrsList.push({ name: name, value: value });
+}
+
+var model$2 = {
+  preTransformNode: preTransformNode
+};
+
+var modules$1 = [
+  klass$1,
+  style$1,
+  model$2
+];
+
+/*  */
+
+function text (el, dir) {
+  if (dir.value) {
+    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
+  }
+}
+
+/*  */
+
+function html (el, dir) {
+  if (dir.value) {
+    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
+  }
+}
+
+var directives$1 = {
+  model: model,
+  text: text,
+  html: html
+};
+
+/*  */
+
+var baseOptions = {
+  expectHTML: true,
+  modules: modules$1,
+  directives: directives$1,
+  isPreTag: isPreTag,
+  isUnaryTag: isUnaryTag,
+  mustUseProp: mustUseProp,
+  canBeLeftOpenTag: canBeLeftOpenTag,
+  isReservedTag: isReservedTag,
+  getTagNamespace: getTagNamespace,
+  staticKeys: genStaticKeys(modules$1)
+};
 
 /*  */
 
@@ -19793,6 +22969,14 @@ function genHandler (
         if (keyCodes[key]) {
           keys.push(key);
         }
+      } else if (key === 'exact') {
+        var modifiers = (handler.modifiers);
+        genModifierCode += genGuard(
+          ['ctrl', 'shift', 'alt', 'meta']
+            .filter(function (keyModifier) { return !modifiers[keyModifier]; })
+            .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
+            .join('||')
+        );
       } else {
         keys.push(key);
       }
@@ -19822,8 +23006,13 @@ function genFilterCode (key) {
   if (keyVal) {
     return ("$event.keyCode!==" + keyVal)
   }
-  var alias = keyCodes[key];
-  return ("_k($event.keyCode," + (JSON.stringify(key)) + (alias ? ',' + JSON.stringify(alias) : '') + ")")
+  var code = keyCodes[key];
+  return (
+    "_k($event.keyCode," +
+    (JSON.stringify(key)) + "," +
+    (JSON.stringify(code)) + "," +
+    "$event.key)"
+  )
 }
 
 /*  */
@@ -20061,7 +23250,8 @@ function genData$2 (el, state) {
     data += (genHandlers(el.nativeEvents, true, state.warn)) + ",";
   }
   // slot target
-  if (el.slotTarget) {
+  // only for non-scoped slots
+  if (el.slotTarget && !el.slotScope) {
     data += "slot:" + (el.slotTarget) + ",";
   }
   // scoped slots
@@ -20119,7 +23309,7 @@ function genDirectives (el, state) {
 function genInlineTemplate (el, state) {
   var ast = el.children[0];
   if ("development" !== 'production' && (
-    el.children.length > 1 || ast.type !== 1
+    el.children.length !== 1 || ast.type !== 1
   )) {
     state.warn('Inline-template components must have exactly one child element.');
   }
@@ -20146,10 +23336,13 @@ function genScopedSlot (
   if (el.for && !el.forProcessed) {
     return genForScopedSlot(key, el, state)
   }
-  return "{key:" + key + ",fn:function(" + (String(el.attrsMap.scope)) + "){" +
+  var fn = "function(" + (String(el.slotScope)) + "){" +
     "return " + (el.tag === 'template'
-      ? genChildren(el, state) || 'void 0'
-      : genElement(el, state)) + "}}"
+      ? el.if
+        ? ((el.if) + "?" + (genChildren(el, state) || 'undefined') + ":undefined")
+        : genChildren(el, state) || 'undefined'
+      : genElement(el, state)) + "}";
+  return ("{key:" + key + ",fn:" + fn + "}")
 }
 
 function genForScopedSlot (
@@ -20378,10 +23571,14 @@ function checkExpression (exp, text, errors) {
     if (keywordMatch) {
       errors.push(
         "avoid using JavaScript keyword as property name: " +
-        "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim())
+        "\"" + (keywordMatch[0]) + "\"\n  Raw expression: " + (text.trim())
       );
     } else {
-      errors.push(("invalid expression: " + (text.trim())));
+      errors.push(
+        "invalid expression: " + (e.message) + " in\n\n" +
+        "    " + exp + "\n\n" +
+        "  Raw expression: " + (text.trim()) + "\n"
+      );
     }
   }
 }
@@ -20405,7 +23602,9 @@ function createCompileToFunctionFn (compile) {
     options,
     vm
   ) {
-    options = options || {};
+    options = extend({}, options);
+    var warn$$1 = options.warn || warn;
+    delete options.warn;
 
     /* istanbul ignore if */
     {
@@ -20414,7 +23613,7 @@ function createCompileToFunctionFn (compile) {
         new Function('return 1');
       } catch (e) {
         if (e.toString().match(/unsafe-eval|CSP/)) {
-          warn(
+          warn$$1(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
             'The template compiler cannot work in this environment. Consider ' +
@@ -20439,7 +23638,7 @@ function createCompileToFunctionFn (compile) {
     // check compilation errors/tips
     {
       if (compiled.errors && compiled.errors.length) {
-        warn(
+        warn$$1(
           "Error compiling template:\n\n" + template + "\n\n" +
           compiled.errors.map(function (e) { return ("- " + e); }).join('\n') + '\n',
           vm
@@ -20464,7 +23663,7 @@ function createCompileToFunctionFn (compile) {
     /* istanbul ignore if */
     {
       if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
-        warn(
+        warn$$1(
           "Failed to generate render function:\n\n" +
           fnGenErrors.map(function (ref) {
             var err = ref.err;
@@ -20625,7 +23824,7 @@ Vue$3.prototype.$mount = function (
       /* istanbul ignore if */
       if ("development" !== 'production' && config.performance && mark) {
         mark('compile end');
-        measure(((this._name) + " compile"), 'compile', 'compile end');
+        measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
       }
     }
   }
@@ -20652,7 +23851,7 @@ return Vue$3;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(6).setImmediate))
 
 /***/ }),
 
@@ -21878,13 +25077,13 @@ jQuery.Velocity ? console.log("Velocity is already loaded. You may be needlessly
       }
     }, destroy: function () {
       this.element && lc(this, !1), this.handlers = {}, this.session = {}, this.input.destroy(), this.element = null;
-    } }, n(hc, { INPUT_START: O, INPUT_MOVE: P, INPUT_END: Q, INPUT_CANCEL: R, STATE_POSSIBLE: Rb, STATE_BEGAN: Sb, STATE_CHANGED: Tb, STATE_ENDED: Ub, STATE_RECOGNIZED: Vb, STATE_CANCELLED: Wb, STATE_FAILED: Xb, DIRECTION_NONE: S, DIRECTION_LEFT: T, DIRECTION_RIGHT: U, DIRECTION_UP: V, DIRECTION_DOWN: W, DIRECTION_HORIZONTAL: X, DIRECTION_VERTICAL: Y, DIRECTION_ALL: Z, Manager: kc, Input: ab, TouchAction: Pb, TouchInput: Eb, MouseInput: rb, PointerEventInput: wb, TouchMouseInput: Gb, SingleTouchInput: Ab, Recognizer: Yb, AttrRecognizer: ac, Tap: gc, Pan: bc, Swipe: fc, Pinch: cc, Rotate: ec, Press: dc, on: t, off: u, each: m, merge: o, extend: n, inherit: p, bindFn: q, prefixed: B }), "function" == g && __webpack_require__(6) ? !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+    } }, n(hc, { INPUT_START: O, INPUT_MOVE: P, INPUT_END: Q, INPUT_CANCEL: R, STATE_POSSIBLE: Rb, STATE_BEGAN: Sb, STATE_CHANGED: Tb, STATE_ENDED: Ub, STATE_RECOGNIZED: Vb, STATE_CANCELLED: Wb, STATE_FAILED: Xb, DIRECTION_NONE: S, DIRECTION_LEFT: T, DIRECTION_RIGHT: U, DIRECTION_UP: V, DIRECTION_DOWN: W, DIRECTION_HORIZONTAL: X, DIRECTION_VERTICAL: Y, DIRECTION_ALL: Z, Manager: kc, Input: ab, TouchAction: Pb, TouchInput: Eb, MouseInput: rb, PointerEventInput: wb, TouchMouseInput: Gb, SingleTouchInput: Ab, Recognizer: Yb, AttrRecognizer: ac, Tap: gc, Pan: bc, Swipe: fc, Pinch: cc, Rotate: ec, Press: dc, on: t, off: u, each: m, merge: o, extend: n, inherit: p, bindFn: q, prefixed: B }), "function" == g && __webpack_require__(9) ? !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
     return hc;
   }.call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : "undefined" != typeof module && module.exports ? module.exports = hc : a[c] = hc;
 }(window, document, "Hammer");;(function (factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(7)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1), __webpack_require__(10)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -30690,11 +33889,39 @@ if (Vel) {
   };
 })(jQuery);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1), __webpack_require__(1), __webpack_require__(4)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(1), __webpack_require__(1), __webpack_require__(5)(module)))
 
 /***/ }),
 
 /***/ 4:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 5:
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -30723,2883 +33950,458 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 5:
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
 /***/ 6:
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
-module.exports = __webpack_amd_options__;
+var apply = Function.prototype.apply;
 
-/* WEBPACK VAR INJECTION */}.call(exports, {}))
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(7);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
+
 
 /***/ }),
 
 /***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
- * http://hammerjs.github.io/
- *
- * Copyright (c) 2016 Jorik Tangelder;
- * Licensed under the MIT license */
-(function(window, document, exportName, undefined) {
-  'use strict';
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
 
-var VENDOR_PREFIXES = ['', 'webkit', 'Moz', 'MS', 'ms', 'o'];
-var TEST_ELEMENT = document.createElement('div');
-
-var TYPE_FUNCTION = 'function';
-
-var round = Math.round;
-var abs = Math.abs;
-var now = Date.now;
-
-/**
- * set a timeout with a given scope
- * @param {Function} fn
- * @param {Number} timeout
- * @param {Object} context
- * @returns {number}
- */
-function setTimeoutContext(fn, timeout, context) {
-    return setTimeout(bindFn(fn, context), timeout);
-}
-
-/**
- * if the argument is an array, we want to execute the fn on each entry
- * if it aint an array we don't want to do a thing.
- * this is used by all the methods that accept a single and array argument.
- * @param {*|Array} arg
- * @param {String} fn
- * @param {Object} [context]
- * @returns {Boolean}
- */
-function invokeArrayArg(arg, fn, context) {
-    if (Array.isArray(arg)) {
-        each(arg, context[fn], context);
-        return true;
-    }
-    return false;
-}
-
-/**
- * walk objects and arrays
- * @param {Object} obj
- * @param {Function} iterator
- * @param {Object} context
- */
-function each(obj, iterator, context) {
-    var i;
-
-    if (!obj) {
+    if (global.setImmediate) {
         return;
     }
 
-    if (obj.forEach) {
-        obj.forEach(iterator, context);
-    } else if (obj.length !== undefined) {
-        i = 0;
-        while (i < obj.length) {
-            iterator.call(context, obj[i], i, obj);
-            i++;
-        }
-    } else {
-        for (i in obj) {
-            obj.hasOwnProperty(i) && iterator.call(context, obj[i], i, obj);
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
         }
     }
-}
 
-/**
- * wrap a method with a deprecation warning and stack trace
- * @param {Function} method
- * @param {String} name
- * @param {String} message
- * @returns {Function} A new function wrapping the supplied method.
- */
-function deprecate(method, name, message) {
-    var deprecationMessage = 'DEPRECATED METHOD: ' + name + '\n' + message + ' AT \n';
-    return function() {
-        var e = new Error('get-stack-trace');
-        var stack = e && e.stack ? e.stack.replace(/^[^\(]+?[\n$]/gm, '')
-            .replace(/^\s+at\s+/gm, '')
-            .replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@') : 'Unknown Stack Trace';
-
-        var log = window.console && (window.console.warn || window.console.log);
-        if (log) {
-            log.call(window.console, deprecationMessage, stack);
-        }
-        return method.apply(this, arguments);
-    };
-}
-
-/**
- * extend object.
- * means that properties in dest will be overwritten by the ones in src.
- * @param {Object} target
- * @param {...Object} objects_to_assign
- * @returns {Object} target
- */
-var assign;
-if (typeof Object.assign !== 'function') {
-    assign = function assign(target) {
-        if (target === undefined || target === null) {
-            throw new TypeError('Cannot convert undefined or null to object');
-        }
-
-        var output = Object(target);
-        for (var index = 1; index < arguments.length; index++) {
-            var source = arguments[index];
-            if (source !== undefined && source !== null) {
-                for (var nextKey in source) {
-                    if (source.hasOwnProperty(nextKey)) {
-                        output[nextKey] = source[nextKey];
-                    }
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
                 }
             }
         }
-        return output;
-    };
-} else {
-    assign = Object.assign;
-}
+    }
 
-/**
- * extend object.
- * means that properties in dest will be overwritten by the ones in src.
- * @param {Object} dest
- * @param {Object} src
- * @param {Boolean} [merge=false]
- * @returns {Object} dest
- */
-var extend = deprecate(function extend(dest, src, merge) {
-    var keys = Object.keys(src);
-    var i = 0;
-    while (i < keys.length) {
-        if (!merge || (merge && dest[keys[i]] === undefined)) {
-            dest[keys[i]] = src[keys[i]];
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
         }
-        i++;
     }
-    return dest;
-}, 'extend', 'Use `assign`.');
 
-/**
- * merge the values from src in the dest.
- * means that properties that exist in dest will not be overwritten by src
- * @param {Object} dest
- * @param {Object} src
- * @returns {Object} dest
- */
-var merge = deprecate(function merge(dest, src) {
-    return extend(dest, src, true);
-}, 'merge', 'Use `assign`.');
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
 
-/**
- * simple class inheritance
- * @param {Function} child
- * @param {Function} base
- * @param {Object} [properties]
- */
-function inherit(child, base, properties) {
-    var baseP = base.prototype,
-        childP;
-
-    childP = child.prototype = Object.create(baseP);
-    childP.constructor = child;
-    childP._super = baseP;
-
-    if (properties) {
-        assign(childP, properties);
-    }
-}
-
-/**
- * simple function bind
- * @param {Function} fn
- * @param {Object} context
- * @returns {Function}
- */
-function bindFn(fn, context) {
-    return function boundFn() {
-        return fn.apply(context, arguments);
-    };
-}
-
-/**
- * let a boolean value also be a function that must return a boolean
- * this first item in args will be used as the context
- * @param {Boolean|Function} val
- * @param {Array} [args]
- * @returns {Boolean}
- */
-function boolOrFn(val, args) {
-    if (typeof val == TYPE_FUNCTION) {
-        return val.apply(args ? args[0] || undefined : undefined, args);
-    }
-    return val;
-}
-
-/**
- * use the val2 when val1 is undefined
- * @param {*} val1
- * @param {*} val2
- * @returns {*}
- */
-function ifUndefined(val1, val2) {
-    return (val1 === undefined) ? val2 : val1;
-}
-
-/**
- * addEventListener with multiple events at once
- * @param {EventTarget} target
- * @param {String} types
- * @param {Function} handler
- */
-function addEventListeners(target, types, handler) {
-    each(splitStr(types), function(type) {
-        target.addEventListener(type, handler, false);
-    });
-}
-
-/**
- * removeEventListener with multiple events at once
- * @param {EventTarget} target
- * @param {String} types
- * @param {Function} handler
- */
-function removeEventListeners(target, types, handler) {
-    each(splitStr(types), function(type) {
-        target.removeEventListener(type, handler, false);
-    });
-}
-
-/**
- * find if a node is in the given parent
- * @method hasParent
- * @param {HTMLElement} node
- * @param {HTMLElement} parent
- * @return {Boolean} found
- */
-function hasParent(node, parent) {
-    while (node) {
-        if (node == parent) {
-            return true;
-        }
-        node = node.parentNode;
-    }
-    return false;
-}
-
-/**
- * small indexOf wrapper
- * @param {String} str
- * @param {String} find
- * @returns {Boolean} found
- */
-function inStr(str, find) {
-    return str.indexOf(find) > -1;
-}
-
-/**
- * split string on whitespace
- * @param {String} str
- * @returns {Array} words
- */
-function splitStr(str) {
-    return str.trim().split(/\s+/g);
-}
-
-/**
- * find if a array contains the object using indexOf or a simple polyFill
- * @param {Array} src
- * @param {String} find
- * @param {String} [findByKey]
- * @return {Boolean|Number} false when not found, or the index
- */
-function inArray(src, find, findByKey) {
-    if (src.indexOf && !findByKey) {
-        return src.indexOf(find);
-    } else {
-        var i = 0;
-        while (i < src.length) {
-            if ((findByKey && src[i][findByKey] == find) || (!findByKey && src[i] === find)) {
-                return i;
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
             }
-            i++;
-        }
-        return -1;
-    }
-}
+        };
 
-/**
- * convert array-like objects to real arrays
- * @param {Object} obj
- * @returns {Array}
- */
-function toArray(obj) {
-    return Array.prototype.slice.call(obj, 0);
-}
-
-/**
- * unique array with objects based on a key (like 'id') or just by the array's value
- * @param {Array} src [{id:1},{id:2},{id:1}]
- * @param {String} [key]
- * @param {Boolean} [sort=False]
- * @returns {Array} [{id:1},{id:2}]
- */
-function uniqueArray(src, key, sort) {
-    var results = [];
-    var values = [];
-    var i = 0;
-
-    while (i < src.length) {
-        var val = key ? src[i][key] : src[i];
-        if (inArray(values, val) < 0) {
-            results.push(src[i]);
-        }
-        values[i] = val;
-        i++;
-    }
-
-    if (sort) {
-        if (!key) {
-            results = results.sort();
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
         } else {
-            results = results.sort(function sortUniqueArray(a, b) {
-                return a[key] > b[key];
-            });
+            global.attachEvent("onmessage", onGlobalMessage);
         }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
     }
 
-    return results;
-}
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
 
-/**
- * get the prefixed property
- * @param {Object} obj
- * @param {String} property
- * @returns {String|Undefined} prefixed
- */
-function prefixed(obj, property) {
-    var prefix, prop;
-    var camelProp = property[0].toUpperCase() + property.slice(1);
-
-    var i = 0;
-    while (i < VENDOR_PREFIXES.length) {
-        prefix = VENDOR_PREFIXES[i];
-        prop = (prefix) ? prefix + camelProp : property;
-
-        if (prop in obj) {
-            return prop;
-        }
-        i++;
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
     }
-    return undefined;
-}
 
-/**
- * get a unique id
- * @returns {number} uniqueId
- */
-var _uniqueId = 1;
-function uniqueId() {
-    return _uniqueId++;
-}
-
-/**
- * get the window object of an element
- * @param {HTMLElement} element
- * @returns {DocumentView|Window}
- */
-function getWindowForElement(element) {
-    var doc = element.ownerDocument || element;
-    return (doc.defaultView || doc.parentWindow || window);
-}
-
-var MOBILE_REGEX = /mobile|tablet|ip(ad|hone|od)|android/i;
-
-var SUPPORT_TOUCH = ('ontouchstart' in window);
-var SUPPORT_POINTER_EVENTS = prefixed(window, 'PointerEvent') !== undefined;
-var SUPPORT_ONLY_TOUCH = SUPPORT_TOUCH && MOBILE_REGEX.test(navigator.userAgent);
-
-var INPUT_TYPE_TOUCH = 'touch';
-var INPUT_TYPE_PEN = 'pen';
-var INPUT_TYPE_MOUSE = 'mouse';
-var INPUT_TYPE_KINECT = 'kinect';
-
-var COMPUTE_INTERVAL = 25;
-
-var INPUT_START = 1;
-var INPUT_MOVE = 2;
-var INPUT_END = 4;
-var INPUT_CANCEL = 8;
-
-var DIRECTION_NONE = 1;
-var DIRECTION_LEFT = 2;
-var DIRECTION_RIGHT = 4;
-var DIRECTION_UP = 8;
-var DIRECTION_DOWN = 16;
-
-var DIRECTION_HORIZONTAL = DIRECTION_LEFT | DIRECTION_RIGHT;
-var DIRECTION_VERTICAL = DIRECTION_UP | DIRECTION_DOWN;
-var DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
-
-var PROPS_XY = ['x', 'y'];
-var PROPS_CLIENT_XY = ['clientX', 'clientY'];
-
-/**
- * create new input type manager
- * @param {Manager} manager
- * @param {Function} callback
- * @returns {Input}
- * @constructor
- */
-function Input(manager, callback) {
-    var self = this;
-    this.manager = manager;
-    this.callback = callback;
-    this.element = manager.element;
-    this.target = manager.options.inputTarget;
-
-    // smaller wrapper around the handler, for the scope and the enabled state of the manager,
-    // so when disabled the input events are completely bypassed.
-    this.domHandler = function(ev) {
-        if (boolOrFn(manager.options.enable, [manager])) {
-            self.handler(ev);
-        }
-    };
-
-    this.init();
-
-}
-
-Input.prototype = {
-    /**
-     * should handle the inputEvent data and trigger the callback
-     * @virtual
-     */
-    handler: function() { },
-
-    /**
-     * bind the events
-     */
-    init: function() {
-        this.evEl && addEventListeners(this.element, this.evEl, this.domHandler);
-        this.evTarget && addEventListeners(this.target, this.evTarget, this.domHandler);
-        this.evWin && addEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
-    },
-
-    /**
-     * unbind the events
-     */
-    destroy: function() {
-        this.evEl && removeEventListeners(this.element, this.evEl, this.domHandler);
-        this.evTarget && removeEventListeners(this.target, this.evTarget, this.domHandler);
-        this.evWin && removeEventListeners(getWindowForElement(this.element), this.evWin, this.domHandler);
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
     }
-};
 
-/**
- * create new input type manager
- * called by the Manager constructor
- * @param {Hammer} manager
- * @returns {Input}
- */
-function createInputInstance(manager) {
-    var Type;
-    var inputClass = manager.options.inputClass;
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
 
-    if (inputClass) {
-        Type = inputClass;
-    } else if (SUPPORT_POINTER_EVENTS) {
-        Type = PointerEventInput;
-    } else if (SUPPORT_ONLY_TOUCH) {
-        Type = TouchInput;
-    } else if (!SUPPORT_TOUCH) {
-        Type = MouseInput;
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
     } else {
-        Type = TouchMouseInput;
-    }
-    return new (Type)(manager, inputHandler);
-}
-
-/**
- * handle input events
- * @param {Manager} manager
- * @param {String} eventType
- * @param {Object} input
- */
-function inputHandler(manager, eventType, input) {
-    var pointersLen = input.pointers.length;
-    var changedPointersLen = input.changedPointers.length;
-    var isFirst = (eventType & INPUT_START && (pointersLen - changedPointersLen === 0));
-    var isFinal = (eventType & (INPUT_END | INPUT_CANCEL) && (pointersLen - changedPointersLen === 0));
-
-    input.isFirst = !!isFirst;
-    input.isFinal = !!isFinal;
-
-    if (isFirst) {
-        manager.session = {};
+        // For older browsers
+        installSetTimeoutImplementation();
     }
 
-    // source event is the normalized value of the domEvents
-    // like 'touchstart, mouseup, pointerdown'
-    input.eventType = eventType;
-
-    // compute scale, rotation etc
-    computeInputData(manager, input);
-
-    // emit secret event
-    manager.emit('hammer.input', input);
-
-    manager.recognize(input);
-    manager.session.prevInput = input;
-}
-
-/**
- * extend the data with some usable properties like scale, rotate, velocity etc
- * @param {Object} manager
- * @param {Object} input
- */
-function computeInputData(manager, input) {
-    var session = manager.session;
-    var pointers = input.pointers;
-    var pointersLength = pointers.length;
-
-    // store the first input to calculate the distance and direction
-    if (!session.firstInput) {
-        session.firstInput = simpleCloneInputData(input);
-    }
-
-    // to compute scale and rotation we need to store the multiple touches
-    if (pointersLength > 1 && !session.firstMultiple) {
-        session.firstMultiple = simpleCloneInputData(input);
-    } else if (pointersLength === 1) {
-        session.firstMultiple = false;
-    }
-
-    var firstInput = session.firstInput;
-    var firstMultiple = session.firstMultiple;
-    var offsetCenter = firstMultiple ? firstMultiple.center : firstInput.center;
-
-    var center = input.center = getCenter(pointers);
-    input.timeStamp = now();
-    input.deltaTime = input.timeStamp - firstInput.timeStamp;
-
-    input.angle = getAngle(offsetCenter, center);
-    input.distance = getDistance(offsetCenter, center);
-
-    computeDeltaXY(session, input);
-    input.offsetDirection = getDirection(input.deltaX, input.deltaY);
-
-    var overallVelocity = getVelocity(input.deltaTime, input.deltaX, input.deltaY);
-    input.overallVelocityX = overallVelocity.x;
-    input.overallVelocityY = overallVelocity.y;
-    input.overallVelocity = (abs(overallVelocity.x) > abs(overallVelocity.y)) ? overallVelocity.x : overallVelocity.y;
-
-    input.scale = firstMultiple ? getScale(firstMultiple.pointers, pointers) : 1;
-    input.rotation = firstMultiple ? getRotation(firstMultiple.pointers, pointers) : 0;
-
-    input.maxPointers = !session.prevInput ? input.pointers.length : ((input.pointers.length >
-        session.prevInput.maxPointers) ? input.pointers.length : session.prevInput.maxPointers);
-
-    computeIntervalInputData(session, input);
-
-    // find the correct target
-    var target = manager.element;
-    if (hasParent(input.srcEvent.target, target)) {
-        target = input.srcEvent.target;
-    }
-    input.target = target;
-}
-
-function computeDeltaXY(session, input) {
-    var center = input.center;
-    var offset = session.offsetDelta || {};
-    var prevDelta = session.prevDelta || {};
-    var prevInput = session.prevInput || {};
-
-    if (input.eventType === INPUT_START || prevInput.eventType === INPUT_END) {
-        prevDelta = session.prevDelta = {
-            x: prevInput.deltaX || 0,
-            y: prevInput.deltaY || 0
-        };
-
-        offset = session.offsetDelta = {
-            x: center.x,
-            y: center.y
-        };
-    }
-
-    input.deltaX = prevDelta.x + (center.x - offset.x);
-    input.deltaY = prevDelta.y + (center.y - offset.y);
-}
-
-/**
- * velocity is calculated every x ms
- * @param {Object} session
- * @param {Object} input
- */
-function computeIntervalInputData(session, input) {
-    var last = session.lastInterval || input,
-        deltaTime = input.timeStamp - last.timeStamp,
-        velocity, velocityX, velocityY, direction;
-
-    if (input.eventType != INPUT_CANCEL && (deltaTime > COMPUTE_INTERVAL || last.velocity === undefined)) {
-        var deltaX = input.deltaX - last.deltaX;
-        var deltaY = input.deltaY - last.deltaY;
-
-        var v = getVelocity(deltaTime, deltaX, deltaY);
-        velocityX = v.x;
-        velocityY = v.y;
-        velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
-        direction = getDirection(deltaX, deltaY);
-
-        session.lastInterval = input;
-    } else {
-        // use latest velocity info if it doesn't overtake a minimum period
-        velocity = last.velocity;
-        velocityX = last.velocityX;
-        velocityY = last.velocityY;
-        direction = last.direction;
-    }
-
-    input.velocity = velocity;
-    input.velocityX = velocityX;
-    input.velocityY = velocityY;
-    input.direction = direction;
-}
-
-/**
- * create a simple clone from the input used for storage of firstInput and firstMultiple
- * @param {Object} input
- * @returns {Object} clonedInputData
- */
-function simpleCloneInputData(input) {
-    // make a simple copy of the pointers because we will get a reference if we don't
-    // we only need clientXY for the calculations
-    var pointers = [];
-    var i = 0;
-    while (i < input.pointers.length) {
-        pointers[i] = {
-            clientX: round(input.pointers[i].clientX),
-            clientY: round(input.pointers[i].clientY)
-        };
-        i++;
-    }
-
-    return {
-        timeStamp: now(),
-        pointers: pointers,
-        center: getCenter(pointers),
-        deltaX: input.deltaX,
-        deltaY: input.deltaY
-    };
-}
-
-/**
- * get the center of all the pointers
- * @param {Array} pointers
- * @return {Object} center contains `x` and `y` properties
- */
-function getCenter(pointers) {
-    var pointersLength = pointers.length;
-
-    // no need to loop when only one touch
-    if (pointersLength === 1) {
-        return {
-            x: round(pointers[0].clientX),
-            y: round(pointers[0].clientY)
-        };
-    }
-
-    var x = 0, y = 0, i = 0;
-    while (i < pointersLength) {
-        x += pointers[i].clientX;
-        y += pointers[i].clientY;
-        i++;
-    }
-
-    return {
-        x: round(x / pointersLength),
-        y: round(y / pointersLength)
-    };
-}
-
-/**
- * calculate the velocity between two points. unit is in px per ms.
- * @param {Number} deltaTime
- * @param {Number} x
- * @param {Number} y
- * @return {Object} velocity `x` and `y`
- */
-function getVelocity(deltaTime, x, y) {
-    return {
-        x: x / deltaTime || 0,
-        y: y / deltaTime || 0
-    };
-}
-
-/**
- * get the direction between two points
- * @param {Number} x
- * @param {Number} y
- * @return {Number} direction
- */
-function getDirection(x, y) {
-    if (x === y) {
-        return DIRECTION_NONE;
-    }
-
-    if (abs(x) >= abs(y)) {
-        return x < 0 ? DIRECTION_LEFT : DIRECTION_RIGHT;
-    }
-    return y < 0 ? DIRECTION_UP : DIRECTION_DOWN;
-}
-
-/**
- * calculate the absolute distance between two points
- * @param {Object} p1 {x, y}
- * @param {Object} p2 {x, y}
- * @param {Array} [props] containing x and y keys
- * @return {Number} distance
- */
-function getDistance(p1, p2, props) {
-    if (!props) {
-        props = PROPS_XY;
-    }
-    var x = p2[props[0]] - p1[props[0]],
-        y = p2[props[1]] - p1[props[1]];
-
-    return Math.sqrt((x * x) + (y * y));
-}
-
-/**
- * calculate the angle between two coordinates
- * @param {Object} p1
- * @param {Object} p2
- * @param {Array} [props] containing x and y keys
- * @return {Number} angle
- */
-function getAngle(p1, p2, props) {
-    if (!props) {
-        props = PROPS_XY;
-    }
-    var x = p2[props[0]] - p1[props[0]],
-        y = p2[props[1]] - p1[props[1]];
-    return Math.atan2(y, x) * 180 / Math.PI;
-}
-
-/**
- * calculate the rotation degrees between two pointersets
- * @param {Array} start array of pointers
- * @param {Array} end array of pointers
- * @return {Number} rotation
- */
-function getRotation(start, end) {
-    return getAngle(end[1], end[0], PROPS_CLIENT_XY) + getAngle(start[1], start[0], PROPS_CLIENT_XY);
-}
-
-/**
- * calculate the scale factor between two pointersets
- * no scale is 1, and goes down to 0 when pinched together, and bigger when pinched out
- * @param {Array} start array of pointers
- * @param {Array} end array of pointers
- * @return {Number} scale
- */
-function getScale(start, end) {
-    return getDistance(end[0], end[1], PROPS_CLIENT_XY) / getDistance(start[0], start[1], PROPS_CLIENT_XY);
-}
-
-var MOUSE_INPUT_MAP = {
-    mousedown: INPUT_START,
-    mousemove: INPUT_MOVE,
-    mouseup: INPUT_END
-};
-
-var MOUSE_ELEMENT_EVENTS = 'mousedown';
-var MOUSE_WINDOW_EVENTS = 'mousemove mouseup';
-
-/**
- * Mouse events input
- * @constructor
- * @extends Input
- */
-function MouseInput() {
-    this.evEl = MOUSE_ELEMENT_EVENTS;
-    this.evWin = MOUSE_WINDOW_EVENTS;
-
-    this.pressed = false; // mousedown state
-
-    Input.apply(this, arguments);
-}
-
-inherit(MouseInput, Input, {
-    /**
-     * handle mouse events
-     * @param {Object} ev
-     */
-    handler: function MEhandler(ev) {
-        var eventType = MOUSE_INPUT_MAP[ev.type];
-
-        // on start we want to have the left mouse button down
-        if (eventType & INPUT_START && ev.button === 0) {
-            this.pressed = true;
-        }
-
-        if (eventType & INPUT_MOVE && ev.which !== 1) {
-            eventType = INPUT_END;
-        }
-
-        // mouse must be down
-        if (!this.pressed) {
-            return;
-        }
-
-        if (eventType & INPUT_END) {
-            this.pressed = false;
-        }
-
-        this.callback(this.manager, eventType, {
-            pointers: [ev],
-            changedPointers: [ev],
-            pointerType: INPUT_TYPE_MOUSE,
-            srcEvent: ev
-        });
-    }
-});
-
-var POINTER_INPUT_MAP = {
-    pointerdown: INPUT_START,
-    pointermove: INPUT_MOVE,
-    pointerup: INPUT_END,
-    pointercancel: INPUT_CANCEL,
-    pointerout: INPUT_CANCEL
-};
-
-// in IE10 the pointer types is defined as an enum
-var IE10_POINTER_TYPE_ENUM = {
-    2: INPUT_TYPE_TOUCH,
-    3: INPUT_TYPE_PEN,
-    4: INPUT_TYPE_MOUSE,
-    5: INPUT_TYPE_KINECT // see https://twitter.com/jacobrossi/status/480596438489890816
-};
-
-var POINTER_ELEMENT_EVENTS = 'pointerdown';
-var POINTER_WINDOW_EVENTS = 'pointermove pointerup pointercancel';
-
-// IE10 has prefixed support, and case-sensitive
-if (window.MSPointerEvent && !window.PointerEvent) {
-    POINTER_ELEMENT_EVENTS = 'MSPointerDown';
-    POINTER_WINDOW_EVENTS = 'MSPointerMove MSPointerUp MSPointerCancel';
-}
-
-/**
- * Pointer events input
- * @constructor
- * @extends Input
- */
-function PointerEventInput() {
-    this.evEl = POINTER_ELEMENT_EVENTS;
-    this.evWin = POINTER_WINDOW_EVENTS;
-
-    Input.apply(this, arguments);
-
-    this.store = (this.manager.session.pointerEvents = []);
-}
-
-inherit(PointerEventInput, Input, {
-    /**
-     * handle mouse events
-     * @param {Object} ev
-     */
-    handler: function PEhandler(ev) {
-        var store = this.store;
-        var removePointer = false;
-
-        var eventTypeNormalized = ev.type.toLowerCase().replace('ms', '');
-        var eventType = POINTER_INPUT_MAP[eventTypeNormalized];
-        var pointerType = IE10_POINTER_TYPE_ENUM[ev.pointerType] || ev.pointerType;
-
-        var isTouch = (pointerType == INPUT_TYPE_TOUCH);
-
-        // get index of the event in the store
-        var storeIndex = inArray(store, ev.pointerId, 'pointerId');
-
-        // start and mouse must be down
-        if (eventType & INPUT_START && (ev.button === 0 || isTouch)) {
-            if (storeIndex < 0) {
-                store.push(ev);
-                storeIndex = store.length - 1;
-            }
-        } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
-            removePointer = true;
-        }
-
-        // it not found, so the pointer hasn't been down (so it's probably a hover)
-        if (storeIndex < 0) {
-            return;
-        }
-
-        // update the event in the store
-        store[storeIndex] = ev;
-
-        this.callback(this.manager, eventType, {
-            pointers: store,
-            changedPointers: [ev],
-            pointerType: pointerType,
-            srcEvent: ev
-        });
-
-        if (removePointer) {
-            // remove from the store
-            store.splice(storeIndex, 1);
-        }
-    }
-});
-
-var SINGLE_TOUCH_INPUT_MAP = {
-    touchstart: INPUT_START,
-    touchmove: INPUT_MOVE,
-    touchend: INPUT_END,
-    touchcancel: INPUT_CANCEL
-};
-
-var SINGLE_TOUCH_TARGET_EVENTS = 'touchstart';
-var SINGLE_TOUCH_WINDOW_EVENTS = 'touchstart touchmove touchend touchcancel';
-
-/**
- * Touch events input
- * @constructor
- * @extends Input
- */
-function SingleTouchInput() {
-    this.evTarget = SINGLE_TOUCH_TARGET_EVENTS;
-    this.evWin = SINGLE_TOUCH_WINDOW_EVENTS;
-    this.started = false;
-
-    Input.apply(this, arguments);
-}
-
-inherit(SingleTouchInput, Input, {
-    handler: function TEhandler(ev) {
-        var type = SINGLE_TOUCH_INPUT_MAP[ev.type];
-
-        // should we handle the touch events?
-        if (type === INPUT_START) {
-            this.started = true;
-        }
-
-        if (!this.started) {
-            return;
-        }
-
-        var touches = normalizeSingleTouches.call(this, ev, type);
-
-        // when done, reset the started state
-        if (type & (INPUT_END | INPUT_CANCEL) && touches[0].length - touches[1].length === 0) {
-            this.started = false;
-        }
-
-        this.callback(this.manager, type, {
-            pointers: touches[0],
-            changedPointers: touches[1],
-            pointerType: INPUT_TYPE_TOUCH,
-            srcEvent: ev
-        });
-    }
-});
-
-/**
- * @this {TouchInput}
- * @param {Object} ev
- * @param {Number} type flag
- * @returns {undefined|Array} [all, changed]
- */
-function normalizeSingleTouches(ev, type) {
-    var all = toArray(ev.touches);
-    var changed = toArray(ev.changedTouches);
-
-    if (type & (INPUT_END | INPUT_CANCEL)) {
-        all = uniqueArray(all.concat(changed), 'identifier', true);
-    }
-
-    return [all, changed];
-}
-
-var TOUCH_INPUT_MAP = {
-    touchstart: INPUT_START,
-    touchmove: INPUT_MOVE,
-    touchend: INPUT_END,
-    touchcancel: INPUT_CANCEL
-};
-
-var TOUCH_TARGET_EVENTS = 'touchstart touchmove touchend touchcancel';
-
-/**
- * Multi-user touch events input
- * @constructor
- * @extends Input
- */
-function TouchInput() {
-    this.evTarget = TOUCH_TARGET_EVENTS;
-    this.targetIds = {};
-
-    Input.apply(this, arguments);
-}
-
-inherit(TouchInput, Input, {
-    handler: function MTEhandler(ev) {
-        var type = TOUCH_INPUT_MAP[ev.type];
-        var touches = getTouches.call(this, ev, type);
-        if (!touches) {
-            return;
-        }
-
-        this.callback(this.manager, type, {
-            pointers: touches[0],
-            changedPointers: touches[1],
-            pointerType: INPUT_TYPE_TOUCH,
-            srcEvent: ev
-        });
-    }
-});
-
-/**
- * @this {TouchInput}
- * @param {Object} ev
- * @param {Number} type flag
- * @returns {undefined|Array} [all, changed]
- */
-function getTouches(ev, type) {
-    var allTouches = toArray(ev.touches);
-    var targetIds = this.targetIds;
-
-    // when there is only one touch, the process can be simplified
-    if (type & (INPUT_START | INPUT_MOVE) && allTouches.length === 1) {
-        targetIds[allTouches[0].identifier] = true;
-        return [allTouches, allTouches];
-    }
-
-    var i,
-        targetTouches,
-        changedTouches = toArray(ev.changedTouches),
-        changedTargetTouches = [],
-        target = this.target;
-
-    // get target touches from touches
-    targetTouches = allTouches.filter(function(touch) {
-        return hasParent(touch.target, target);
-    });
-
-    // collect touches
-    if (type === INPUT_START) {
-        i = 0;
-        while (i < targetTouches.length) {
-            targetIds[targetTouches[i].identifier] = true;
-            i++;
-        }
-    }
-
-    // filter changed touches to only contain touches that exist in the collected target ids
-    i = 0;
-    while (i < changedTouches.length) {
-        if (targetIds[changedTouches[i].identifier]) {
-            changedTargetTouches.push(changedTouches[i]);
-        }
-
-        // cleanup removed touches
-        if (type & (INPUT_END | INPUT_CANCEL)) {
-            delete targetIds[changedTouches[i].identifier];
-        }
-        i++;
-    }
-
-    if (!changedTargetTouches.length) {
-        return;
-    }
-
-    return [
-        // merge targetTouches with changedTargetTouches so it contains ALL touches, including 'end' and 'cancel'
-        uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true),
-        changedTargetTouches
-    ];
-}
-
-/**
- * Combined touch and mouse input
- *
- * Touch has a higher priority then mouse, and while touching no mouse events are allowed.
- * This because touch devices also emit mouse events while doing a touch.
- *
- * @constructor
- * @extends Input
- */
-
-var DEDUP_TIMEOUT = 2500;
-var DEDUP_DISTANCE = 25;
-
-function TouchMouseInput() {
-    Input.apply(this, arguments);
-
-    var handler = bindFn(this.handler, this);
-    this.touch = new TouchInput(this.manager, handler);
-    this.mouse = new MouseInput(this.manager, handler);
-
-    this.primaryTouch = null;
-    this.lastTouches = [];
-}
-
-inherit(TouchMouseInput, Input, {
-    /**
-     * handle mouse and touch events
-     * @param {Hammer} manager
-     * @param {String} inputEvent
-     * @param {Object} inputData
-     */
-    handler: function TMEhandler(manager, inputEvent, inputData) {
-        var isTouch = (inputData.pointerType == INPUT_TYPE_TOUCH),
-            isMouse = (inputData.pointerType == INPUT_TYPE_MOUSE);
-
-        if (isMouse && inputData.sourceCapabilities && inputData.sourceCapabilities.firesTouchEvents) {
-            return;
-        }
-
-        // when we're in a touch event, record touches to  de-dupe synthetic mouse event
-        if (isTouch) {
-            recordTouches.call(this, inputEvent, inputData);
-        } else if (isMouse && isSyntheticEvent.call(this, inputData)) {
-            return;
-        }
-
-        this.callback(manager, inputEvent, inputData);
-    },
-
-    /**
-     * remove the event listeners
-     */
-    destroy: function destroy() {
-        this.touch.destroy();
-        this.mouse.destroy();
-    }
-});
-
-function recordTouches(eventType, eventData) {
-    if (eventType & INPUT_START) {
-        this.primaryTouch = eventData.changedPointers[0].identifier;
-        setLastTouch.call(this, eventData);
-    } else if (eventType & (INPUT_END | INPUT_CANCEL)) {
-        setLastTouch.call(this, eventData);
-    }
-}
-
-function setLastTouch(eventData) {
-    var touch = eventData.changedPointers[0];
-
-    if (touch.identifier === this.primaryTouch) {
-        var lastTouch = {x: touch.clientX, y: touch.clientY};
-        this.lastTouches.push(lastTouch);
-        var lts = this.lastTouches;
-        var removeLastTouch = function() {
-            var i = lts.indexOf(lastTouch);
-            if (i > -1) {
-                lts.splice(i, 1);
-            }
-        };
-        setTimeout(removeLastTouch, DEDUP_TIMEOUT);
-    }
-}
-
-function isSyntheticEvent(eventData) {
-    var x = eventData.srcEvent.clientX, y = eventData.srcEvent.clientY;
-    for (var i = 0; i < this.lastTouches.length; i++) {
-        var t = this.lastTouches[i];
-        var dx = Math.abs(x - t.x), dy = Math.abs(y - t.y);
-        if (dx <= DEDUP_DISTANCE && dy <= DEDUP_DISTANCE) {
-            return true;
-        }
-    }
-    return false;
-}
-
-var PREFIXED_TOUCH_ACTION = prefixed(TEST_ELEMENT.style, 'touchAction');
-var NATIVE_TOUCH_ACTION = PREFIXED_TOUCH_ACTION !== undefined;
-
-// magical touchAction value
-var TOUCH_ACTION_COMPUTE = 'compute';
-var TOUCH_ACTION_AUTO = 'auto';
-var TOUCH_ACTION_MANIPULATION = 'manipulation'; // not implemented
-var TOUCH_ACTION_NONE = 'none';
-var TOUCH_ACTION_PAN_X = 'pan-x';
-var TOUCH_ACTION_PAN_Y = 'pan-y';
-var TOUCH_ACTION_MAP = getTouchActionProps();
-
-/**
- * Touch Action
- * sets the touchAction property or uses the js alternative
- * @param {Manager} manager
- * @param {String} value
- * @constructor
- */
-function TouchAction(manager, value) {
-    this.manager = manager;
-    this.set(value);
-}
-
-TouchAction.prototype = {
-    /**
-     * set the touchAction value on the element or enable the polyfill
-     * @param {String} value
-     */
-    set: function(value) {
-        // find out the touch-action by the event handlers
-        if (value == TOUCH_ACTION_COMPUTE) {
-            value = this.compute();
-        }
-
-        if (NATIVE_TOUCH_ACTION && this.manager.element.style && TOUCH_ACTION_MAP[value]) {
-            this.manager.element.style[PREFIXED_TOUCH_ACTION] = value;
-        }
-        this.actions = value.toLowerCase().trim();
-    },
-
-    /**
-     * just re-set the touchAction value
-     */
-    update: function() {
-        this.set(this.manager.options.touchAction);
-    },
-
-    /**
-     * compute the value for the touchAction property based on the recognizer's settings
-     * @returns {String} value
-     */
-    compute: function() {
-        var actions = [];
-        each(this.manager.recognizers, function(recognizer) {
-            if (boolOrFn(recognizer.options.enable, [recognizer])) {
-                actions = actions.concat(recognizer.getTouchAction());
-            }
-        });
-        return cleanTouchActions(actions.join(' '));
-    },
-
-    /**
-     * this method is called on each input cycle and provides the preventing of the browser behavior
-     * @param {Object} input
-     */
-    preventDefaults: function(input) {
-        var srcEvent = input.srcEvent;
-        var direction = input.offsetDirection;
-
-        // if the touch action did prevented once this session
-        if (this.manager.session.prevented) {
-            srcEvent.preventDefault();
-            return;
-        }
-
-        var actions = this.actions;
-        var hasNone = inStr(actions, TOUCH_ACTION_NONE) && !TOUCH_ACTION_MAP[TOUCH_ACTION_NONE];
-        var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y) && !TOUCH_ACTION_MAP[TOUCH_ACTION_PAN_Y];
-        var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X) && !TOUCH_ACTION_MAP[TOUCH_ACTION_PAN_X];
-
-        if (hasNone) {
-            //do not prevent defaults if this is a tap gesture
-
-            var isTapPointer = input.pointers.length === 1;
-            var isTapMovement = input.distance < 2;
-            var isTapTouchTime = input.deltaTime < 250;
-
-            if (isTapPointer && isTapMovement && isTapTouchTime) {
-                return;
-            }
-        }
-
-        if (hasPanX && hasPanY) {
-            // `pan-x pan-y` means browser handles all scrolling/panning, do not prevent
-            return;
-        }
-
-        if (hasNone ||
-            (hasPanY && direction & DIRECTION_HORIZONTAL) ||
-            (hasPanX && direction & DIRECTION_VERTICAL)) {
-            return this.preventSrc(srcEvent);
-        }
-    },
-
-    /**
-     * call preventDefault to prevent the browser's default behavior (scrolling in most cases)
-     * @param {Object} srcEvent
-     */
-    preventSrc: function(srcEvent) {
-        this.manager.session.prevented = true;
-        srcEvent.preventDefault();
-    }
-};
-
-/**
- * when the touchActions are collected they are not a valid value, so we need to clean things up. *
- * @param {String} actions
- * @returns {*}
- */
-function cleanTouchActions(actions) {
-    // none
-    if (inStr(actions, TOUCH_ACTION_NONE)) {
-        return TOUCH_ACTION_NONE;
-    }
-
-    var hasPanX = inStr(actions, TOUCH_ACTION_PAN_X);
-    var hasPanY = inStr(actions, TOUCH_ACTION_PAN_Y);
-
-    // if both pan-x and pan-y are set (different recognizers
-    // for different directions, e.g. horizontal pan but vertical swipe?)
-    // we need none (as otherwise with pan-x pan-y combined none of these
-    // recognizers will work, since the browser would handle all panning
-    if (hasPanX && hasPanY) {
-        return TOUCH_ACTION_NONE;
-    }
-
-    // pan-x OR pan-y
-    if (hasPanX || hasPanY) {
-        return hasPanX ? TOUCH_ACTION_PAN_X : TOUCH_ACTION_PAN_Y;
-    }
-
-    // manipulation
-    if (inStr(actions, TOUCH_ACTION_MANIPULATION)) {
-        return TOUCH_ACTION_MANIPULATION;
-    }
-
-    return TOUCH_ACTION_AUTO;
-}
-
-function getTouchActionProps() {
-    if (!NATIVE_TOUCH_ACTION) {
-        return false;
-    }
-    var touchMap = {};
-    var cssSupports = window.CSS && window.CSS.supports;
-    ['auto', 'manipulation', 'pan-y', 'pan-x', 'pan-x pan-y', 'none'].forEach(function(val) {
-
-        // If css.supports is not supported but there is native touch-action assume it supports
-        // all values. This is the case for IE 10 and 11.
-        touchMap[val] = cssSupports ? window.CSS.supports('touch-action', val) : true;
-    });
-    return touchMap;
-}
-
-/**
- * Recognizer flow explained; *
- * All recognizers have the initial state of POSSIBLE when a input session starts.
- * The definition of a input session is from the first input until the last input, with all it's movement in it. *
- * Example session for mouse-input: mousedown -> mousemove -> mouseup
- *
- * On each recognizing cycle (see Manager.recognize) the .recognize() method is executed
- * which determines with state it should be.
- *
- * If the recognizer has the state FAILED, CANCELLED or RECOGNIZED (equals ENDED), it is reset to
- * POSSIBLE to give it another change on the next cycle.
- *
- *               Possible
- *                  |
- *            +-----+---------------+
- *            |                     |
- *      +-----+-----+               |
- *      |           |               |
- *   Failed      Cancelled          |
- *                          +-------+------+
- *                          |              |
- *                      Recognized       Began
- *                                         |
- *                                      Changed
- *                                         |
- *                                  Ended/Recognized
- */
-var STATE_POSSIBLE = 1;
-var STATE_BEGAN = 2;
-var STATE_CHANGED = 4;
-var STATE_ENDED = 8;
-var STATE_RECOGNIZED = STATE_ENDED;
-var STATE_CANCELLED = 16;
-var STATE_FAILED = 32;
-
-/**
- * Recognizer
- * Every recognizer needs to extend from this class.
- * @constructor
- * @param {Object} options
- */
-function Recognizer(options) {
-    this.options = assign({}, this.defaults, options || {});
-
-    this.id = uniqueId();
-
-    this.manager = null;
-
-    // default is enable true
-    this.options.enable = ifUndefined(this.options.enable, true);
-
-    this.state = STATE_POSSIBLE;
-
-    this.simultaneous = {};
-    this.requireFail = [];
-}
-
-Recognizer.prototype = {
-    /**
-     * @virtual
-     * @type {Object}
-     */
-    defaults: {},
-
-    /**
-     * set options
-     * @param {Object} options
-     * @return {Recognizer}
-     */
-    set: function(options) {
-        assign(this.options, options);
-
-        // also update the touchAction, in case something changed about the directions/enabled state
-        this.manager && this.manager.touchAction.update();
-        return this;
-    },
-
-    /**
-     * recognize simultaneous with an other recognizer.
-     * @param {Recognizer} otherRecognizer
-     * @returns {Recognizer} this
-     */
-    recognizeWith: function(otherRecognizer) {
-        if (invokeArrayArg(otherRecognizer, 'recognizeWith', this)) {
-            return this;
-        }
-
-        var simultaneous = this.simultaneous;
-        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-        if (!simultaneous[otherRecognizer.id]) {
-            simultaneous[otherRecognizer.id] = otherRecognizer;
-            otherRecognizer.recognizeWith(this);
-        }
-        return this;
-    },
-
-    /**
-     * drop the simultaneous link. it doesnt remove the link on the other recognizer.
-     * @param {Recognizer} otherRecognizer
-     * @returns {Recognizer} this
-     */
-    dropRecognizeWith: function(otherRecognizer) {
-        if (invokeArrayArg(otherRecognizer, 'dropRecognizeWith', this)) {
-            return this;
-        }
-
-        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-        delete this.simultaneous[otherRecognizer.id];
-        return this;
-    },
-
-    /**
-     * recognizer can only run when an other is failing
-     * @param {Recognizer} otherRecognizer
-     * @returns {Recognizer} this
-     */
-    requireFailure: function(otherRecognizer) {
-        if (invokeArrayArg(otherRecognizer, 'requireFailure', this)) {
-            return this;
-        }
-
-        var requireFail = this.requireFail;
-        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-        if (inArray(requireFail, otherRecognizer) === -1) {
-            requireFail.push(otherRecognizer);
-            otherRecognizer.requireFailure(this);
-        }
-        return this;
-    },
-
-    /**
-     * drop the requireFailure link. it does not remove the link on the other recognizer.
-     * @param {Recognizer} otherRecognizer
-     * @returns {Recognizer} this
-     */
-    dropRequireFailure: function(otherRecognizer) {
-        if (invokeArrayArg(otherRecognizer, 'dropRequireFailure', this)) {
-            return this;
-        }
-
-        otherRecognizer = getRecognizerByNameIfManager(otherRecognizer, this);
-        var index = inArray(this.requireFail, otherRecognizer);
-        if (index > -1) {
-            this.requireFail.splice(index, 1);
-        }
-        return this;
-    },
-
-    /**
-     * has require failures boolean
-     * @returns {boolean}
-     */
-    hasRequireFailures: function() {
-        return this.requireFail.length > 0;
-    },
-
-    /**
-     * if the recognizer can recognize simultaneous with an other recognizer
-     * @param {Recognizer} otherRecognizer
-     * @returns {Boolean}
-     */
-    canRecognizeWith: function(otherRecognizer) {
-        return !!this.simultaneous[otherRecognizer.id];
-    },
-
-    /**
-     * You should use `tryEmit` instead of `emit` directly to check
-     * that all the needed recognizers has failed before emitting.
-     * @param {Object} input
-     */
-    emit: function(input) {
-        var self = this;
-        var state = this.state;
-
-        function emit(event) {
-            self.manager.emit(event, input);
-        }
-
-        // 'panstart' and 'panmove'
-        if (state < STATE_ENDED) {
-            emit(self.options.event + stateStr(state));
-        }
-
-        emit(self.options.event); // simple 'eventName' events
-
-        if (input.additionalEvent) { // additional event(panleft, panright, pinchin, pinchout...)
-            emit(input.additionalEvent);
-        }
-
-        // panend and pancancel
-        if (state >= STATE_ENDED) {
-            emit(self.options.event + stateStr(state));
-        }
-    },
-
-    /**
-     * Check that all the require failure recognizers has failed,
-     * if true, it emits a gesture event,
-     * otherwise, setup the state to FAILED.
-     * @param {Object} input
-     */
-    tryEmit: function(input) {
-        if (this.canEmit()) {
-            return this.emit(input);
-        }
-        // it's failing anyway
-        this.state = STATE_FAILED;
-    },
-
-    /**
-     * can we emit?
-     * @returns {boolean}
-     */
-    canEmit: function() {
-        var i = 0;
-        while (i < this.requireFail.length) {
-            if (!(this.requireFail[i].state & (STATE_FAILED | STATE_POSSIBLE))) {
-                return false;
-            }
-            i++;
-        }
-        return true;
-    },
-
-    /**
-     * update the recognizer
-     * @param {Object} inputData
-     */
-    recognize: function(inputData) {
-        // make a new copy of the inputData
-        // so we can change the inputData without messing up the other recognizers
-        var inputDataClone = assign({}, inputData);
-
-        // is is enabled and allow recognizing?
-        if (!boolOrFn(this.options.enable, [this, inputDataClone])) {
-            this.reset();
-            this.state = STATE_FAILED;
-            return;
-        }
-
-        // reset when we've reached the end
-        if (this.state & (STATE_RECOGNIZED | STATE_CANCELLED | STATE_FAILED)) {
-            this.state = STATE_POSSIBLE;
-        }
-
-        this.state = this.process(inputDataClone);
-
-        // the recognizer has recognized a gesture
-        // so trigger an event
-        if (this.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED | STATE_CANCELLED)) {
-            this.tryEmit(inputDataClone);
-        }
-    },
-
-    /**
-     * return the state of the recognizer
-     * the actual recognizing happens in this method
-     * @virtual
-     * @param {Object} inputData
-     * @returns {Const} STATE
-     */
-    process: function(inputData) { }, // jshint ignore:line
-
-    /**
-     * return the preferred touch-action
-     * @virtual
-     * @returns {Array}
-     */
-    getTouchAction: function() { },
-
-    /**
-     * called when the gesture isn't allowed to recognize
-     * like when another is being recognized or it is disabled
-     * @virtual
-     */
-    reset: function() { }
-};
-
-/**
- * get a usable string, used as event postfix
- * @param {Const} state
- * @returns {String} state
- */
-function stateStr(state) {
-    if (state & STATE_CANCELLED) {
-        return 'cancel';
-    } else if (state & STATE_ENDED) {
-        return 'end';
-    } else if (state & STATE_CHANGED) {
-        return 'move';
-    } else if (state & STATE_BEGAN) {
-        return 'start';
-    }
-    return '';
-}
-
-/**
- * direction cons to string
- * @param {Const} direction
- * @returns {String}
- */
-function directionStr(direction) {
-    if (direction == DIRECTION_DOWN) {
-        return 'down';
-    } else if (direction == DIRECTION_UP) {
-        return 'up';
-    } else if (direction == DIRECTION_LEFT) {
-        return 'left';
-    } else if (direction == DIRECTION_RIGHT) {
-        return 'right';
-    }
-    return '';
-}
-
-/**
- * get a recognizer by name if it is bound to a manager
- * @param {Recognizer|String} otherRecognizer
- * @param {Recognizer} recognizer
- * @returns {Recognizer}
- */
-function getRecognizerByNameIfManager(otherRecognizer, recognizer) {
-    var manager = recognizer.manager;
-    if (manager) {
-        return manager.get(otherRecognizer);
-    }
-    return otherRecognizer;
-}
-
-/**
- * This recognizer is just used as a base for the simple attribute recognizers.
- * @constructor
- * @extends Recognizer
- */
-function AttrRecognizer() {
-    Recognizer.apply(this, arguments);
-}
-
-inherit(AttrRecognizer, Recognizer, {
-    /**
-     * @namespace
-     * @memberof AttrRecognizer
-     */
-    defaults: {
-        /**
-         * @type {Number}
-         * @default 1
-         */
-        pointers: 1
-    },
-
-    /**
-     * Used to check if it the recognizer receives valid input, like input.distance > 10.
-     * @memberof AttrRecognizer
-     * @param {Object} input
-     * @returns {Boolean} recognized
-     */
-    attrTest: function(input) {
-        var optionPointers = this.options.pointers;
-        return optionPointers === 0 || input.pointers.length === optionPointers;
-    },
-
-    /**
-     * Process the input and return the state for the recognizer
-     * @memberof AttrRecognizer
-     * @param {Object} input
-     * @returns {*} State
-     */
-    process: function(input) {
-        var state = this.state;
-        var eventType = input.eventType;
-
-        var isRecognized = state & (STATE_BEGAN | STATE_CHANGED);
-        var isValid = this.attrTest(input);
-
-        // on cancel input and we've recognized before, return STATE_CANCELLED
-        if (isRecognized && (eventType & INPUT_CANCEL || !isValid)) {
-            return state | STATE_CANCELLED;
-        } else if (isRecognized || isValid) {
-            if (eventType & INPUT_END) {
-                return state | STATE_ENDED;
-            } else if (!(state & STATE_BEGAN)) {
-                return STATE_BEGAN;
-            }
-            return state | STATE_CHANGED;
-        }
-        return STATE_FAILED;
-    }
-});
-
-/**
- * Pan
- * Recognized when the pointer is down and moved in the allowed direction.
- * @constructor
- * @extends AttrRecognizer
- */
-function PanRecognizer() {
-    AttrRecognizer.apply(this, arguments);
-
-    this.pX = null;
-    this.pY = null;
-}
-
-inherit(PanRecognizer, AttrRecognizer, {
-    /**
-     * @namespace
-     * @memberof PanRecognizer
-     */
-    defaults: {
-        event: 'pan',
-        threshold: 10,
-        pointers: 1,
-        direction: DIRECTION_ALL
-    },
-
-    getTouchAction: function() {
-        var direction = this.options.direction;
-        var actions = [];
-        if (direction & DIRECTION_HORIZONTAL) {
-            actions.push(TOUCH_ACTION_PAN_Y);
-        }
-        if (direction & DIRECTION_VERTICAL) {
-            actions.push(TOUCH_ACTION_PAN_X);
-        }
-        return actions;
-    },
-
-    directionTest: function(input) {
-        var options = this.options;
-        var hasMoved = true;
-        var distance = input.distance;
-        var direction = input.direction;
-        var x = input.deltaX;
-        var y = input.deltaY;
-
-        // lock to axis?
-        if (!(direction & options.direction)) {
-            if (options.direction & DIRECTION_HORIZONTAL) {
-                direction = (x === 0) ? DIRECTION_NONE : (x < 0) ? DIRECTION_LEFT : DIRECTION_RIGHT;
-                hasMoved = x != this.pX;
-                distance = Math.abs(input.deltaX);
-            } else {
-                direction = (y === 0) ? DIRECTION_NONE : (y < 0) ? DIRECTION_UP : DIRECTION_DOWN;
-                hasMoved = y != this.pY;
-                distance = Math.abs(input.deltaY);
-            }
-        }
-        input.direction = direction;
-        return hasMoved && distance > options.threshold && direction & options.direction;
-    },
-
-    attrTest: function(input) {
-        return AttrRecognizer.prototype.attrTest.call(this, input) &&
-            (this.state & STATE_BEGAN || (!(this.state & STATE_BEGAN) && this.directionTest(input)));
-    },
-
-    emit: function(input) {
-
-        this.pX = input.deltaX;
-        this.pY = input.deltaY;
-
-        var direction = directionStr(input.direction);
-
-        if (direction) {
-            input.additionalEvent = this.options.event + direction;
-        }
-        this._super.emit.call(this, input);
-    }
-});
-
-/**
- * Pinch
- * Recognized when two or more pointers are moving toward (zoom-in) or away from each other (zoom-out).
- * @constructor
- * @extends AttrRecognizer
- */
-function PinchRecognizer() {
-    AttrRecognizer.apply(this, arguments);
-}
-
-inherit(PinchRecognizer, AttrRecognizer, {
-    /**
-     * @namespace
-     * @memberof PinchRecognizer
-     */
-    defaults: {
-        event: 'pinch',
-        threshold: 0,
-        pointers: 2
-    },
-
-    getTouchAction: function() {
-        return [TOUCH_ACTION_NONE];
-    },
-
-    attrTest: function(input) {
-        return this._super.attrTest.call(this, input) &&
-            (Math.abs(input.scale - 1) > this.options.threshold || this.state & STATE_BEGAN);
-    },
-
-    emit: function(input) {
-        if (input.scale !== 1) {
-            var inOut = input.scale < 1 ? 'in' : 'out';
-            input.additionalEvent = this.options.event + inOut;
-        }
-        this._super.emit.call(this, input);
-    }
-});
-
-/**
- * Press
- * Recognized when the pointer is down for x ms without any movement.
- * @constructor
- * @extends Recognizer
- */
-function PressRecognizer() {
-    Recognizer.apply(this, arguments);
-
-    this._timer = null;
-    this._input = null;
-}
-
-inherit(PressRecognizer, Recognizer, {
-    /**
-     * @namespace
-     * @memberof PressRecognizer
-     */
-    defaults: {
-        event: 'press',
-        pointers: 1,
-        time: 251, // minimal time of the pointer to be pressed
-        threshold: 9 // a minimal movement is ok, but keep it low
-    },
-
-    getTouchAction: function() {
-        return [TOUCH_ACTION_AUTO];
-    },
-
-    process: function(input) {
-        var options = this.options;
-        var validPointers = input.pointers.length === options.pointers;
-        var validMovement = input.distance < options.threshold;
-        var validTime = input.deltaTime > options.time;
-
-        this._input = input;
-
-        // we only allow little movement
-        // and we've reached an end event, so a tap is possible
-        if (!validMovement || !validPointers || (input.eventType & (INPUT_END | INPUT_CANCEL) && !validTime)) {
-            this.reset();
-        } else if (input.eventType & INPUT_START) {
-            this.reset();
-            this._timer = setTimeoutContext(function() {
-                this.state = STATE_RECOGNIZED;
-                this.tryEmit();
-            }, options.time, this);
-        } else if (input.eventType & INPUT_END) {
-            return STATE_RECOGNIZED;
-        }
-        return STATE_FAILED;
-    },
-
-    reset: function() {
-        clearTimeout(this._timer);
-    },
-
-    emit: function(input) {
-        if (this.state !== STATE_RECOGNIZED) {
-            return;
-        }
-
-        if (input && (input.eventType & INPUT_END)) {
-            this.manager.emit(this.options.event + 'up', input);
-        } else {
-            this._input.timeStamp = now();
-            this.manager.emit(this.options.event, this._input);
-        }
-    }
-});
-
-/**
- * Rotate
- * Recognized when two or more pointer are moving in a circular motion.
- * @constructor
- * @extends AttrRecognizer
- */
-function RotateRecognizer() {
-    AttrRecognizer.apply(this, arguments);
-}
-
-inherit(RotateRecognizer, AttrRecognizer, {
-    /**
-     * @namespace
-     * @memberof RotateRecognizer
-     */
-    defaults: {
-        event: 'rotate',
-        threshold: 0,
-        pointers: 2
-    },
-
-    getTouchAction: function() {
-        return [TOUCH_ACTION_NONE];
-    },
-
-    attrTest: function(input) {
-        return this._super.attrTest.call(this, input) &&
-            (Math.abs(input.rotation) > this.options.threshold || this.state & STATE_BEGAN);
-    }
-});
-
-/**
- * Swipe
- * Recognized when the pointer is moving fast (velocity), with enough distance in the allowed direction.
- * @constructor
- * @extends AttrRecognizer
- */
-function SwipeRecognizer() {
-    AttrRecognizer.apply(this, arguments);
-}
-
-inherit(SwipeRecognizer, AttrRecognizer, {
-    /**
-     * @namespace
-     * @memberof SwipeRecognizer
-     */
-    defaults: {
-        event: 'swipe',
-        threshold: 10,
-        velocity: 0.3,
-        direction: DIRECTION_HORIZONTAL | DIRECTION_VERTICAL,
-        pointers: 1
-    },
-
-    getTouchAction: function() {
-        return PanRecognizer.prototype.getTouchAction.call(this);
-    },
-
-    attrTest: function(input) {
-        var direction = this.options.direction;
-        var velocity;
-
-        if (direction & (DIRECTION_HORIZONTAL | DIRECTION_VERTICAL)) {
-            velocity = input.overallVelocity;
-        } else if (direction & DIRECTION_HORIZONTAL) {
-            velocity = input.overallVelocityX;
-        } else if (direction & DIRECTION_VERTICAL) {
-            velocity = input.overallVelocityY;
-        }
-
-        return this._super.attrTest.call(this, input) &&
-            direction & input.offsetDirection &&
-            input.distance > this.options.threshold &&
-            input.maxPointers == this.options.pointers &&
-            abs(velocity) > this.options.velocity && input.eventType & INPUT_END;
-    },
-
-    emit: function(input) {
-        var direction = directionStr(input.offsetDirection);
-        if (direction) {
-            this.manager.emit(this.options.event + direction, input);
-        }
-
-        this.manager.emit(this.options.event, input);
-    }
-});
-
-/**
- * A tap is ecognized when the pointer is doing a small tap/click. Multiple taps are recognized if they occur
- * between the given interval and position. The delay option can be used to recognize multi-taps without firing
- * a single tap.
- *
- * The eventData from the emitted event contains the property `tapCount`, which contains the amount of
- * multi-taps being recognized.
- * @constructor
- * @extends Recognizer
- */
-function TapRecognizer() {
-    Recognizer.apply(this, arguments);
-
-    // previous time and center,
-    // used for tap counting
-    this.pTime = false;
-    this.pCenter = false;
-
-    this._timer = null;
-    this._input = null;
-    this.count = 0;
-}
-
-inherit(TapRecognizer, Recognizer, {
-    /**
-     * @namespace
-     * @memberof PinchRecognizer
-     */
-    defaults: {
-        event: 'tap',
-        pointers: 1,
-        taps: 1,
-        interval: 300, // max time between the multi-tap taps
-        time: 250, // max time of the pointer to be down (like finger on the screen)
-        threshold: 9, // a minimal movement is ok, but keep it low
-        posThreshold: 10 // a multi-tap can be a bit off the initial position
-    },
-
-    getTouchAction: function() {
-        return [TOUCH_ACTION_MANIPULATION];
-    },
-
-    process: function(input) {
-        var options = this.options;
-
-        var validPointers = input.pointers.length === options.pointers;
-        var validMovement = input.distance < options.threshold;
-        var validTouchTime = input.deltaTime < options.time;
-
-        this.reset();
-
-        if ((input.eventType & INPUT_START) && (this.count === 0)) {
-            return this.failTimeout();
-        }
-
-        // we only allow little movement
-        // and we've reached an end event, so a tap is possible
-        if (validMovement && validTouchTime && validPointers) {
-            if (input.eventType != INPUT_END) {
-                return this.failTimeout();
-            }
-
-            var validInterval = this.pTime ? (input.timeStamp - this.pTime < options.interval) : true;
-            var validMultiTap = !this.pCenter || getDistance(this.pCenter, input.center) < options.posThreshold;
-
-            this.pTime = input.timeStamp;
-            this.pCenter = input.center;
-
-            if (!validMultiTap || !validInterval) {
-                this.count = 1;
-            } else {
-                this.count += 1;
-            }
-
-            this._input = input;
-
-            // if tap count matches we have recognized it,
-            // else it has began recognizing...
-            var tapCount = this.count % options.taps;
-            if (tapCount === 0) {
-                // no failing requirements, immediately trigger the tap event
-                // or wait as long as the multitap interval to trigger
-                if (!this.hasRequireFailures()) {
-                    return STATE_RECOGNIZED;
-                } else {
-                    this._timer = setTimeoutContext(function() {
-                        this.state = STATE_RECOGNIZED;
-                        this.tryEmit();
-                    }, options.interval, this);
-                    return STATE_BEGAN;
-                }
-            }
-        }
-        return STATE_FAILED;
-    },
-
-    failTimeout: function() {
-        this._timer = setTimeoutContext(function() {
-            this.state = STATE_FAILED;
-        }, this.options.interval, this);
-        return STATE_FAILED;
-    },
-
-    reset: function() {
-        clearTimeout(this._timer);
-    },
-
-    emit: function() {
-        if (this.state == STATE_RECOGNIZED) {
-            this._input.tapCount = this.count;
-            this.manager.emit(this.options.event, this._input);
-        }
-    }
-});
-
-/**
- * Simple way to create a manager with a default set of recognizers.
- * @param {HTMLElement} element
- * @param {Object} [options]
- * @constructor
- */
-function Hammer(element, options) {
-    options = options || {};
-    options.recognizers = ifUndefined(options.recognizers, Hammer.defaults.preset);
-    return new Manager(element, options);
-}
-
-/**
- * @const {string}
- */
-Hammer.VERSION = '2.0.7';
-
-/**
- * default settings
- * @namespace
- */
-Hammer.defaults = {
-    /**
-     * set if DOM events are being triggered.
-     * But this is slower and unused by simple implementations, so disabled by default.
-     * @type {Boolean}
-     * @default false
-     */
-    domEvents: false,
-
-    /**
-     * The value for the touchAction property/fallback.
-     * When set to `compute` it will magically set the correct value based on the added recognizers.
-     * @type {String}
-     * @default compute
-     */
-    touchAction: TOUCH_ACTION_COMPUTE,
-
-    /**
-     * @type {Boolean}
-     * @default true
-     */
-    enable: true,
-
-    /**
-     * EXPERIMENTAL FEATURE -- can be removed/changed
-     * Change the parent input target element.
-     * If Null, then it is being set the to main element.
-     * @type {Null|EventTarget}
-     * @default null
-     */
-    inputTarget: null,
-
-    /**
-     * force an input class
-     * @type {Null|Function}
-     * @default null
-     */
-    inputClass: null,
-
-    /**
-     * Default recognizer setup when calling `Hammer()`
-     * When creating a new Manager these will be skipped.
-     * @type {Array}
-     */
-    preset: [
-        // RecognizerClass, options, [recognizeWith, ...], [requireFailure, ...]
-        [RotateRecognizer, {enable: false}],
-        [PinchRecognizer, {enable: false}, ['rotate']],
-        [SwipeRecognizer, {direction: DIRECTION_HORIZONTAL}],
-        [PanRecognizer, {direction: DIRECTION_HORIZONTAL}, ['swipe']],
-        [TapRecognizer],
-        [TapRecognizer, {event: 'doubletap', taps: 2}, ['tap']],
-        [PressRecognizer]
-    ],
-
-    /**
-     * Some CSS properties can be used to improve the working of Hammer.
-     * Add them to this method and they will be set when creating a new Manager.
-     * @namespace
-     */
-    cssProps: {
-        /**
-         * Disables text selection to improve the dragging gesture. Mainly for desktop browsers.
-         * @type {String}
-         * @default 'none'
-         */
-        userSelect: 'none',
-
-        /**
-         * Disable the Windows Phone grippers when pressing an element.
-         * @type {String}
-         * @default 'none'
-         */
-        touchSelect: 'none',
-
-        /**
-         * Disables the default callout shown when you touch and hold a touch target.
-         * On iOS, when you touch and hold a touch target such as a link, Safari displays
-         * a callout containing information about the link. This property allows you to disable that callout.
-         * @type {String}
-         * @default 'none'
-         */
-        touchCallout: 'none',
-
-        /**
-         * Specifies whether zooming is enabled. Used by IE10>
-         * @type {String}
-         * @default 'none'
-         */
-        contentZooming: 'none',
-
-        /**
-         * Specifies that an entire element should be draggable instead of its contents. Mainly for desktop browsers.
-         * @type {String}
-         * @default 'none'
-         */
-        userDrag: 'none',
-
-        /**
-         * Overrides the highlight color shown when the user taps a link or a JavaScript
-         * clickable element in iOS. This property obeys the alpha value, if specified.
-         * @type {String}
-         * @default 'rgba(0,0,0,0)'
-         */
-        tapHighlightColor: 'rgba(0,0,0,0)'
-    }
-};
-
-var STOP = 1;
-var FORCED_STOP = 2;
-
-/**
- * Manager
- * @param {HTMLElement} element
- * @param {Object} [options]
- * @constructor
- */
-function Manager(element, options) {
-    this.options = assign({}, Hammer.defaults, options || {});
-
-    this.options.inputTarget = this.options.inputTarget || element;
-
-    this.handlers = {};
-    this.session = {};
-    this.recognizers = [];
-    this.oldCssProps = {};
-
-    this.element = element;
-    this.input = createInputInstance(this);
-    this.touchAction = new TouchAction(this, this.options.touchAction);
-
-    toggleCssProps(this, true);
-
-    each(this.options.recognizers, function(item) {
-        var recognizer = this.add(new (item[0])(item[1]));
-        item[2] && recognizer.recognizeWith(item[2]);
-        item[3] && recognizer.requireFailure(item[3]);
-    }, this);
-}
-
-Manager.prototype = {
-    /**
-     * set options
-     * @param {Object} options
-     * @returns {Manager}
-     */
-    set: function(options) {
-        assign(this.options, options);
-
-        // Options that need a little more setup
-        if (options.touchAction) {
-            this.touchAction.update();
-        }
-        if (options.inputTarget) {
-            // Clean up existing event listeners and reinitialize
-            this.input.destroy();
-            this.input.target = options.inputTarget;
-            this.input.init();
-        }
-        return this;
-    },
-
-    /**
-     * stop recognizing for this session.
-     * This session will be discarded, when a new [input]start event is fired.
-     * When forced, the recognizer cycle is stopped immediately.
-     * @param {Boolean} [force]
-     */
-    stop: function(force) {
-        this.session.stopped = force ? FORCED_STOP : STOP;
-    },
-
-    /**
-     * run the recognizers!
-     * called by the inputHandler function on every movement of the pointers (touches)
-     * it walks through all the recognizers and tries to detect the gesture that is being made
-     * @param {Object} inputData
-     */
-    recognize: function(inputData) {
-        var session = this.session;
-        if (session.stopped) {
-            return;
-        }
-
-        // run the touch-action polyfill
-        this.touchAction.preventDefaults(inputData);
-
-        var recognizer;
-        var recognizers = this.recognizers;
-
-        // this holds the recognizer that is being recognized.
-        // so the recognizer's state needs to be BEGAN, CHANGED, ENDED or RECOGNIZED
-        // if no recognizer is detecting a thing, it is set to `null`
-        var curRecognizer = session.curRecognizer;
-
-        // reset when the last recognizer is recognized
-        // or when we're in a new session
-        if (!curRecognizer || (curRecognizer && curRecognizer.state & STATE_RECOGNIZED)) {
-            curRecognizer = session.curRecognizer = null;
-        }
-
-        var i = 0;
-        while (i < recognizers.length) {
-            recognizer = recognizers[i];
-
-            // find out if we are allowed try to recognize the input for this one.
-            // 1.   allow if the session is NOT forced stopped (see the .stop() method)
-            // 2.   allow if we still haven't recognized a gesture in this session, or the this recognizer is the one
-            //      that is being recognized.
-            // 3.   allow if the recognizer is allowed to run simultaneous with the current recognized recognizer.
-            //      this can be setup with the `recognizeWith()` method on the recognizer.
-            if (session.stopped !== FORCED_STOP && ( // 1
-                    !curRecognizer || recognizer == curRecognizer || // 2
-                    recognizer.canRecognizeWith(curRecognizer))) { // 3
-                recognizer.recognize(inputData);
-            } else {
-                recognizer.reset();
-            }
-
-            // if the recognizer has been recognizing the input as a valid gesture, we want to store this one as the
-            // current active recognizer. but only if we don't already have an active recognizer
-            if (!curRecognizer && recognizer.state & (STATE_BEGAN | STATE_CHANGED | STATE_ENDED)) {
-                curRecognizer = session.curRecognizer = recognizer;
-            }
-            i++;
-        }
-    },
-
-    /**
-     * get a recognizer by its event name.
-     * @param {Recognizer|String} recognizer
-     * @returns {Recognizer|Null}
-     */
-    get: function(recognizer) {
-        if (recognizer instanceof Recognizer) {
-            return recognizer;
-        }
-
-        var recognizers = this.recognizers;
-        for (var i = 0; i < recognizers.length; i++) {
-            if (recognizers[i].options.event == recognizer) {
-                return recognizers[i];
-            }
-        }
-        return null;
-    },
-
-    /**
-     * add a recognizer to the manager
-     * existing recognizers with the same event name will be removed
-     * @param {Recognizer} recognizer
-     * @returns {Recognizer|Manager}
-     */
-    add: function(recognizer) {
-        if (invokeArrayArg(recognizer, 'add', this)) {
-            return this;
-        }
-
-        // remove existing
-        var existing = this.get(recognizer.options.event);
-        if (existing) {
-            this.remove(existing);
-        }
-
-        this.recognizers.push(recognizer);
-        recognizer.manager = this;
-
-        this.touchAction.update();
-        return recognizer;
-    },
-
-    /**
-     * remove a recognizer by name or instance
-     * @param {Recognizer|String} recognizer
-     * @returns {Manager}
-     */
-    remove: function(recognizer) {
-        if (invokeArrayArg(recognizer, 'remove', this)) {
-            return this;
-        }
-
-        recognizer = this.get(recognizer);
-
-        // let's make sure this recognizer exists
-        if (recognizer) {
-            var recognizers = this.recognizers;
-            var index = inArray(recognizers, recognizer);
-
-            if (index !== -1) {
-                recognizers.splice(index, 1);
-                this.touchAction.update();
-            }
-        }
-
-        return this;
-    },
-
-    /**
-     * bind event
-     * @param {String} events
-     * @param {Function} handler
-     * @returns {EventEmitter} this
-     */
-    on: function(events, handler) {
-        if (events === undefined) {
-            return;
-        }
-        if (handler === undefined) {
-            return;
-        }
-
-        var handlers = this.handlers;
-        each(splitStr(events), function(event) {
-            handlers[event] = handlers[event] || [];
-            handlers[event].push(handler);
-        });
-        return this;
-    },
-
-    /**
-     * unbind event, leave emit blank to remove all handlers
-     * @param {String} events
-     * @param {Function} [handler]
-     * @returns {EventEmitter} this
-     */
-    off: function(events, handler) {
-        if (events === undefined) {
-            return;
-        }
-
-        var handlers = this.handlers;
-        each(splitStr(events), function(event) {
-            if (!handler) {
-                delete handlers[event];
-            } else {
-                handlers[event] && handlers[event].splice(inArray(handlers[event], handler), 1);
-            }
-        });
-        return this;
-    },
-
-    /**
-     * emit event to the listeners
-     * @param {String} event
-     * @param {Object} data
-     */
-    emit: function(event, data) {
-        // we also want to trigger dom events
-        if (this.options.domEvents) {
-            triggerDomEvent(event, data);
-        }
-
-        // no handlers, so skip it all
-        var handlers = this.handlers[event] && this.handlers[event].slice();
-        if (!handlers || !handlers.length) {
-            return;
-        }
-
-        data.type = event;
-        data.preventDefault = function() {
-            data.srcEvent.preventDefault();
-        };
-
-        var i = 0;
-        while (i < handlers.length) {
-            handlers[i](data);
-            i++;
-        }
-    },
-
-    /**
-     * destroy the manager and unbinds all events
-     * it doesn't unbind dom events, that is the user own responsibility
-     */
-    destroy: function() {
-        this.element && toggleCssProps(this, false);
-
-        this.handlers = {};
-        this.session = {};
-        this.input.destroy();
-        this.element = null;
-    }
-};
-
-/**
- * add/remove the css properties as defined in manager.options.cssProps
- * @param {Manager} manager
- * @param {Boolean} add
- */
-function toggleCssProps(manager, add) {
-    var element = manager.element;
-    if (!element.style) {
-        return;
-    }
-    var prop;
-    each(manager.options.cssProps, function(value, name) {
-        prop = prefixed(element.style, name);
-        if (add) {
-            manager.oldCssProps[prop] = element.style[prop];
-            element.style[prop] = value;
-        } else {
-            element.style[prop] = manager.oldCssProps[prop] || '';
-        }
-    });
-    if (!add) {
-        manager.oldCssProps = {};
-    }
-}
-
-/**
- * trigger dom event
- * @param {String} event
- * @param {Object} data
- */
-function triggerDomEvent(event, data) {
-    var gestureEvent = document.createEvent('Event');
-    gestureEvent.initEvent(event, true, true);
-    gestureEvent.gesture = data;
-    data.target.dispatchEvent(gestureEvent);
-}
-
-assign(Hammer, {
-    INPUT_START: INPUT_START,
-    INPUT_MOVE: INPUT_MOVE,
-    INPUT_END: INPUT_END,
-    INPUT_CANCEL: INPUT_CANCEL,
-
-    STATE_POSSIBLE: STATE_POSSIBLE,
-    STATE_BEGAN: STATE_BEGAN,
-    STATE_CHANGED: STATE_CHANGED,
-    STATE_ENDED: STATE_ENDED,
-    STATE_RECOGNIZED: STATE_RECOGNIZED,
-    STATE_CANCELLED: STATE_CANCELLED,
-    STATE_FAILED: STATE_FAILED,
-
-    DIRECTION_NONE: DIRECTION_NONE,
-    DIRECTION_LEFT: DIRECTION_LEFT,
-    DIRECTION_RIGHT: DIRECTION_RIGHT,
-    DIRECTION_UP: DIRECTION_UP,
-    DIRECTION_DOWN: DIRECTION_DOWN,
-    DIRECTION_HORIZONTAL: DIRECTION_HORIZONTAL,
-    DIRECTION_VERTICAL: DIRECTION_VERTICAL,
-    DIRECTION_ALL: DIRECTION_ALL,
-
-    Manager: Manager,
-    Input: Input,
-    TouchAction: TouchAction,
-
-    TouchInput: TouchInput,
-    MouseInput: MouseInput,
-    PointerEventInput: PointerEventInput,
-    TouchMouseInput: TouchMouseInput,
-    SingleTouchInput: SingleTouchInput,
-
-    Recognizer: Recognizer,
-    AttrRecognizer: AttrRecognizer,
-    Tap: TapRecognizer,
-    Pan: PanRecognizer,
-    Swipe: SwipeRecognizer,
-    Pinch: PinchRecognizer,
-    Rotate: RotateRecognizer,
-    Press: PressRecognizer,
-
-    on: addEventListeners,
-    off: removeEventListeners,
-    each: each,
-    merge: merge,
-    extend: extend,
-    assign: assign,
-    inherit: inherit,
-    bindFn: bindFn,
-    prefixed: prefixed
-});
-
-// this prevents errors when Hammer is loaded in the presence of an AMD
-//  style loader but by script tag, not by the loader.
-var freeGlobal = (typeof window !== 'undefined' ? window : (typeof self !== 'undefined' ? self : {})); // jshint ignore:line
-freeGlobal.Hammer = Hammer;
-
-if (true) {
-    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-        return Hammer;
-    }.call(exports, __webpack_require__, exports, module),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-} else if (typeof module != 'undefined' && module.exports) {
-    module.exports = Hammer;
-} else {
-    window[exportName] = Hammer;
-}
-
-})(window, document, 'Hammer');
-
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(8)))
 
 /***/ }),
 
 /***/ 8:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
+// shim for using process in browser
+var process = module.exports = {};
 
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+var cachedSetTimeout;
+var cachedClearTimeout;
 
-var _vue = __webpack_require__(2);
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _jquery = __webpack_require__(1);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var _materializeCss = __webpack_require__(3);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
-var _StorageMixin = __webpack_require__(9);
-
-var _StorageMixin2 = _interopRequireDefault(_StorageMixin);
-
-var _dialog = __webpack_require__(10);
-
-var _dialog2 = _interopRequireDefault(_dialog);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Dialog = _vue2.default.extend({
-    template: _dialog2.default,
-    props: ['user-role', 'messages-unread'],
-    mixins: [_StorageMixin2.default],
-    data: function data() {
-        return {
-            message: "",
-            getter: null,
-            isSelected: false,
-            selected: null,
-            users: [{
-                name: "Vasya",
-                role: "deputy"
-            }, {
-                name: "Kyle",
-                role: "musician"
-            }, {
-                name: "Fedor",
-                role: "musician"
-            }, {
-                name: "Bondarchuk",
-                role: "organizer"
-            }, {
-                name: "Alice",
-                role: "admin"
-            }],
-            messages: []
-        };
-    },
-
-    watch: {
-        messagesUnread: function messagesUnread(val) {
-            this.messages = val;
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
         }
-    },
-    mounted: function mounted() {
-        (0, _jquery2.default)('select').material_select();
-        (0, _jquery2.default)('#dialog_window').modal();
-    },
-
-    methods: {
-        openDialog: function openDialog() {
-            (0, _jquery2.default)('#dialog_window').modal('open');
-        },
-        openMessages: function openMessages(author) {
-            this.selected = author.messages;
-            this.getter = author.name;
-            this.isSelected = true;
-        },
-        successAction: function successAction(message) {
-            _materializeCss2.default.toast(message, 4000);
-        },
-        getUsers: function getUsers() {
-            var uri = "/api/1/users",
-                self = this;
-            _jquery2.default.get(uri).done(function (data) {
-                self.users = data.response;
-                self.storageSave('users', self.users);
-            }).fail(function (error) {
-                console.log(error);
-            });
-        },
-        selectGetter: function selectGetter(name) {
-            document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
-        },
-        search: function search(event) {},
-        encodeImageFileAsURL: function encodeImageFileAsURL(event) {
-            var filesSelected = event.target.files;
-            if (filesSelected.length > 0) {
-                var fileToLoad = filesSelected[0];
-                var fileReader = new FileReader();
-
-                fileReader.onload = function (fileLoadedEvent) {
-                    var srcData = fileLoadedEvent.target.result; // <--- data: base64
-                    var newImage = document.createElement('img');
-                    newImage.src = srcData;
-                    newImage.className = "responsive-img";
-                    document.getElementById("img-field").innerHTML = newImage.outerHTML;
-                };
-                fileReader.readAsDataURL(fileToLoad);
-            }
-        },
-        getSess: function getSess() {
-            return document.getElementById('session_id').innerHTML;
-        },
-        sendMessage: function sendMessage() {
-            var self = this,
-                uri = '/api/1/message/',
-                params = {
-                sessionid: self.getSess(),
-                content: self.message,
-                login: 'almamater'
-            };
-            if (self.getter === null) {
-                return self.successAction('Выберите получателя!');
-            }
-            _jquery2.default.post(uri, params).done(function (data) {
-                if (data.success) {
-                    self.message = "";
-                    self.successAction('Сообщение отправлено!');
-                }
-            }).fail(function (error) {
-                console.error(error);
-            });
-        },
-        closeModal: function closeModal() {
-            (0, _jquery2.default)('#dialog_window').modal('close');
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
         }
     }
-});
 
-exports.default = Dialog;
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 
 /***/ }),
 
 /***/ 9:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    data: function data() {
-        return {
-            storage: localStorage
-        };
-    },
-
-    methods: {
-        storageSave: function storageSave(key, info) {
-            console.log('hi');
-            try {
-                this.storage.setItem(key, info);
-            } catch (e) {
-                if (e == QUOTA_EXCEEDED_ERR) {
-                    console.error('Quota exceeded!');
-                }
-            }
-        },
-        storageGet: function storageGet(key) {
-            return this.storage.getItem(key);
-        },
-        storageRemove: function storageRemove(key) {
-            this.storage.removeItem(key);
-        },
-        storageKey: function storageKey(n) {
-            return this.storage.key(n);
-        },
-        storageClear: function storageClear() {
-            this.storage.clear();
-        }
-    }
-};
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ })
 
