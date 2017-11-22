@@ -39,6 +39,7 @@ def get_rating(request, sessionid: str, app: str, key: int):
 
     return JsonResponse(result)
 
+
 def get_messages_unread(request, sessionid:str):
     """Get unread user messages"""
     user = _get_user(sessionid)
@@ -128,6 +129,7 @@ def send_message(request):
     sessionid = request.POST.get('sessionid')
     login = request.POST.get('login')
     content = request.POST.get('content', '')
+    dialog = request.POST.get('dialog')
     from_user = _get_user(sessionid)
     to_user = _get_message_getter(login)
     last_message = request.session.get('last_message')
@@ -146,7 +148,7 @@ def send_message(request):
 
     request.session['last_message'] = datetime.now().strftime(r'%x %X')
     if not result.get('error'):
-        getattr(_load_module('message'), 'send_message')(content, from_user, to_user)
+        getattr(_load_module('message'), 'send_message')(content, from_user, to_user, int(dialog))
         result = {'success': 'Message success append'}
 
     return JsonResponse(result)

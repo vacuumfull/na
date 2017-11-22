@@ -86,7 +86,8 @@ const Dialog = Vue.extend({
                 params = {
                     sessionid: self.getSess(),
                     content: self.message,
-                    login: 'almamater'
+                    login: 'almamater',
+                    dialog: 0
                 }
             if (self.getter === null){
                 return self.successAction('Выберите получателя!')

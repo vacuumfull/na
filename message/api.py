@@ -1,10 +1,14 @@
 """Message api."""
 from message.models import Message
 
-def send_message(content:str, from_user: object, to_user: object) -> None:
+def send_message(content:str, from_user: object, to_user: object, dialog: int) -> None:
     """Send message to user"""
     try:
-        Message.objects.create(content=content, from_user=from_user, to_user=to_user)
+        if dialog == 0:
+            latest = Message.objects.latest()
+            dialog = latest.dialog_id  + 1
+        Message.objects.create(content=content, from_user=from_user, to_user=to_user, dialog_id=dialog)
+    
     except Message.DoesNotExist:
         pass
 

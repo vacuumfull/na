@@ -13,6 +13,7 @@ from uuslug import uuslug
 
 class MessageManager(models.Manager):
 
+
     def unread(self, to_user):
         """All unread messages"""
         rows = Message.objects.select_related('from_user').filter(read=False, deleted=False, to_user=to_user).order_by('created_at')
@@ -20,6 +21,7 @@ class MessageManager(models.Manager):
 
         for row in rows:
             result_row = {}
+            result_row['dialog_id'] = row.dialog_id;
             result_row['content'] = row.content;
             result_row['from_user'] = row.from_user.username
             result_row['created_at'] = row.created_at
@@ -36,6 +38,7 @@ class MessageManager(models.Manager):
         return result 
 
 
+
 class Message(models.Model):
     """Message model."""
 
@@ -45,16 +48,15 @@ class Message(models.Model):
                              related_name='from_user')
     to_user = models.ForeignKey(User, verbose_name='Получатель',
                              related_name='to_user')
+    dialog_id = models.IntegerField(default=0, verbose_name='Диалог')
     deleted = models.BooleanField(default=False, verbose_name='Удалено')
     read = models.BooleanField(default=False, verbose_name='Прочитано')
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = MessageManager()
 
-    def __str__(self):
-        return "{}: {}".format(self.user, self.content)
-
     class Meta:
         ordering = ['created_at', 'from_user']
         verbose_name = 'Сообщения'
         verbose_name_plural = 'Сообщения'
+        get_latest_by = 'dialog_id'
