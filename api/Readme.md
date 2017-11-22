@@ -86,6 +86,7 @@ params:
 * login - getter login
 * content - message content 
 * sessionid - user session cookies from browser
+* dialog - dealog id, if new dialog - id=0
 
 RESPONSE:
 

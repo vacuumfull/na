@@ -1,6 +1,7 @@
 """Message api."""
 from message.models import Message
 
+
 def send_message(content:str, from_user: object, to_user: object, dialog: int) -> None:
     """Send message to user"""
     try:
@@ -12,6 +13,12 @@ def send_message(content:str, from_user: object, to_user: object, dialog: int) -
     except Message.DoesNotExist:
         pass
 
+
 def get_unread_messages(user:object) -> list:
     """Get unread user messages"""
     return Message.objects.unread(to_user=user)
+
+
+def get_messages_history(dialog:int, offset:int) -> list:
+    """Get messages history"""
+    return Message.objects.dialog_history(dialog, offset)

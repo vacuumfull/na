@@ -17,7 +17,6 @@ import message.api
 def get_users(request, sessionid: str):
     """Get users"""
     user = _get_user(sessionid)
-
     if not user:
         return JsonResponse({'error': 'User must be authenticated!'})
 
@@ -30,7 +29,6 @@ def get_users(request, sessionid: str):
 def get_rating(request, sessionid: str, app: str, key: int):
     """Get app rating."""
     user = _get_user(sessionid)
-
     if not user:
         return JsonResponse({'error': 'User must be authenticated!'})
 
@@ -43,11 +41,26 @@ def get_rating(request, sessionid: str, app: str, key: int):
 def get_messages_unread(request, sessionid:str):
     """Get unread user messages"""
     user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
 
     result = {}
     result = getattr(_load_module('message'), 'get_unread_messages')(user)
 
     return JsonResponse(result, safe=False)
+
+
+def get_messages_history(request, dialog:int, sessionid:str, offset:int):
+    """Get messages history"""
+    user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+
+    result = {}
+    result = getattr(_load_module('message'), 'get_messages_history')(int(dialog), int(offset))
+
+    return JsonResponse(result, safe=False)
+
 
 
 @csrf_exempt

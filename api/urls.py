@@ -11,7 +11,9 @@ urlpatterns = [
 
     url(r'^1/users/(?P<sessionid>.*)/$', views.get_users),
     url(r'^1/messages/unread/(?P<sessionid>.*)/$', views.get_messages_unread),
-
+    
+    url(r'^1/messages/history/(?P<dialog>\d+)/(?P<sessionid>.*)/' +
+        '(?P<offset>\d+)/$', views.get_messages_history),
     url(r'^1/send/$', views.send_comment),
     url(r'^1/vote/$', views.vote_rating),
     url(r'^1/message/$', views.send_message),

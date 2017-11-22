@@ -21,8 +21,8 @@ class MessageManager(models.Manager):
 
         for row in rows:
             result_row = {}
-            result_row['dialog_id'] = row.dialog_id;
-            result_row['content'] = row.content;
+            result_row['dialog_id'] = row.dialog_id
+            result_row['content'] = row.content
             result_row['from_user'] = row.from_user.username
             result_row['created_at'] = row.created_at
             result.append(result_row)      
@@ -30,11 +30,19 @@ class MessageManager(models.Manager):
         return result
 
 
-    def user_history(self, dialog:int, offset:int=0):
-        """All published post."""
-        result = Message.objects.filter(read=True, deleted=False,
-                                        dialog_id=dialog)[offset:offset+20]
-        result.order_by('created_at')
+    def dialog_history(self, dialog:int, offset:int=0):
+        """History of dialog"""
+        rows = Message.objects.filter(read=False, deleted=False,
+                                        dialog_id=dialog).order_by('created_at')[offset:offset+20]
+        result = []
+        for row in rows:
+            result_row = {}
+            result_row['content'] = row.content
+            result_row['from_user'] = row.from_user.username
+            result_row['to_user'] = row.to_user.username
+            result_row['created_at'] = row.created_at
+            result.append(result_row)      
+
         return result 
 
 
