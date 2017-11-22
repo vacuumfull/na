@@ -8,7 +8,6 @@ def send_message(content:str, from_user: object, to_user: object) -> None:
     except Message.DoesNotExist:
         pass
 
-def get_unread_messages(user:object) -> dict:
+def get_unread_messages(user:object) -> list:
     """Get unread user messages"""
-    result = Message.objects.unread(to_user=user)
-    return result
+    return Message.objects.unread(to_user=user)

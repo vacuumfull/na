@@ -15,11 +15,18 @@ class MessageManager(models.Manager):
 
     def unread(self, to_user):
         """All unread messages"""
-        rows = Message.objects.filter(read=False, deleted=False, to_user=to_user).values('content', 'from_user', 'created_at')
-        rows.order_by('created_at')
-        result = list(rows)
-    
+        rows = Message.objects.select_related('from_user').filter(read=False, deleted=False, to_user=to_user).order_by('created_at')
+        result = []
+
+        for row in rows:
+            result_row = {}
+            result_row['content'] = row.content;
+            result_row['from_user'] = row.from_user.username
+            result_row['created_at'] = row.created_at
+            result.append(result_row)      
+
         return result
+
 
     def user_history(self, from_user: User, to_user: User, offset: int=0):
         """All published post."""
