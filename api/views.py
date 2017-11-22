@@ -19,7 +19,7 @@ def get_users(request, sessionid: str):
     user = _get_user(sessionid)
 
     if not user:
-        result = JsonResponse({'error': 'User must be authenticated!'})
+        return JsonResponse({'error': 'User must be authenticated!'})
 
     usernames = User.objects.values('username')
     list_users = [entry['username'] for entry in usernames]
@@ -30,6 +30,9 @@ def get_users(request, sessionid: str):
 def get_rating(request, sessionid: str, app: str, key: int):
     """Get app rating."""
     user = _get_user(sessionid)
+
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
 
     result = {}
     result = getattr(_load_module(app), 'get_rating')(key, user)
