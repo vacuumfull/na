@@ -23,10 +23,12 @@ const LeftMessages = Vue.extend({
         },
         search(event){
             let self = this,
-                session = self.getSess(),
-                uri = `/api/1/user/${session}`,
-                keyword = event.target.value;
+                keyword = event.target.value,
+                users = self.storageGet('users');
             if (keyword.length <= 2) return;
+            self.users = users.filter((item) => {
+                return item.username.indexOf(keyword) === 0;
+            })
            
         },
         getSess(){
@@ -39,7 +41,6 @@ const LeftMessages = Vue.extend({
                 console.log(uri)
             $.get(uri)
                 .done(function(data){
-                    console.log(data)
                     self.storageSave('users', data);
                 })
                 .fail(function(error) {

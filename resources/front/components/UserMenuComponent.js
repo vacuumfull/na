@@ -62,8 +62,8 @@ const UserMenu = Vue.extend({
     },
     methods: {
         getMessages(){
-            this.transportMessages();
-            return this.messagesUnread;
+            //this.transportMessages();
+            //return this.messagesUnread;
         },
         openDialog(){
             $('#dialog_window').modal('open');

@@ -15,9 +15,7 @@ const Dialog = Vue.extend({
             getter: null,
             isSelected: false,
             selected: null,
-            users: [
-                
-            ],
+            users: [],
             messages: []
         }
     },
@@ -64,14 +62,12 @@ const Dialog = Vue.extend({
         },
         search(event){
             let self = this,
-                keyword = event.target.value;
+                keyword = event.target.value,
+                users = self.storageGet('users');
             if (keyword.length <= 2) return;
-      
-            let filtered = self.users.filter((item, key) => {
+            self.users = users.filter((item) => {
                 return item.username.indexOf(keyword) === 0;
             })
-            
-        
         },
         encodeImageFileAsURL(event) {
             let filesSelected = event.target.files;

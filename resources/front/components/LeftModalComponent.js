@@ -9,7 +9,7 @@ const LeftModal = Vue.extend({
     data(){
         return {
             message: '',
-            getter: "",
+            getter: '',
         }
     },
     watch:{

@@ -22,12 +22,19 @@
                     </div>
                     <div class="senders __padding-right_l">
                         <div class="collection">
-                            <template v-for="sender in  messages">
+                            <template v-if="messages.length > 0" v-for="sender in messages">
                                 <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
                                     <span class="left" v-if="sender.avatar === null"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="sender.avatar !== null"><img class="responsive-img __small-avatar circle" :src='sender.avatar'></span>
                                     <!--span class="__sender-name __margin-left_m">{{ sender.name }} <span  class="__sender-role">{{ sender.role }}</span></span-->
                                     <span class="badge right new ">{{ sender.messages.length }}</span>
+                                </a>
+                            </template>
+                            <template v-if="users.length > 0" v-for="getter in users">
+                                <a href="#!" class="collection-item">
+                                    <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
+                                    <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
+                                    <span class="__sender-name __margin-left_m">{{ getter.username }}</span>
                                 </a>
                             </template>
                         </div>

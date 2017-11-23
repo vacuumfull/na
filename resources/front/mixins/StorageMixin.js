@@ -7,7 +7,7 @@ export default {
     methods: {
         storageSave(key, info){
             try {
-                this.storage.setItem(key, info);
+                this.storage.setItem(key, JSON.stringify(info));
             } catch (e) {
                 if (e == QUOTA_EXCEEDED_ERR) {
                     console.error('Quota exceeded!');
@@ -15,9 +15,7 @@ export default {
             }
         },
         storageGet(key){
-            let item = this.storage.getItem(key);
-            console.log(item)
-            return item;
+            return JSON.parse(this.storage.getItem(key));
         },
         storageRemove(key){
             this.storage.removeItem(key);
