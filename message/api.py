@@ -22,3 +22,11 @@ def get_unread_messages(user:object) -> list:
 def get_messages_history(dialog:int, offset:int) -> list:
     """Get messages history"""
     return Message.objects.dialog_history(dialog, offset)
+
+
+def remove_message(message_id:int) -> None:
+    """Remove message by id"""
+    try:
+        Message.objects.filter(id=message_id).delete()
+     except Message.DoesNotExist:
+        pass

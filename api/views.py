@@ -167,6 +167,24 @@ def send_message(request):
     return JsonResponse(result)
 
 
+@csrf_exempt
+@require_http_methods(['POST'])
+def remove_message(request):
+    sessionid = request.POST.get('sessionid')
+    message_id = request.POST.get('message_id')
+    user = _get_user(sessionid)
+    result = {}
+
+    if not user:
+        result = {'error': 'User must be authenticated!'}
+    
+    if not result.get('error'):
+        getattr(_load_module('message'), 'remove_message')(int(message_id))
+        result = {'success': 'Message success append'}
+
+    return JsonResponse(result)
+
+
 
 def _get_user(sessionid):
     """Get user info from sessionid token."""

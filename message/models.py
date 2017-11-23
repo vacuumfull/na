@@ -37,6 +37,7 @@ class MessageManager(models.Manager):
         result = []
         for row in rows:
             result_row = {}
+            result_row['id'] = row.id
             result_row['content'] = row.content
             result_row['from_user'] = row.from_user.username
             result_row['to_user'] = row.to_user.username
@@ -44,6 +45,7 @@ class MessageManager(models.Manager):
             result.append(result_row)      
 
         return result 
+
 
 
 
