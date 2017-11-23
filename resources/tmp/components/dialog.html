@@ -26,7 +26,7 @@
                                 <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
                                     <span class="left" v-if="sender.avatar === null"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="sender.avatar !== null"><img class="responsive-img __small-avatar circle" :src='sender.avatar'></span>
-                                    <span class="__sender-name __margin-left_m">{{ sender.name }} <span  class="__sender-role">{{ sender.role }}</span></span>
+                                    <!--span class="__sender-name __margin-left_m">{{ sender.name }} <span  class="__sender-role">{{ sender.role }}</span></span-->
                                     <span class="badge right new ">{{ sender.messages.length }}</span>
                                 </a>
                             </template>

@@ -21,7 +21,7 @@ def get_users(request, sessionid: str):
         return JsonResponse({'error': 'User must be authenticated!'})
 
     usernames = User.objects.values('username')
-    list_users = [entry['username'] for entry in usernames]
+    list_users = [entry for entry in usernames]
     
     return JsonResponse(list_users, safe=False)
 
@@ -162,7 +162,7 @@ def send_message(request):
     request.session['last_message'] = datetime.now().strftime(r'%x %X')
     if not result.get('error'):
         getattr(_load_module('message'), 'send_message')(content, from_user, to_user, int(dialog))
-        result = {'success': 'Message success append'}
+        result = {'success': 'Message successly send'}
 
     return JsonResponse(result)
 
@@ -180,7 +180,7 @@ def remove_message(request):
     
     if not result.get('error'):
         getattr(_load_module('message'), 'remove_message')(int(message_id))
-        result = {'success': 'Message success append'}
+        result = {'success': 'Message successly removed'}
 
     return JsonResponse(result)
 

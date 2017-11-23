@@ -28,5 +28,5 @@ def remove_message(message_id:int) -> None:
     """Remove message by id"""
     try:
         Message.objects.filter(id=message_id).delete()
-     except Message.DoesNotExist:
+    except Message.DoesNotExist:
         pass

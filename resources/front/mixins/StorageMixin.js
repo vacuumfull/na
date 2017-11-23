@@ -6,7 +6,6 @@ export default {
     },
     methods: {
         storageSave(key, info){
-            console.log('hi');
             try {
                 this.storage.setItem(key, info);
             } catch (e) {
@@ -16,7 +15,9 @@ export default {
             }
         },
         storageGet(key){
-            return this.storage.getItem(key);
+            let item = this.storage.getItem(key);
+            console.log(item)
+            return item;
         },
         storageRemove(key){
             this.storage.removeItem(key);

@@ -27,10 +27,14 @@ const Dialog = Vue.extend({
         }
     },
     mounted(){
-        $('select').material_select();
-        $('#dialog_window').modal();
+        this.init()
     },
     methods: {
+        init(){
+            $('select').material_select();
+            $('#dialog_window').modal();
+            this.getUsers();
+        },
         openDialog(){
             $('#dialog_window').modal('open');
         },
@@ -43,12 +47,13 @@ const Dialog = Vue.extend({
             Materialize.toast(message, 4000);
         },
         getUsers(){
-            let uri = "/api/1/users",
-                self = this;
+            let self = this,
+                session = self.getSess(),
+                uri = `/api/1/users/${session}`;
             $.get(uri)
                 .done(function(data){
-                    self.users =  data.response;
-                    self.storageSave('users', self.users);
+                    self.users = data;
+                    self.storageSave('users', data);
                 })
                 .fail(function(error) {
                     console.log(error);
@@ -58,7 +63,15 @@ const Dialog = Vue.extend({
             document.querySelectorAll(".__dialog-field .materialize-textarea")[0].focus();
         },
         search(event){
-
+            let self = this,
+                keyword = event.target.value;
+            if (keyword.length <= 2) return;
+      
+            let filtered = self.users.filter((item, key) => {
+                return item.username.indexOf(keyword) === 0;
+            })
+            
+        
         },
         encodeImageFileAsURL(event) {
             let filesSelected = event.target.files;
