@@ -21,7 +21,7 @@ new Vue({
         userInfo: {
             name: ""
         },
-        messagesUnread: {},
+        messagesUnreadCount: 0,
     },
     mounted(){
         $(".button-collapse").sideNav();
@@ -33,8 +33,8 @@ new Vue({
         openDialog(){
             $('#dialog_window').modal('open');
         },
-        transportUserMessages(messagesUnread){
-            this.messagesUnread = messagesUnread;
+        transportMessagesCount(messagesCount){
+            this.messagesUnreadCount = messagesCount;
         }
     }
 })

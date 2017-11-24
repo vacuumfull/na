@@ -12,6 +12,7 @@ export default {
                 if (e == QUOTA_EXCEEDED_ERR) {
                     console.error('Quota exceeded!');
                 }
+                return false;
             }
         },
         storageGet(key){

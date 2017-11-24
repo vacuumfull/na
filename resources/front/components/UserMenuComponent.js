@@ -5,50 +5,11 @@ import template from '../../tmp/components/user-menu.html';
 
 const UserMenu = Vue.extend({
     template,
+    props: ['messages-unread-count'],
     data() {
         return {
-            left: -5,
-            unread: 3,
-            messagesUnread: [ 
-            {
-                name: 'Nikolas',
-                role: 'organizer',
-                avatar: '/src/reacl.jpg',
-                messages: [
-                    {
-                        date: '11/11/2013',
-                        text: 'hihihihi hello'
-                    },
-                    {
-                        date: '11/12/2013',
-                        text: 'Здорово нигеры!'
-                    }
-                ]
-            },
-            {
-                name: 'Ann',
-                role: 'deputy',
-                avatar: null,
-                messages: [
-                    {
-                        date: '13/10/2013',
-                        text: 'hihihihi hello'
-                    },
-                    {
-                        date: '11/09/2013',
-                        text: 'Здорово нигеры!'
-                    },
-                    {
-                        date: '11/11/2013',
-                        text: 'HI BITCHES!'
-                    }
-                ]
-            },
-            ]
+            left: -5
         }
-    },
-    mounted(){
-        this.getMessages()
     },
     updated(){
         setTimeout(() => {
@@ -61,10 +22,6 @@ const UserMenu = Vue.extend({
         }, 300);
     },
     methods: {
-        getMessages(){
-            //this.transportMessages();
-            //return this.messagesUnread;
-        },
         openDialog(){
             $('#dialog_window').modal('open');
         },
@@ -75,9 +32,6 @@ const UserMenu = Vue.extend({
             } else {
                 this.left = -5;
             }
-        },
-        transportMessages(){
-            this.$emit('transport-messages', this.messagesUnread);
         }
     }
 });

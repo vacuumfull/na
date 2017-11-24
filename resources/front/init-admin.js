@@ -27,7 +27,7 @@ new Vue({
         showModal:  false,
         showMap: false,
         date: null,
-        messagesUnread: {},
+        messagesUnreadCount: 0,
     },
     mounted(){
         this.init()
@@ -64,8 +64,8 @@ new Vue({
         setCoordinates(coordinates){
             document.querySelectorAll('#map-coordinates > div > div > input')[0].value = coordinates;
         },
-        transportUserMessages(messagesUnread){
-            this.messagesUnread = messagesUnread;
+        transportMessagesCount(messagesCount){
+            this.messagesUnreadCount = messagesCount;
         },
         setDate(date){
             this.date = moment(date).format('YYYY-MM-D')

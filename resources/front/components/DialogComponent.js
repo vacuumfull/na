@@ -7,7 +7,7 @@ import template from '../../tmp/components/dialog.html';
 
 const Dialog = Vue.extend({
     template,
-    props: ['user-role', 'messages-unread'],
+    props: ['user-role'],
     mixins: [Storage],
     data() {
         return {
@@ -16,12 +16,8 @@ const Dialog = Vue.extend({
             isSelected: false,
             selected: null,
             users: [],
-            messages: []
-        }
-    },
-    watch: {
-        messagesUnread(val){
-            this.messages = val;
+            messages: [],
+            dialogId: 0
         }
     },
     mounted(){
@@ -31,7 +27,8 @@ const Dialog = Vue.extend({
         init(){
             $('select').material_select();
             $('#dialog_window').modal();
-            this.getUsers();
+            this.triggerGetUsers();
+            this.getUnreadMessages();
         },
         openDialog(){
             $('#dialog_window').modal('open');
@@ -41,20 +38,46 @@ const Dialog = Vue.extend({
             this.getter = author.name;
             this.isSelected = true;
         },
+        getUnreadMessages(){
+            let self = this,
+                session = self.getSess(),
+                uri = `/api/1/messages/unread/${session}`;
+            $.get(uri)
+                .done(data => {
+                    if (data.error){
+                        return console.error(data.error)
+                    }
+                    console.log(data)
+                    data.map((item, key) => {
+                        console.log(item)
+                    })
+                })
+                .fail(error => {
+                    console.error(error)
+                })
+
+            self.$emit('transport-count', 3)
+        },
         successAction(message){
             Materialize.toast(message, 4000);
+        },
+        triggerGetUsers(){
+            this.users = this.storageGet('users') !== null ? this.storageGet('users') : false;
+            if (!this.users) this.getUsers(); 
         },
         getUsers(){
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/users/${session}`;
             $.get(uri)
-                .done(function(data){
+                .done(data => {
+                    if (data.error){
+                        console.error(data.error)
+                    }
                     self.users = data;
-                    self.storageSave('users', data);
                 })
-                .fail(function(error) {
-                    console.log(error);
+                .fail(error => { 
+                    console.error(error);
                 });
         },
         selectGetter(name){
@@ -96,7 +119,7 @@ const Dialog = Vue.extend({
                     sessionid: self.getSess(),
                     content: self.message,
                     login: 'almamater',
-                    dialog: 0
+                    dialog: self.dialogId
                 }
             if (self.getter === null){
                 return self.successAction('Выберите получателя!')

@@ -38,7 +38,6 @@ const LeftMessages = Vue.extend({
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/users/${session}`;
-                console.log(uri)
             $.get(uri)
                 .done(function(data){
                     self.storageSave('users', data);

@@ -19,7 +19,7 @@ new Vue({
         userInfo: {
             name: ""
         },
-        messagesUnread: {},
+        messagesUnreadCount: 0,
     },
     created(){
         GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q'
@@ -62,8 +62,8 @@ new Vue({
         openDialog(){
             $('#dialog_window').modal('open');
         },
-        transportUserMessages(messagesUnread){
-            this.messagesUnread = messagesUnread;
+        transportMessagesCount(messagesCount){
+            this.messagesUnreadCount = messagesCount;
         },
         setLocations(map){
             let self = this,
