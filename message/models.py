@@ -47,6 +47,18 @@ class MessageManager(models.Manager):
         return result 
 
 
+    def dialogs(self, user):
+        """Get user dialogs"""
+        rows = Message.objects.filter(to_user=user).order_by('created_at')
+        
+        result = []
+        for row in rows:
+            result_row = {}
+            result_row['dialog_id'] = row.dialog_id
+            result_row['from_user'] = row.from_user.username
+            result.append(result_row)      
+        dialog_unique = list({v['dialog_id']:v for v in result}.values())
+        return dialog_unique
 
 
 class Message(models.Model):

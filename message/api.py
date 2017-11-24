@@ -24,6 +24,11 @@ def get_messages_history(dialog:int, offset:int) -> list:
     return Message.objects.dialog_history(dialog, offset)
 
 
+def get_dialogs(user:object) -> list:
+    """Get user dialogs"""
+    return Message.objects.dialogs(user)
+
+
 def remove_message(message_id:int) -> None:
     """Remove message by id"""
     try:

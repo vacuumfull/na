@@ -62,6 +62,16 @@ def get_messages_history(request, dialog:int, sessionid:str, offset:int):
     return JsonResponse(result, safe=False)
 
 
+def get_dialogs(request, sessionid:str):
+    """Get muser dialogs"""
+    user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+
+    result = getattr(_load_module('message'), 'get_dialogs')(user)
+
+    return JsonResponse(result, safe=False)
+
 
 @csrf_exempt
 @require_http_methods(['POST'])

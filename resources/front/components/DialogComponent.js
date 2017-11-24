@@ -47,16 +47,17 @@ const Dialog = Vue.extend({
                     if (data.error){
                         return console.error(data.error)
                     }
-                    console.log(data)
-                    data.map((item, key) => {
-                        console.log(item)
-                    })
+                    let dialogs = _.groupBy(data, 'dialog_id')
+                    console.log(dialogs)
                 })
                 .fail(error => {
                     console.error(error)
                 })
 
             self.$emit('transport-count', 3)
+        },
+        checkGetter(name){
+
         },
         successAction(message){
             Materialize.toast(message, 4000);
@@ -72,7 +73,7 @@ const Dialog = Vue.extend({
             $.get(uri)
                 .done(data => {
                     if (data.error){
-                        console.error(data.error)
+                        return console.error(data.error)
                     }
                     self.users = data;
                 })

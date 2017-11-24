@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^1/message/$', views.send_message),
     url(r'^1/message/remove/$', views.remove_message),
     
+    url(r'^1/messages/dialogs/(?P<sessionid>.*)/$', views.get_dialogs),
     url(r'^1/messages/unread/(?P<sessionid>.*)/$', views.get_messages_unread),
     url(r'^1/messages/history/(?P<dialog>\d+)/(?P<sessionid>.*)/' +
         '(?P<offset>\d+)/$', views.get_messages_history)

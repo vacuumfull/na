@@ -31,7 +31,7 @@
                                 </a>
                             </template>
                             <template v-if="users.length > 0" v-for="getter in users">
-                                <a href="#!" class="collection-item">
+                                <a v-on:click="checkGetter(getter.username)" href="#!" class="collection-item">
                                     <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
                                     <span class="__sender-name __margin-left_m">{{ getter.username }}</span>
