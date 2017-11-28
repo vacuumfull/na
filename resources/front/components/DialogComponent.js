@@ -16,6 +16,7 @@ const Dialog = Vue.extend({
             isSelected: false,
             selected: null,
             users: [],
+            dialogs: [],
             messages: [],
             dialogId: 0
         }
@@ -29,6 +30,7 @@ const Dialog = Vue.extend({
             $('#dialog_window').modal();
             this.triggerGetUsers();
             this.getUnreadMessages();
+            this.getUserDialogs();
         },
         openDialog(){
             $('#dialog_window').modal('open');
@@ -38,6 +40,38 @@ const Dialog = Vue.extend({
             this.getter = author.name;
             this.isSelected = true;
         },
+        getHistory(offset){
+            let self = this,
+                session = self.getSess(),
+                uri = `/api/1/messages/history/${self.dialogId}/${self.session}/${offset}`;
+                console.log(uri)
+            $.get(uri)
+                .done(data => {
+                    if(data.error){
+                        return console.error(data.error)
+                    }
+                    console.log(data)
+                })
+                .fail(error => {
+                    console.error(error)
+                })
+        },
+        getUserDialogs(){
+            let self = this,
+                session = self.getSess(),
+                uri = `/api/1/messages/dialogs/${session}`;
+            $.get(uri)
+                .done(data => {
+                    if(data.error){
+                        return console.error(data.error)
+                    }
+                    self.dialogs = data;
+                })
+                .fail(error => {
+                    console.error(error)
+                })
+
+        },  
         getUnreadMessages(){
             let self = this,
                 session = self.getSess(),
@@ -56,8 +90,20 @@ const Dialog = Vue.extend({
 
             self.$emit('transport-count', 3)
         },
+        setGetter(name){
+            let self = this;
+            self.getter = name;
+            self.isSelected = true;
+            self.checkGetter(name);
+        },
         checkGetter(name){
-
+            let self = this;
+            self.dialogId = 0;
+            _.each(self.dialogs, (item) => { 
+                if (_.includes(item, name)){
+                    self.dialogId = item.dialog_id;
+                }
+            })
         },
         successAction(message){
             Materialize.toast(message, 4000);
@@ -114,12 +160,13 @@ const Dialog = Vue.extend({
             return document.getElementById('session_id').innerHTML;
         },  
         sendMessage(){
+            this.checkGetter(this.getter)
             let self = this,
                 uri = '/api/1/message/',
                 params = {
                     sessionid: self.getSess(),
                     content: self.message,
-                    login: 'almamater',
+                    login: self.getter,
                     dialog: self.dialogId
                 }
             if (self.getter === null){
