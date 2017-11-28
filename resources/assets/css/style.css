@@ -773,8 +773,8 @@ p.__message {
 }
 
 .__messages-window{
-    height: 170px;
-    max-height: 175px;
+    height: 280px;
+    overflow: auto;
 }
 
 .__enter_icons a:hover{

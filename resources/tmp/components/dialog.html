@@ -42,6 +42,7 @@
                 </div>
                 <div class="col s7">
                     <div class="__messages-window">
+                        <div id="img-field"></div>
                         <div v-if="selected !== null" >
                             <p v-for="message in selected" class="__margin-top_xs __margin-bottom_xs">
                                 <span class="__margin-right_m grey-text text-darken-2">{{ message.date }}:</span><span>{{ message.text }}</span>

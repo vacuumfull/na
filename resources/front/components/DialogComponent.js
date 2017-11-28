@@ -18,7 +18,7 @@ const Dialog = Vue.extend({
             users: [],
             dialogs: [],
             messages: [],
-            dialogId: 0
+            dialogId: 0,
         }
     },
     mounted(){
@@ -151,7 +151,6 @@ const Dialog = Vue.extend({
                     newImage.src = srcData;
                     newImage.className = "responsive-img";
                     document.getElementById("img-field").innerHTML = newImage.outerHTML;
-
                 }
                 fileReader.readAsDataURL(fileToLoad);
             }
@@ -160,12 +159,14 @@ const Dialog = Vue.extend({
             return document.getElementById('session_id').innerHTML;
         },  
         sendMessage(){
+    
             this.checkGetter(this.getter)
             let self = this,
                 uri = '/api/1/message/',
+                content = self.message + document.getElementById("img-field").innerHTML,
                 params = {
                     sessionid: self.getSess(),
-                    content: self.message,
+                    content: content,
                     login: self.getter,
                     dialog: self.dialogId
                 }
@@ -176,6 +177,8 @@ const Dialog = Vue.extend({
                 if (data.success){
                     self.message = "";
                     self.successAction('Сообщение отправлено!')
+                    document.getElementById("img-field").innerHTML = "";
+                    self.getUserDialogs();
                 }
                 if (data.error){
                     console.error(data.error)
