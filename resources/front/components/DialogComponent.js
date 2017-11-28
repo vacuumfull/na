@@ -112,7 +112,7 @@ const Dialog = Vue.extend({
         },
         getSess(){
             return document.getElementById('session_id').innerHTML;
-         },  
+        },  
         sendMessage(){
             let self = this,
                 uri = '/api/1/message/',
