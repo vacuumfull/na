@@ -22,15 +22,15 @@
                     </div>
                     <div class="senders __padding-right_l">
                         <div class="collection">
-                            <template v-if="messages.length > 0" v-for="sender in messages">
-                                <a v-on:click="openMessages(sender)" href="#!" class="collection-item">
-                                    <span class="left" v-if="sender.avatar === null"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
-                                    <span class="left" v-if="sender.avatar !== null"><img class="responsive-img __small-avatar circle" :src='sender.avatar'></span>
-                                    <!--span class="__sender-name __margin-left_m">{{ sender.name }} <span  class="__sender-role">{{ sender.role }}</span></span-->
-                                    <span class="badge right new ">{{ sender.messages.length }}</span>
+                            <template v-if="Object.keys(messagesUnread).length > 0" v-for="(item, key) in messagesUnread">
+                                <a v-on:click="readMessages(item, key)" href="#!" class="collection-item">
+                                    <span class="left" v-if="item.avatar === null || item.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
+                                    <span class="left" v-if="item.avatar !== null && item.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='item.avatar'></span>
+                                    <span class="__sender-name __margin-left_m">{{ key }} <!--span  class="__sender-role">{{ sender.role }}</span--></span>
+                                    <span class="new badge">{{ item.length }}</span>
                                 </a>
                             </template>
-                            <template v-if="users.length > 0" v-for="getter in users">
+                            <template v-if="Object.keys(messagesUnread).length === 0" v-for="getter in users">
                                 <a v-on:click="setGetter(getter.username)" href="#!" class="collection-item">
                                     <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
@@ -43,9 +43,9 @@
                 <div class="col s7">
                     <div class="__messages-window">
                         <div id="img-field"></div>
-                        <div v-if="selected !== null" >
-                            <p v-for="message in selected" class="__margin-top_xs __margin-bottom_xs">
-                                <span class="__margin-right_m grey-text text-darken-2">{{ message.date }}:</span><span>{{ message.text }}</span>
+                        <div v-if="selectedMessages.length > 0" >
+                            <p v-for="message in selectedMessages" class="__margin-top_xs __margin-bottom_xs">
+                                <span class="__margin-right_m grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span><span v-html="message.content"></span>
                             </p>
                         </div>
                     </div>

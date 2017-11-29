@@ -49,14 +49,21 @@ class MessageManager(models.Manager):
 
     def dialogs(self, user):
         """Get user dialogs"""
-        rows = Message.objects.filter(to_user=user).order_by('created_at')
-        
+        rows_to_user = Message.objects.filter(to_user=user).order_by('created_at')
+        rows_from_user = Message.objects.filter(from_user=user).order_by('created_at')
         result = []
-        for row in rows:
+        
+        for row in rows_to_user:
             result_row = {}
             result_row['dialog_id'] = row.dialog_id
-            result_row['from_user'] = row.from_user.username
-            result.append(result_row)      
+            result_row['username'] = row.from_user.username
+            result.append(result_row)    
+        for row in rows_from_user:
+            result_row = {}
+            result_row['dialog_id'] = row.dialog_id
+            result_row['username'] = row.to_user.username
+            result.append(result_row)    
+
         dialog_unique = list({v['dialog_id']:v for v in result}.values())
         return dialog_unique
 

@@ -14,10 +14,10 @@ const Dialog = Vue.extend({
             message: "",
             getter: null,
             isSelected: false,
-            selected: null,
+            selectedMessages: [],
             users: [],
             dialogs: [],
-            messages: [],
+            messagesUnread: [],
             dialogId: 0,
         }
     },
@@ -35,16 +35,19 @@ const Dialog = Vue.extend({
         openDialog(){
             $('#dialog_window').modal('open');
         },
-        openMessages(author){
-            this.selected = author.messages;
-            this.getter = author.name;
-            this.isSelected = true;
+        formatDate(string){
+            let date = new Date(string),
+                hour = date.getHours(),
+                minutes = date.getMinutes(),
+                day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
+                month = date.getMonth() + 1,
+                year = date.getFullYear();
+            return `${day}/${month}/${year} ${hour}:${minutes}`;
         },
         getHistory(offset){
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/messages/history/${self.dialogId}/${self.session}/${offset}`;
-                console.log(uri)
             $.get(uri)
                 .done(data => {
                     if(data.error){
@@ -56,21 +59,43 @@ const Dialog = Vue.extend({
                     console.error(error)
                 })
         },
+        readMessages(messages, name){
+            let self = this,
+                uri = '/api/1/messages/read/',
+                session = self.getSess(),
+                dialog = self.dialogs.filter(item => item.username === name).reduce((sum,item) => item.dialog_id, 0),
+                params = {
+                    dialog: dialog,
+                    sessionid: session
+                };
+            self.selectedMessages = messages;
+            self.getter = name;
+            self.isSelected = true;
+            
+            $.post(uri, params).done(data => {
+                if (data.success){
+                    delete self.messagesUnread[name];
+                    self.$emit('transport-count', Object.keys(self.messagesUnread).length)
+                }
+                if (data.error){
+                    return console.error(data.error)
+                }
+            }).fail(error => {
+                console.error(error)
+            })
+        },
         getUserDialogs(){
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/messages/dialogs/${session}`;
-            $.get(uri)
-                .done(data => {
+            $.get(uri).done(data => {
                     if(data.error){
                         return console.error(data.error)
                     }
                     self.dialogs = data;
-                })
-                .fail(error => {
+                }).fail(error => {
                     console.error(error)
                 })
-
         },  
         getUnreadMessages(){
             let self = this,
@@ -81,14 +106,13 @@ const Dialog = Vue.extend({
                     if (data.error){
                         return console.error(data.error)
                     }
-                    let dialogs = _.groupBy(data, 'dialog_id')
-                    console.log(dialogs)
+                    self.messagesUnread = _.groupBy(data, 'from_user')
+                    console.dir(self.messagesUnread)
+                    self.$emit('transport-count', Object.keys(self.messagesUnread).length)
                 })
                 .fail(error => {
                     console.error(error)
                 })
-
-            self.$emit('transport-count', 3)
         },
         setGetter(name){
             let self = this;
@@ -159,8 +183,8 @@ const Dialog = Vue.extend({
             return document.getElementById('session_id').innerHTML;
         },  
         sendMessage(){
-    
             this.checkGetter(this.getter)
+
             let self = this,
                 uri = '/api/1/message/',
                 content = self.message + document.getElementById("img-field").innerHTML,
@@ -170,15 +194,19 @@ const Dialog = Vue.extend({
                     login: self.getter,
                     dialog: self.dialogId
                 }
+
             if (self.getter === null){
                 return self.successAction('Выберите получателя!')
             }
+            
             $.post(uri, params).done((data) => {
                 if (data.success){
                     self.message = "";
                     self.successAction('Сообщение отправлено!')
                     document.getElementById("img-field").innerHTML = "";
-                    self.getUserDialogs();
+                }
+                if (data.info.length > 0) {
+                    self.dialogs.push(data.info)
                 }
                 if (data.error){
                     console.error(data.error)

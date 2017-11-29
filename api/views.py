@@ -146,6 +146,7 @@ def send_comment(request):
     return JsonResponse(result)
 
 
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def send_message(request):
@@ -171,9 +172,28 @@ def send_message(request):
 
     request.session['last_message'] = datetime.now().strftime(r'%x %X')
     if not result.get('error'):
-        getattr(_load_module('message'), 'send_message')(content, from_user, to_user, int(dialog))
-        result = {'success': 'Message successly send'}
+        info = {}
+        info = getattr(_load_module('message'), 'send_message')(content, from_user, to_user, int(dialog))
+        result = {'success': 'Message successly send', 'info': info}
 
+    return JsonResponse(result)
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def read_messages(request):
+    sessionid = request.POST.get('sessionid')
+    dialog_id = request.POST.get('dialog')
+    user = _get_user(sessionid)
+    result = {}
+
+    if not user:
+        result = {'error': 'User must be authenticated!'}
+
+    if not result.get('error'):
+        getattr(_load_module('message'), 'read_messages')(user, int(dialog_id))
+        result = {'success': 'Successfully red messages'}
+    
     return JsonResponse(result)
 
 
@@ -190,10 +210,9 @@ def remove_message(request):
     
     if not result.get('error'):
         getattr(_load_module('message'), 'remove_message')(int(message_id))
-        result = {'success': 'Message successly removed'}
+        result = {'success': 'Message successfully removed'}
 
     return JsonResponse(result)
-
 
 
 def _get_user(sessionid):
