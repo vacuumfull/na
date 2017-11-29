@@ -45,7 +45,7 @@ const Dialog = Vue.extend({
                 year = date.getFullYear();
             return `${day}/${month}/${year} ${hour}:${minutes}`;
         },
-        getHistory(offset, dialogId){
+        getHistory(username, offset, dialogId){
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/messages/history/${dialogId}/${session}/${offset}`;
@@ -53,11 +53,21 @@ const Dialog = Vue.extend({
                     if(data.error){
                         return console.error(data.error)
                     }
-                    console.log(data)
+                   self.formatHistory(username, data)
                 })
                 .fail(error => {
                     console.error(error)
                 })
+        },
+        formatHistory(username, info){
+            let dialogs = _.groupBy(info, 'dialog_id')
+            let item = {
+                username: username,
+                items: dialogs,
+                count: Object.keys(dialogs).length
+            };
+            this.historyMessages.unshift(item);
+            this.historyMessages = _.uniqBy(this.historyMessages, 'username');
         },
         readMessages(messages, name){
             let self = this,
@@ -123,8 +133,8 @@ const Dialog = Vue.extend({
             self.dialogId = 0;
             _.each(self.dialogs, (item) => { 
                 if (_.includes(item, name)) self.dialogId = item.dialog_id;
-                self.getHistory(0, item.dialog_id);
             })
+            self.getHistory(name, 0, self.dialogId);
         },
         successAction(message){
             Materialize.toast(message, 4000);
