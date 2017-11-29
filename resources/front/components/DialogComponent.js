@@ -15,9 +15,10 @@ const Dialog = Vue.extend({
             getter: null,
             isSelected: false,
             selectedMessages: [],
+            unreadMessages: {},
+            historyMessages: [],
             users: [],
             dialogs: [],
-            messagesUnread: [],
             dialogId: 0,
         }
     },
@@ -44,12 +45,11 @@ const Dialog = Vue.extend({
                 year = date.getFullYear();
             return `${day}/${month}/${year} ${hour}:${minutes}`;
         },
-        getHistory(offset){
+        getHistory(offset, dialogId){
             let self = this,
                 session = self.getSess(),
-                uri = `/api/1/messages/history/${self.dialogId}/${self.session}/${offset}`;
-            $.get(uri)
-                .done(data => {
+                uri = `/api/1/messages/history/${dialogId}/${session}/${offset}`;
+            $.get(uri).done(data => {
                     if(data.error){
                         return console.error(data.error)
                     }
@@ -74,8 +74,8 @@ const Dialog = Vue.extend({
             
             $.post(uri, params).done(data => {
                 if (data.success){
-                    delete self.messagesUnread[name];
-                    self.$emit('transport-count', Object.keys(self.messagesUnread).length)
+                    delete self.unreadMessages[name];
+                    self.$emit('transport-count', Object.keys(self.unreadMessages).length)
                 }
                 if (data.error){
                     return console.error(data.error)
@@ -101,14 +101,12 @@ const Dialog = Vue.extend({
             let self = this,
                 session = self.getSess(),
                 uri = `/api/1/messages/unread/${session}`;
-            $.get(uri)
-                .done(data => {
+            $.get(uri).done(data => {
                     if (data.error){
                         return console.error(data.error)
                     }
-                    self.messagesUnread = _.groupBy(data, 'from_user')
-                    console.dir(self.messagesUnread)
-                    self.$emit('transport-count', Object.keys(self.messagesUnread).length)
+                    self.unreadMessages = _.groupBy(data, 'from_user')
+                    self.$emit('transport-count', Object.keys(self.unreadMessages).length)
                 })
                 .fail(error => {
                     console.error(error)
@@ -124,9 +122,8 @@ const Dialog = Vue.extend({
             let self = this;
             self.dialogId = 0;
             _.each(self.dialogs, (item) => { 
-                if (_.includes(item, name)){
-                    self.dialogId = item.dialog_id;
-                }
+                if (_.includes(item, name)) self.dialogId = item.dialog_id;
+                self.getHistory(0, item.dialog_id);
             })
         },
         successAction(message){

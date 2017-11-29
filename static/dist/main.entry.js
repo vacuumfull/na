@@ -34095,9 +34095,10 @@ var Dialog = _vue2.default.extend({
             getter: null,
             isSelected: false,
             selectedMessages: [],
+            unreadMessages: {},
+            historyMessages: [],
             users: [],
             dialogs: [],
-            messagesUnread: [],
             dialogId: 0
         };
     },
@@ -34125,10 +34126,10 @@ var Dialog = _vue2.default.extend({
                 year = date.getFullYear();
             return day + '/' + month + '/' + year + ' ' + hour + ':' + minutes;
         },
-        getHistory: function getHistory(offset) {
+        getHistory: function getHistory(offset, dialogId) {
             var self = this,
                 session = self.getSess(),
-                uri = '/api/1/messages/history/' + self.dialogId + '/' + self.session + '/' + offset;
+                uri = '/api/1/messages/history/' + dialogId + '/' + session + '/' + offset;
             _jquery2.default.get(uri).done(function (data) {
                 if (data.error) {
                     return console.error(data.error);
@@ -34157,8 +34158,8 @@ var Dialog = _vue2.default.extend({
 
             _jquery2.default.post(uri, params).done(function (data) {
                 if (data.success) {
-                    delete self.messagesUnread[name];
-                    self.$emit('transport-count', Object.keys(self.messagesUnread).length);
+                    delete self.unreadMessages[name];
+                    self.$emit('transport-count', Object.keys(self.unreadMessages).length);
                 }
                 if (data.error) {
                     return console.error(data.error);
@@ -34188,9 +34189,8 @@ var Dialog = _vue2.default.extend({
                 if (data.error) {
                     return console.error(data.error);
                 }
-                self.messagesUnread = (0, _groupBy3.default)(data, 'from_user');
-                console.dir(self.messagesUnread);
-                self.$emit('transport-count', Object.keys(self.messagesUnread).length);
+                self.unreadMessages = (0, _groupBy3.default)(data, 'from_user');
+                self.$emit('transport-count', Object.keys(self.unreadMessages).length);
             }).fail(function (error) {
                 console.error(error);
             });
@@ -34205,9 +34205,8 @@ var Dialog = _vue2.default.extend({
             var self = this;
             self.dialogId = 0;
             (0, _each3.default)(self.dialogs, function (item) {
-                if ((0, _includes3.default)(item, name)) {
-                    self.dialogId = item.dialog_id;
-                }
+                if ((0, _includes3.default)(item, name)) self.dialogId = item.dialog_id;
+                self.getHistory(0, item.dialog_id);
             });
         },
         successAction: function successAction(message) {
@@ -37657,7 +37656,7 @@ module.exports = basePropertyDeep;
 /* 150 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-if=\"Object.keys(messagesUnread).length > 0\" v-for=\"(item, key) in messagesUnread\">\n                                <a v-on:click=\"readMessages(item, key)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"item.avatar === null || item.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"item.avatar !== null && item.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='item.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ key }} <!--span  class=\"__sender-role\">{{ sender.role }}</span--></span>\n                                    <span class=\"new badge\">{{ item.length }}</span>\n                                </a>\n                            </template>\n                            <template v-if=\"Object.keys(messagesUnread).length === 0\" v-for=\"getter in users\">\n                                <a v-on:click=\"setGetter(getter.username)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <div v-if=\"selectedMessages.length > 0\" >\n                            <p v-for=\"message in selectedMessages\" class=\"__margin-top_xs __margin-bottom_xs\">\n                                <span class=\"__margin-right_m grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span><span v-html=\"message.content\"></span>\n                            </p>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-if=\"Object.keys(unreadMessages).length > 0\" v-for=\"(item, key) in unreadMessages\">\n                                <a v-on:click=\"readMessages(item, key)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"item.avatar === null || item.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"item.avatar !== null && item.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='item.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ key }} <!--span  class=\"__sender-role\">{{ sender.role }}</span--></span>\n                                    <span class=\"new badge\">{{ item.length }}</span>\n                                </a>\n                            </template>\n                            <template v-if=\"Object.keys(unreadMessages).length === 0\" v-for=\"getter in users\">\n                                <a v-on:click=\"setGetter(getter.username)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                </a>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <div>\n                            <template v-if=\"selectedMessages.length > 0\" v-for=\"message in selectedMessages\">\n                                <p class=\"__margin-top_xs __margin-bottom_xs\">\n                                    <span class=\"__margin-right_m grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span>\n                                    <span v-html=\"message.content\"></span>\n                                </p>\n                            </template>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 151 */,

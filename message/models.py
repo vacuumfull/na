@@ -32,12 +32,13 @@ class MessageManager(models.Manager):
 
     def dialog_history(self, dialog:int, offset:int=0):
         """History of dialog"""
-        rows = Message.objects.filter(read=False, deleted=False,
+        rows = Message.objects.filter(read=True, deleted=False,
                                         dialog_id=dialog).order_by('created_at')[offset:offset+20]
         result = []
         for row in rows:
             result_row = {}
             result_row['id'] = row.id
+            result_row['dialog_id'] = row.dialog_id
             result_row['content'] = row.content
             result_row['from_user'] = row.from_user.username
             result_row['to_user'] = row.to_user.username
@@ -52,7 +53,7 @@ class MessageManager(models.Manager):
         rows_to_user = Message.objects.filter(to_user=user).order_by('created_at')
         rows_from_user = Message.objects.filter(from_user=user).order_by('created_at')
         result = []
-        
+
         for row in rows_to_user:
             result_row = {}
             result_row['dialog_id'] = row.dialog_id
