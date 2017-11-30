@@ -772,6 +772,12 @@ p.__message {
     animation:         vkmove 0.5s linear;/* IE 10+, Fx 29+ */
 }
 
+.__history_messages{
+    position: absolute;
+    bottom: 220px;
+    right: 22%;
+}
+
 .__messages-window{
     height: 280px;
     overflow: auto;

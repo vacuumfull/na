@@ -43,14 +43,28 @@
                 <div class="col s7">
                     <div class="__messages-window">
                         <div id="img-field"></div>
-                        <div>
-                            <template v-if="selectedMessages.length > 0" v-for="message in selectedMessages">
-                                <p class="__margin-top_xs __margin-bottom_xs">
-                                    <span class="__margin-right_m grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span>
-                                    <span v-html="message.content"></span>
-                                </p>
-                            </template>
-                        </div>
+                        <template v-if="selectedMessages.length > 0" v-for="message in selectedMessages">
+                            <p class="__margin-top_xs __margin-bottom_xs">
+                                <span class="__margin-right_xs grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span>
+                                <span v-html="message.content"></span>
+                            </p>
+                        </template>
+                        <template v-if="historyMessages.length > 0" v-for="item in historyMessages">
+                            <div v-if="item.show" class="__margin-top_xs __margin-bottom_xs">
+                                <template v-for="message in item.messages">
+                                    <p v-bind:class="{ right: message.from_user === username }" class="__margin-top_xs __margin-bottom_xs">
+                                        <span v-if="message.from_user === username" class="right __margin-right_s" style="color: #26a69a;"><b>Я</b></span>
+                                        <br>
+                                        <span class="__margin-right_xs grey-text text-darken-2" v-bind:class="{ right: message.from_user === username }">{{ formatDate(message.created_at) }}:</span>
+                                        <br>
+                                        <span v-html="message.content" v-bind:class="{ right: message.from_user === username }"></span>
+                                    </p>
+                                </template>
+                            </div>
+                            <p v-if="item.messages.length > 19" class="center __history_messages">
+                                <a v-on:click="getHistory(item.username, item.offset+1, item.dialogId)">Смотреть предыдущие</a>
+                            </p>
+                        </template>
                     </div>
                 </div>
             </div>

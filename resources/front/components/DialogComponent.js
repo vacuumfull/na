@@ -12,6 +12,7 @@ const Dialog = Vue.extend({
     data() {
         return {
             message: "",
+            username: "",
             getter: null,
             isSelected: false,
             selectedMessages: [],
@@ -32,6 +33,7 @@ const Dialog = Vue.extend({
             this.triggerGetUsers();
             this.getUnreadMessages();
             this.getUserDialogs();
+            this.username = document.getElementById('username').innerText;
         },
         openDialog(){
             $('#dialog_window').modal('open');
@@ -42,7 +44,7 @@ const Dialog = Vue.extend({
                 minutes = date.getMinutes(),
                 day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
                 month = date.getMonth() + 1,
-                year = date.getFullYear();
+                year = date.getFullYear();  
             return `${day}/${month}/${year} ${hour}:${minutes}`;
         },
         getHistory(username, offset, dialogId){
@@ -53,21 +55,47 @@ const Dialog = Vue.extend({
                     if(data.error){
                         return console.error(data.error)
                     }
-                   self.formatHistory(username, data)
+                   self.formatHistory(username, data, offset);
+                   self.selectedMessages = [];
+                   self.historyMessages.map(item => {
+                       if (item.username === username && item.count > 0) {
+                           item.show = true;
+                       } else{
+                           item.show = false;
+                       }
+                   })
+                   console.log(data)
                 })
                 .fail(error => {
                     console.error(error)
                 })
         },
-        formatHistory(username, info){
-            let dialogs = _.groupBy(info, 'dialog_id')
-            let item = {
-                username: username,
-                items: dialogs,
-                count: Object.keys(dialogs).length
-            };
-            this.historyMessages.unshift(item);
-            this.historyMessages = _.uniqBy(this.historyMessages, 'username');
+        formatHistory(username, info, offset=0){
+            let item;
+            if (offset === 0 && info) {
+                item = {
+                    username: username,
+                    messages: info,
+                    offset: offset,
+                    show: false,
+                    count: info.length,
+                };
+                if (info.length > 0) item.dialogId = info[0].dialog_id;
+                this.historyMessages.unshift(item);
+                this.historyMessages = _.uniqBy(this.historyMessages, 'username');
+            } else {
+                this.historyMessages.map(item => {
+                    if (item.username === username) {
+                        _.each(info, infoItem => {
+                            item.messages.push(infoItem)
+                        })
+                        item.offest = offset
+                    }
+                   
+                })
+            }
+           
+            console.log(this.historyMessages)
         },
         readMessages(messages, name){
             let self = this,
@@ -78,6 +106,7 @@ const Dialog = Vue.extend({
                     dialog: dialog,
                     sessionid: session
                 };
+                
             self.selectedMessages = messages;
             self.getter = name;
             self.isSelected = true;
