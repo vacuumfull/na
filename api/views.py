@@ -38,18 +38,6 @@ def get_rating(request, sessionid: str, app: str, key: int):
     return JsonResponse(result)
 
 
-def get_messages_unread(request, sessionid:str):
-    """Get unread user messages"""
-    user = _get_user(sessionid)
-    if not user:
-        return JsonResponse({'error': 'User must be authenticated!'})
-
-    result = {}
-    result = getattr(_load_module('message'), 'get_unread_messages')(user)
-
-    return JsonResponse(result, safe=False)
-
-
 def get_messages_history(request, dialog:int, sessionid:str, offset:int):
     """Get messages history"""
     user = _get_user(sessionid)

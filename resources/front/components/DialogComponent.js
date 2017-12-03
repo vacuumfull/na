@@ -3,12 +3,13 @@ import $ from 'jquery';
 import _ from 'lodash';
 import Materialize from 'materialize-css';
 import Storage from '../mixins/StorageMixin';
+import Helper from '../mixins/HelperMixin';
 import template from '../../tmp/components/dialog.html';
 
 const Dialog = Vue.extend({
     template,
     props: ['user-role'],
-    mixins: [Storage],
+    mixins: [Storage, Helper],
     data() {
         return {
             message: "",
@@ -18,7 +19,8 @@ const Dialog = Vue.extend({
             selectedMessages: [],
             unreadMessages: {},
             historyMessages: [],
-            users: [],
+            users: [{unread: [], username: ""}],
+            openedDialog: {messages: [], open: false, dialog_id: 0, username: '', unread:[]},
             dialogs: [],
             dialogId: 0,
         }
@@ -31,21 +33,11 @@ const Dialog = Vue.extend({
             $('select').material_select();
             $('#dialog_window').modal();
             this.triggerGetUsers();
-            this.getUnreadMessages();
             this.getUserDialogs();
             this.username = document.getElementById('username').innerText;
         },
         openDialog(){
             $('#dialog_window').modal('open');
-        },
-        formatDate(string){
-            let date = new Date(string),
-                hour = date.getHours(),
-                minutes = date.getMinutes(),
-                day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate(),
-                month = date.getMonth() + 1,
-                year = date.getFullYear();  
-            return `${day}/${month}/${year} ${hour}:${minutes}`;
         },
         getHistory(username, offset, dialogId){
             let self = this,
@@ -71,58 +63,9 @@ const Dialog = Vue.extend({
                 })
         },
         formatHistory(username, info, offset=0){
-            let item;
-            if (offset === 0 && info) {
-                item = {
-                    username: username,
-                    messages: info,
-                    offset: offset,
-                    show: false,
-                    count: info.length,
-                };
-                if (info.length > 0) item.dialogId = info[0].dialog_id;
-                this.historyMessages.unshift(item);
-                this.historyMessages = _.uniqBy(this.historyMessages, 'username');
-            } else {
-                this.historyMessages.map(item => {
-                    if (item.username === username) {
-                        _.each(info, infoItem => {
-                            item.messages.push(infoItem)
-                        })
-                        item.offest = offset
-                    }
-                   
-                })
-            }
-           
-            console.log(this.historyMessages)
+ 
         },
-        readMessages(messages, name){
-            let self = this,
-                uri = '/api/1/messages/read/',
-                session = self.getSess(),
-                dialog = self.dialogs.filter(item => item.username === name).reduce((sum,item) => item.dialog_id, 0),
-                params = {
-                    dialog: dialog,
-                    sessionid: session
-                };
-                
-            self.selectedMessages = messages;
-            self.getter = name;
-            self.isSelected = true;
-            
-            $.post(uri, params).done(data => {
-                if (data.success){
-                    delete self.unreadMessages[name];
-                    self.$emit('transport-count', Object.keys(self.unreadMessages).length)
-                }
-                if (data.error){
-                    return console.error(data.error)
-                }
-            }).fail(error => {
-                console.error(error)
-            })
-        },
+       
         getUserDialogs(){
             let self = this,
                 session = self.getSess(),
@@ -132,38 +75,69 @@ const Dialog = Vue.extend({
                         return console.error(data.error)
                     }
                     self.dialogs = data;
+                    _.each(self.users, item => {
+                        self.setDialogsToUsers(item)
+                    })
                 }).fail(error => {
                     console.error(error)
                 })
-        },  
-        getUnreadMessages(){
+        },
+        setDialogsToUsers(user){
             let self = this,
-                session = self.getSess(),
-                uri = `/api/1/messages/unread/${session}`;
-            $.get(uri).done(data => {
-                    if (data.error){
-                        return console.error(data.error)
+                countUnread = 0,
+                dialogs = [];
+                dialogs = self.dialogs.filter(item => {
+                    if(self.username !== user.username) return item.from_user === user.username || item.to_user === user.username;    
+                })
+                self.users.map(item => {
+                    if (item.username === user.username) {
+                        item.messages = dialogs; item.open = false; 
+                        item.unread = item.messages.length > 0 ? self.dialogs.filter(item => !item.read && self.username === item.to_user) : [];
+                        item.dialog_id = item.messages.length === 0 ? 0 : item.messages[0].dialog_id
+                        if (item.unread.length > 0) ++countUnread;
                     }
-                    self.unreadMessages = _.groupBy(data, 'from_user')
-                    self.$emit('transport-count', Object.keys(self.unreadMessages).length)
                 })
-                .fail(error => {
-                    console.error(error)
-                })
+                if (countUnread > 0)  self.$emit('transport-count', countUnread);
+                console.log(self.users)
+                
         },
-        setGetter(name){
-            let self = this;
-            self.getter = name;
-            self.isSelected = true;
-            self.checkGetter(name);
+        openUserDialog(user){
+            this.users.map(item => {
+                item.open = false;
+                if (item.username === user.username){
+                    if (item.unread.length > 0) this.readMessages(user)
+                    item.open = true;
+                    this.openedDialog = item;
+                    this.isSelected = true;
+                    this.getter = user.username;
+                    this.dialogId = item.dialog_id;
+                }
+            });
         },
-        checkGetter(name){
-            let self = this;
-            self.dialogId = 0;
-            _.each(self.dialogs, (item) => { 
-                if (_.includes(item, name)) self.dialogId = item.dialog_id;
+        readMessages(user){
+            let self = this,
+                countUnread = 0,
+                uri = '/api/1/messages/read/',
+                session = self.getSess(),
+                params = {
+                    dialog: user.dialog_id,
+                    sessionid: session
+                };
+               
+            $.post(uri, params).done(data => {
+                if (data.success){
+                    self.users.map(item => {
+                        if (item.username === user.username) item.unread = [];
+                        if (item.unread.length > 0) ++countUnread;
+                    })
+                    self.$emit('transport-count', countUnread)
+                }
+                if (data.error){
+                    return console.error(data.error)
+                }
+            }).fail(error => {
+                console.error(error)
             })
-            self.getHistory(name, 0, self.dialogId);
         },
         successAction(message){
             Materialize.toast(message, 4000);
@@ -194,7 +168,7 @@ const Dialog = Vue.extend({
             let self = this,
                 keyword = event.target.value,
                 users = self.storageGet('users');
-            if (keyword.length <= 2) return;
+            if (keyword.length <= 2) return self.users = self.storageGet('users');;
             self.users = users.filter((item) => {
                 return item.username.indexOf(keyword) === 0;
             })
@@ -219,8 +193,6 @@ const Dialog = Vue.extend({
             return document.getElementById('session_id').innerHTML;
         },  
         sendMessage(){
-            this.checkGetter(this.getter)
-
             let self = this,
                 uri = '/api/1/message/',
                 content = self.message + document.getElementById("img-field").innerHTML,
@@ -230,20 +202,21 @@ const Dialog = Vue.extend({
                     login: self.getter,
                     dialog: self.dialogId
                 }
-
+            console.dir(params)
             if (self.getter === null){
                 return self.successAction('Выберите получателя!')
             }
             
             $.post(uri, params).done((data) => {
+                console.log(data)
                 if (data.success){
                     self.message = "";
                     self.successAction('Сообщение отправлено!')
                     document.getElementById("img-field").innerHTML = "";
                 }
-                if (data.info.length > 0) {
-                    self.dialogs.push(data.info)
-                }
+                //if (data.info.length > 0) {
+                //    self.dialogs.push(data.info)
+                //}
                 if (data.error){
                     console.error(data.error)
                 }

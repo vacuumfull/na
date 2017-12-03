@@ -6,6 +6,7 @@ def send_message(content:str, from_user: object, to_user: object, dialog: int):
     """Send message to user"""
     try:
         info = {}
+        print(dialog == 0)
         if dialog == 0:
             latest = Message.objects.latest()
             dialog = latest.dialog_id  + 1
@@ -14,11 +15,6 @@ def send_message(content:str, from_user: object, to_user: object, dialog: int):
         return info
     except Message.DoesNotExist:
         pass
-
-
-def get_unread_messages(user:object) -> list:
-    """Get unread user messages"""
-    return Message.objects.unread(to_user=user)
 
 
 def get_messages_history(dialog:int, offset:int) -> list:

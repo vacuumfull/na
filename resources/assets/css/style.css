@@ -20,6 +20,9 @@ table.__left > thead> tr > th.__left{
 .collection .collection-item {
     padding: 10px 10px;
 }
+.__bg_unread{
+    background-color:#EAEAEA;
+}
 
 .__left-dialog_btn{
     position: absolute;
@@ -184,6 +187,9 @@ footer > div.footer-copyright {
 }
 footer.page-footer{
     margin-top: 40px;
+}
+.__message-item{
+    padding: 1px 7px 1px 7  px;
 }
 .__message_img{
     margin-top: 30px;
@@ -821,7 +827,7 @@ body nav .__menu_item > a {
 .modal.__modal{
     background-color: #fafafa;
     padding: 0;
-    max-height: 70% !important;
+    height: auto;
     width: 55% !important;
     top: 17% !important;
     margin: auto;
