@@ -87,13 +87,28 @@ const Dialog = Vue.extend({
                 countUnread = 0,
                 dialogs = [];
                 dialogs = self.dialogs.filter(item => {
-                    if(self.username !== user.username) return item.from_user === user.username || item.to_user === user.username;    
+                    if(self.username !== user.username) {
+                        return item.from_user === user.username || item.to_user === user.username;   
+                    } else {
+                       return item.to_user === item.from_user && item.to_user === user.username && item.read;
+                    } 
                 })
+                dialogs = _.uniqBy(dialogs, 'created_at') 
                 self.users.map(item => {
                     if (item.username === user.username) {
                         item.messages = dialogs; item.open = false; 
-                        item.unread = item.messages.length > 0 ? self.dialogs.filter(item => !item.read && self.username === item.to_user) : [];
+                        item.unread = item.messages.length > 0 ? self.dialogs.filter(item => !item.read && self.username === item.to_user && item.to_user !== item.from_user) : [];
                         item.dialog_id = item.messages.length === 0 ? 0 : item.messages[0].dialog_id
+                        if (item.unread.length === 0) {
+    
+                            item.unread = self.dialogs.filter(item => item.to_user === item.from_user && item.to_user === user.username && !item.read)
+                            item.unread = _.uniqBy(item.unread, 'dialog_id') 
+                            if (item.unread.length > 0){
+                                item.messages = item.unread;
+                                item.dialog_id = item.unread[0].dialog_id
+                            } 
+                        }
+
                         if (item.unread.length > 0) ++countUnread;
                     }
                 })
@@ -115,6 +130,7 @@ const Dialog = Vue.extend({
             });
         },
         readMessages(user){
+            console.log(user)
             let self = this,
                 countUnread = 0,
                 uri = '/api/1/messages/read/',
