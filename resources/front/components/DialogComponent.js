@@ -47,25 +47,12 @@ const Dialog = Vue.extend({
                     if(data.error){
                         return console.error(data.error)
                     }
-                   self.formatHistory(username, data, offset);
-                   self.selectedMessages = [];
-                   self.historyMessages.map(item => {
-                       if (item.username === username && item.count > 0) {
-                           item.show = true;
-                       } else{
-                           item.show = false;
-                       }
-                   })
-                   console.log(data)
+                    console.log(data)
                 })
                 .fail(error => {
                     console.error(error)
                 })
         },
-        formatHistory(username, info, offset=0){
- 
-        },
-       
         getUserDialogs(){
             let self = this,
                 session = self.getSess(),
@@ -90,25 +77,23 @@ const Dialog = Vue.extend({
                     if(self.username !== user.username) {
                         return item.from_user === user.username || item.to_user === user.username;   
                     } else {
-                       return item.to_user === item.from_user && item.to_user === user.username && item.read;
+                       return item.to_user === item.from_user && item.to_user === user.username;
                     } 
                 })
                 dialogs = _.uniqBy(dialogs, 'created_at') 
                 self.users.map(item => {
                     if (item.username === user.username) {
+                        let curUser = item.username;
                         item.messages = dialogs; item.open = false; 
-                        item.unread = item.messages.length > 0 ? self.dialogs.filter(item => !item.read && self.username === item.to_user && item.to_user !== item.from_user) : [];
+                        item.unread = item.messages.length > 0 ? self.dialogs.filter(item => {
+                           return !item.read && self.username === item.to_user && item.to_user !== item.from_user && curUser === item.from_user
+                        }) : [];
                         item.dialog_id = item.messages.length === 0 ? 0 : item.messages[0].dialog_id
-                        if (item.unread.length === 0) {
-    
-                            item.unread = self.dialogs.filter(item => item.to_user === item.from_user && item.to_user === user.username && !item.read)
-                            item.unread = _.uniqBy(item.unread, 'dialog_id') 
-                            if (item.unread.length > 0){
-                                item.messages = item.unread;
-                                item.dialog_id = item.unread[0].dialog_id
-                            } 
-                        }
-
+                        console.log(item.unread)
+                        if(self.username === user.username && item.username === self.username) {
+                            item.unread = item.messages.length > 0 ? self.dialogs.filter(item => !item.read && self.username === item.to_user  && item.to_user === item.from_user) : [];
+                        } 
+                        item.unread = _.uniqBy(item.unread, 'created_at') 
                         if (item.unread.length > 0) ++countUnread;
                     }
                 })
