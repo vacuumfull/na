@@ -48,7 +48,7 @@
                         <template v-if="openedDialog.open">
                             <template v-if="openedDialog.messages.length > 0" v-for="message in openedDialog.messages">
                                 <div class="__message-item" v-bind:class="{__bg_unread: message.read === false}" >
-                                    <p class="__margin-top_xs __margin-bottom_xs ">
+                                    <p v-bind:class="[message.from_user === username ? rightClass : '', leftClass]" class="__margin-top_xs __margin-bottom_xs ">
                                         <span class="__margin-right_xs grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span>
                                         <span v-html="message.content"></span>
                                     </p>

@@ -12,6 +12,8 @@ const Dialog = Vue.extend({
     mixins: [Storage, Helper],
     data() {
         return {
+            rightClass: 'right',
+            leftClass: 'left',
             message: "",
             username: "",
             getter: null,
