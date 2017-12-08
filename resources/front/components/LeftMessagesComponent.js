@@ -40,6 +40,7 @@ const LeftMessages = Vue.extend({
                 uri = `/api/1/users/${session}`;
             $.get(uri)
                 .done(function(data){
+                    data.map(item => item.unread=[])
                     self.storageSave('users', data);
                 })
                 .fail(function(error) {

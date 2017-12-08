@@ -22,28 +22,45 @@
                     </div>
                     <div class="senders __padding-right_l">
                         <div class="collection">
-                            <template v-if="Object.keys(unreadMessages).length > 0" v-for="(item, key) in unreadMessages">
+                            <!--template v-if="Object.keys(unreadMessages).length > 0" v-for="(item, key) in unreadMessages">
                                 <a v-on:click="readMessages(item, key)" href="#!" class="collection-item">
                                     <span class="left" v-if="item.avatar === null || item.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="item.avatar !== null && item.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='item.avatar'></span>
-                                    <span class="__sender-name __margin-left_m">{{ key }} <!--span  class="__sender-role">{{ sender.role }}</span--></span>
+                                    <span class="__sender-name __margin-left_m">{{ key }} <span  class="__sender-role">{{ sender.role }}</span></span>
                                     <span class="new badge">{{ item.length }}</span>
                                 </a>
-                            </template>
-                            <template v-if="Object.keys(unreadMessages).length === 0" v-for="getter in users">
-                                <a v-on:click="setGetter(getter.username)" href="#!" class="collection-item">
+                            </template-->
+                            <template v-for="getter in users">
+                                <a v-on:click="openUserDialog(getter)" href="#!" class="collection-item">
                                     <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
                                     <span class="__sender-name __margin-left_m">{{ getter.username }}</span>
+                                    <span v-if="getter.unread.length > 0" class="new badge">{{ getter.unread.length }}</span>
                                 </a>
                             </template>
+                            
                         </div>
                     </div>
                 </div>
                 <div class="col s7">
                     <div class="__messages-window">
                         <div id="img-field"></div>
-                        <template v-if="selectedMessages.length > 0" v-for="message in selectedMessages">
+                        <template v-if="openedDialog.open">
+                            <template v-if="openedDialog.messages.length > 0" v-for="message in openedDialog.messages">
+                                <div class="__message-item" v-bind:class="{__bg_unread: message.read === false}" >
+                                    <p v-bind:class="[message.from_user === username ? rightClass : '', leftClass]" class="__margin-top_xs __margin-bottom_xs ">
+                                        <span class="__margin-right_xs grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span>
+                                        <span v-html="message.content"></span>
+                                    </p>
+                                </div>
+                            </template>
+                          
+                            <div class="__padding-top_xxl" v-if="openedDialog.messages.length === 0">
+                                <p class="center">Вы еще ничего не писали этому пользователю.</p>
+                            </div>   
+                     </template>
+                        
+                        <!--template v-if="selectedMessages.length > 0" v-for="message in selectedMessages">
                             <p class="__margin-top_xs __margin-bottom_xs">
                                 <span class="__margin-right_xs grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span>
                                 <span v-html="message.content"></span>
@@ -64,7 +81,7 @@
                             <p v-if="item.messages.length > 19" class="center __history_messages">
                                 <a v-on:click="getHistory(item.username, item.offset+1, item.dialogId)">Смотреть предыдущие</a>
                             </p>
-                        </template>
+                        </template-->
                     </div>
                 </div>
             </div>

@@ -50,23 +50,31 @@ class MessageManager(models.Manager):
 
     def dialogs(self, user):
         """Get user dialogs"""
-        rows_to_user = Message.objects.filter(to_user=user).order_by('created_at')
-        rows_from_user = Message.objects.filter(from_user=user).order_by('created_at')
+        rows_to_user = Message.objects.filter(to_user=user, deleted=False).order_by('created_at').reverse()[:20]
+        rows_from_user = Message.objects.filter(from_user=user, deleted=False).order_by('created_at').reverse()[:20]
         result = []
-
+        print(rows_to_user, rows_from_user)
         for row in rows_to_user:
             result_row = {}
             result_row['dialog_id'] = row.dialog_id
-            result_row['username'] = row.from_user.username
+            result_row['from_user'] = row.from_user.username
+            result_row['to_user'] = row.to_user.username
+            result_row['read'] = row.read
+            result_row['content'] = row.content
+            result_row['created_at'] = row.created_at
             result.append(result_row)    
         for row in rows_from_user:
             result_row = {}
             result_row['dialog_id'] = row.dialog_id
-            result_row['username'] = row.to_user.username
+            result_row['from_user'] = row.from_user.username
+            result_row['to_user'] = row.to_user.username
+            result_row['read'] = row.read
+            result_row['content'] = row.content
+            result_row['created_at'] = row.created_at
             result.append(result_row)    
 
         dialog_unique = list({v['dialog_id']:v for v in result}.values())
-        return dialog_unique
+        return result
 
 
 class Message(models.Model):
