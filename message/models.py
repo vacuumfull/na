@@ -32,7 +32,7 @@ class MessageManager(models.Manager):
 
     def dialog_history(self, dialog:int, offset:int=0):
         """History of dialog"""
-        limit = 5
+        limit = 20
         rows = Message.objects.filter(read=True, deleted=False,
                                         dialog_id=dialog).order_by('created_at')[limit*offset:limit*(offset+1)]
         result = []
