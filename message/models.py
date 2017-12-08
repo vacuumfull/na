@@ -32,16 +32,18 @@ class MessageManager(models.Manager):
 
     def dialog_history(self, dialog:int, offset:int=0):
         """History of dialog"""
+        limit = 5
         rows = Message.objects.filter(read=True, deleted=False,
-                                        dialog_id=dialog).order_by('created_at')[offset:offset+20]
+                                        dialog_id=dialog).order_by('created_at')[limit*offset:limit*(offset+1)]
         result = []
         for row in rows:
             result_row = {}
             result_row['id'] = row.id
             result_row['dialog_id'] = row.dialog_id
-            result_row['content'] = row.content
             result_row['from_user'] = row.from_user.username
             result_row['to_user'] = row.to_user.username
+            result_row['read'] = row.read
+            result_row['content'] = row.content
             result_row['created_at'] = row.created_at
             result.append(result_row)      
 
@@ -50,12 +52,14 @@ class MessageManager(models.Manager):
 
     def dialogs(self, user):
         """Get user dialogs"""
-        rows_to_user = Message.objects.filter(to_user=user, deleted=False).order_by('created_at').reverse()[:20]
-        rows_from_user = Message.objects.filter(from_user=user, deleted=False).order_by('created_at').reverse()[:20]
+        rows_to_user = Message.objects.filter(to_user=user, deleted=False).order_by('created_at').reverse()[:5]
+        rows_from_user = Message.objects.filter(from_user=user, deleted=False).order_by('created_at').reverse()[:5]
+
         result = []
-        print(rows_to_user, rows_from_user)
+
         for row in rows_to_user:
             result_row = {}
+            result_row['id'] = row.id
             result_row['dialog_id'] = row.dialog_id
             result_row['from_user'] = row.from_user.username
             result_row['to_user'] = row.to_user.username
@@ -65,6 +69,7 @@ class MessageManager(models.Manager):
             result.append(result_row)    
         for row in rows_from_user:
             result_row = {}
+            result_row['id'] = row.id
             result_row['dialog_id'] = row.dialog_id
             result_row['from_user'] = row.from_user.username
             result_row['to_user'] = row.to_user.username
@@ -74,6 +79,7 @@ class MessageManager(models.Manager):
             result.append(result_row)    
 
         dialog_unique = list({v['dialog_id']:v for v in result}.values())
+
         return result
 
 

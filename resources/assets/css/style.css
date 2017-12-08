@@ -189,7 +189,9 @@ footer.page-footer{
     margin-top: 40px;
 }
 .__message-item{
-    padding: 1px 7px 1px 7  px;
+    width: 100%;
+    min-height: 35px;
+    padding: 1px 7px 1px 7px;
 }
 .__message_img{
     margin-top: 30px;
