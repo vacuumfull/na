@@ -14,9 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.static import serve
+from django.urls import include, path, re_path
 
 import api.urls
 import band.urls
@@ -28,17 +28,20 @@ import place.urls
 from under.views import IndexView
 
 urlpatterns = [
-    url(r'^media/(?P<path>.*)$', serve,
-        {'document_root': settings.MEDIA_ROOT}),
+    path('admin/', admin.site.urls),
+    path('api/', include(api.urls)),
+    path('bands/', include(band.urls)),
+    path('blogs/', include(blog.urls)),
+    path('events/', include(event.urls)),
+    path('places/', include(place.urls)),
+    path('page/', include(flatten.urls)),
 
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(api.urls)),
-    url(r'^bands/', include(band.urls)),
-    url(r'^blogs/', include(blog.urls)),
-    url(r'^events/', include(event.urls)),
-    url(r'^places/', include(place.urls)),
-    url(r'^page/', include(flatten.urls)),
+    re_path(r'^', include(member.urls)),
+    path('', IndexView.as_view(), name='index'),
+]
 
-    url(r'^', include(member.urls)),
-    url(r'^$', IndexView.as_view(), name='index'),
+# Add media path to media directory
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve,
+             {'document_root': settings.MEDIA_ROOT})
 ]

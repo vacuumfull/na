@@ -1,12 +1,12 @@
-from django.conf.urls import url
+from django.urls import path
 
 from event.views import EventList, EventCreate, EventView, EventUpdate
 
 
 app_name = 'event'
 urlpatterns = [
-    url(r'^$', EventList.as_view(), name='index'),
-    url(r'^new/$', EventCreate.as_view(), name='create'),
-    url(r'^(?P<slug>[-\w]+)/$', EventView.as_view(), name='view'),
-    url(r'^(?P<slug>[-\w]+)/edit/$', EventUpdate.as_view(), name='edit'),
+    path('', EventList.as_view(), name='index'),
+    path('new/', EventCreate.as_view(), name='create'),
+    path('<slug:slug>/', EventView.as_view(), name='view'),
+    path('<slug:slug>/edit/', EventUpdate.as_view(), name='edit'),
 ]

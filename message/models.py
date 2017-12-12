@@ -16,7 +16,9 @@ class MessageManager(models.Manager):
 
     def unread(self, to_user):
         """All unread messages"""
-        rows = Message.objects.select_related('from_user').filter(read=False, deleted=False, to_user=to_user).order_by('created_at')
+        rows = Message.objects.select_related('from_user').\
+            filter(read=False, deleted=False, to_user=to_user).\
+            order_by('created_at')
         result = []
 
         for row in rows:
@@ -33,8 +35,9 @@ class MessageManager(models.Manager):
     def dialog_history(self, dialog:int, offset:int=0):
         """History of dialog"""
         limit = 20
-        rows = Message.objects.filter(read=True, deleted=False,
-                                        dialog_id=dialog).order_by('created_at')[limit*offset:limit*(offset+1)]
+        rows = Message.objects.\
+            filter(read=True, deleted=False, dialog_id=dialog).\
+            order_by('created_at')[limit*offset:limit*(offset+1)]
         result = []
         for row in rows:
             result_row = {}
@@ -88,10 +91,12 @@ class Message(models.Model):
 
     content = RichTextField(blank=True, null=True,
                             verbose_name='Содержание')
-    from_user = models.ForeignKey(User, verbose_name='Отправитель',
-                             related_name='from_user')
-    to_user = models.ForeignKey(User, verbose_name='Получатель',
-                             related_name='to_user')
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  verbose_name='Отправитель',
+                                  related_name='from_user')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE,
+                                verbose_name='Получатель',
+                                related_name='to_user')
     dialog_id = models.IntegerField(default=0, verbose_name='Диалог')
     deleted = models.BooleanField(default=False, verbose_name='Удалено')
     read = models.BooleanField(default=False, verbose_name='Прочитано')

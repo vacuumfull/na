@@ -1,10 +1,11 @@
-from django.conf.urls import url
+from django.urls import path
 from django.contrib.auth.views import LoginView, logout
 
 from member.views import SignupUser
 
+
 urlpatterns = [
-    url(r'^login/$', LoginView.as_view(), name='login'),
-    url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
-    url(r'^signup/$', SignupUser.as_view(), name='signup')
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', logout, name='logout', kwargs={'next_page': '/'}),
+    path('signup/', SignupUser.as_view(), name='signup')
 ]
