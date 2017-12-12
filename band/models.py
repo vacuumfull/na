@@ -25,7 +25,7 @@ class Band(models.Model):
                                    verbose_name='Описание')
     image = models.ImageField(upload_to=image_path, verbose_name='Логотип')
 
-    owner = models.ForeignKey(User, related_name='owner',
+    owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE,
                               verbose_name='Организатор')
     members = models.ManyToManyField(User, related_name='members',
                                      verbose_name='Участники')

@@ -55,11 +55,14 @@ class Blog(models.Model):
     image = models.ImageField(upload_to=image_path,
                               verbose_name='Титульное изображение')
 
-    author = models.ForeignKey(User, verbose_name='Автор',
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               verbose_name='Автор',
                                related_name='author')
     event = models.ForeignKey(Event, blank=True, null=True,
+                              on_delete=models.SET_NULL,
                               verbose_name='Событие')
     place = models.ForeignKey(Place, blank=True, null=True,
+                              on_delete=models.SET_NULL,
                               verbose_name='Место')
     # tags = models.ManyToManyField(verbose_name='Тэги')
 
@@ -129,8 +132,10 @@ class RatingManager(models.Manager):
 
 
 class Rating(models.Model):
-    blog = models.ForeignKey(Blog, verbose_name='Запись')
-    user = models.ForeignKey(User, verbose_name='Пользователь',
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
+                             verbose_name='Запись')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
                              related_name='blog_voted')
     value = models.IntegerField(verbose_name='Оценка')
 

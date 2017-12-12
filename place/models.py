@@ -49,7 +49,7 @@ class Place(models.Model):
 
     owner = models.ForeignKey(
         User, related_name='place_owner',
-        blank=True, null=True,
+        blank=True, null=True, on_delete=models.SET_NULL,
         verbose_name='Владелец')
     musicians = models.ManyToManyField(
         User, related_name='place_musicians',
@@ -146,8 +146,10 @@ class RatingManager(models.Manager):
 
 
 class Rating(models.Model):
-    place = models.ForeignKey(Place, verbose_name='Запись')
-    user = models.ForeignKey(User, verbose_name='Пользователь',
+    place = models.ForeignKey(Place, on_delete=models.CASCADE,
+                              verbose_name='Запись')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
                              related_name='place_voted')
     value = models.IntegerField(verbose_name='Оценка')
 

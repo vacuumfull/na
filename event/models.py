@@ -51,6 +51,7 @@ class Event(models.Model):
 
     owner = models.ForeignKey(
         User, related_name='event_owner',
+        on_delete=models.CASCADE,
         verbose_name='Организатор')
     bands = models.ManyToManyField(
         Band, related_name='event_bands',
@@ -138,8 +139,10 @@ class RatingManager(models.Manager):
 class Rating(models.Model):
     """Events Rating model."""
 
-    event = models.ForeignKey(Event, verbose_name='Запись')
-    user = models.ForeignKey(User, verbose_name='Пользователь',
+    event = models.ForeignKey(Event, on_delete=models.CASCADE,
+                              verbose_name='Запись')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
                              related_name='event_voted')
     value = models.IntegerField(verbose_name='Оценка')
 

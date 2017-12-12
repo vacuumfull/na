@@ -1,5 +1,5 @@
-Django == 1.11.6
-django-uuslug == 1.1.8
+Django == 2.0.0
+django-uuslug
 django-ckeditor
 
 psycopg2
