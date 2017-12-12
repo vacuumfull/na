@@ -13,7 +13,6 @@ def repeat_all_messages(message):
 def send_link(slug):
     link = '{!s}{!s}'.format(config.base_url, slug)
     bot.send_message(config.channel, link)
-    # Спим секунду, чтобы избежать разного рода ошибок и ограничений (на всякий случай!)
     time.sleep(1)
 
 def send_text(text):
@@ -23,4 +22,3 @@ def send_text(text):
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
-    send_text('huihui')
