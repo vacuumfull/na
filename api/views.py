@@ -61,6 +61,73 @@ def get_dialogs(request, sessionid:str):
     return JsonResponse(result, safe=False)
 
 
+def search_default(request, keyword:str):
+    keyword = 'techno'
+    result = {
+                'id': 121,
+                'type':'event',
+                'title': 'Local Techno',
+                'description': 'Local Techno овзвращается в город',
+                'image': '/static/events/poster/local.bmp',
+                'date': '2018-01-18',
+                'price': '300',
+                'tags': 'techno, localtechno',
+                'slug': 'local_techno_return',
+                'created_at': '2018-01-01',
+                'owner': 'Kosenkoff',
+            }
+    return JsonResponse(result)
+
+
+def search_type(request, app:str, keyword:str):
+    print('searched type')
+    app = 'event'
+    keyword = 'techno'
+    result = {
+        '1':{
+            'id': 121,
+            'title': 'Local Techno',
+            'description': 'Local Techno овзвращается в город',
+            'image': '/static/events/poster/local.bmp',
+            'date': '2018-01-18',
+            'price': '300',
+            'tags': 'techno, localtechno',
+            'slug': 'local_techno_return',
+            'created_at': '2018-01-01',
+            'owner': 'Kosenkoff',
+        },
+        '2': {
+            'id': 130,
+            'title': 'Gamma Festival',
+            'description': 'Логос анонсировал начало Гамма Фестиваля',
+            'image': '/static/events/poster/local.bmp',
+            'date': '2018-06-22',
+            'price': '2100',
+            'tags': 'techno, gammafestival, m_division',
+            'slug': 'gammafestivalagain',
+            'created_at': '2018-01-01',
+            'owner': 'Logos',
+        }
+    }
+    return JsonResponse(result)
+
+
+
+def search_tags(request, keyword:str):
+    """вывод похожих тэгов по ключу. Можно ограничить 30"""
+    print('fast search')
+    keyword = 'пизд'
+    result = ('пиздюк', 'пиздец', 'пиздюли', 'пиздэйшен', 'пиздаболка', 'пизда')
+    return JsonResponse(result, safe=False)
+
+
+def get_tags(request):
+    """Вывод самых попоулярных тэгов с указанием количества. Макс - 1000. Запрос стоит сделать кэшиуремым"""
+
+    result = {'first searched tag': 113, 'second searched tag': 99, 'third searched tag': 87}
+    return JsonResponse(result)
+
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def vote_rating(request):

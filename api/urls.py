@@ -21,4 +21,13 @@ urlpatterns = [
 
     url(r'^1/messages/history/(?P<dialog>\d+)/(?P<sessionid>.*)/' +
         '(?P<offset>\d+)/$', views.get_messages_history),
+
+    url(r'^1/search/default/(?P<keyword>.*)/$', views.search_default),
+
+    url(r'^1/search/type/(?P<app>\w+)/(?P<keyword>.*)/$', views.search_type),
+
+    url(r'^1/search/fast/(?P<keyword>.*)/$', views.search_tags),
+
+    url(r'^1/search/tags/$', views.get_tags)
+    
 ]
