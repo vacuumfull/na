@@ -1,33 +1,36 @@
-from django.conf.urls import url
+from django.urls import include, path
 
 from api import views
 
+
+message_patterns = ([
+    path('', views.send_message),
+    path('remove/', views.remove_message),
+    path('read/', views.read_messages),
+    path('dialogs/<str:sessionid>/', views.get_dialogs),
+    path('history/<int:dialog>/<str:sessionid>/<int:offset>',
+         views.get_messages_history),
+])
+
+search_patterns = ([
+    path('default/<str:keyword>/', views.search_default),
+    path('type/<str:app>/<str:keyword>/', views.search_type),
+    path('fast/<str:keyword>/', views.search_tags),
+    path('tags/', views.get_tags)
+])
+
 urlpatterns = [
-    url(r'^1/comment/(?P<app>\w+)/(?P<key>\d+)/(?P<sessionid>.*)/' +
-        '(?P<offset>\d+)/$',
-        views.get_comment),
-    url(r'^1/rating/(?P<app>\w+)/(?P<key>\d+)/(?P<sessionid>.*)/$',
-        views.get_rating),
-    url(r'^1/users/(?P<sessionid>.*)/$', views.get_users),
-    url(r'^1/send/$', views.send_comment),
-    url(r'^1/vote/$', views.vote_rating),
+    # user info
+    path('1/users/<str:sessionid>/', views.get_users),
+    # comments
+    path('1/comment/<str:app>/<int:key>/<str:sessionid>/<int:offset>/',
+         views.get_comment),
+    path('1/send/', views.send_comment),
+    # rating
+    path('1/rating/<str:app>/<int:key>/<str:sessionid>/',
+         views.get_rating),
+    path('1/vote/', views.vote_rating),
 
-    url(r'^1/message/$', views.send_message),
-    url(r'^1/message/remove/$', views.remove_message),
-    
-    url(r'^1/messages/read/$', views.read_messages),
-
-    url(r'^1/messages/dialogs/(?P<sessionid>.*)/$', views.get_dialogs),
-
-    url(r'^1/messages/history/(?P<dialog>\d+)/(?P<sessionid>.*)/' +
-        '(?P<offset>\d+)/$', views.get_messages_history),
-
-    url(r'^1/search/default/(?P<keyword>.*)/$', views.search_default),
-
-    url(r'^1/search/type/(?P<app>\w+)/(?P<keyword>.*)/$', views.search_type),
-
-    url(r'^1/search/fast/(?P<keyword>.*)/$', views.search_tags),
-
-    url(r'^1/search/tags/$', views.get_tags)
-    
+    path('1/message/', include(message_patterns)),
+    path('1/search/', include(search_patterns)),
 ]
