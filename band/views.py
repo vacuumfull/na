@@ -1,8 +1,8 @@
 """Band view generic."""
-from django.core.urlresolvers import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from django.urls import reverse_lazy
 
 from band.models import Band
 
