@@ -7,6 +7,8 @@ class PonaminaluSpider(Spider):
     # limit = 1000 - ибо, что нас ограничивает забирать всё? ;)
     base_url = "https://spb.ponominalu.ru"
     initial_urls = [base_url + "/ajax/category/concerts?sort_by=date&sort_direction=desc&limit=1000"]
+    locations = ['Гештальт', 'Космонавт', 'Зал ожидания', 'Aurora']
+
 
     def task_initial(self, grab, task):
         """
@@ -24,7 +26,9 @@ class PonaminaluSpider(Spider):
                 'article[@class="event__info bs-bx"]/time[@class="event__time"]').text()
             info['location'] = elem.select(
                 'article[@class="event__info bs-bx"]/div[@class="event__venue"]/a/span').text()
-            yield Task('load_info', url=info_url, info=copy.deepcopy(info))
+            for item in self.locations:
+                if info['location'].find(item) > -1:
+                    yield Task('load_info', url=info_url, info=copy.deepcopy(info))
 
     def task_load_info(self, grab, task, **kwargs):
         """ Обработка собственно карточки """
