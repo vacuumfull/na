@@ -3,6 +3,7 @@ import time
 import datetime
 import config
 from grab import Grab
+from bs4 import BeautifulSoup
 from grab.spider import Task, Spider
 
 
@@ -28,13 +29,38 @@ class GriboedovSpider(Spider):
                     p_count+=1
                     has_title = p.select("a/strong").exists()
                     if has_title:
-                        print(p.text())
+                        try:
+                            print(p.text())
+                            html = elem.select("p")[p_count].html()
+                            link = self.get_href(html)
+                            src = self.get_img_src(html)
+                        except IndexError:
+                            pass
                         
            
     
     def task_load_info(self, grab,          
                        task, **kwargs):    
         print('hi')
+
+
+    @staticmethod
+    def get_href(html):
+        href = ""
+        soup = BeautifulSoup(html)
+        for a in soup.find_all('a', href=True):
+            href = a['href']
+        print(href)
+        return href
+
+    @staticmethod
+    def get_img_src(html):
+        src = ""
+        soup = BeautifulSoup(html)
+        for img in soup.find_all('img', src=True):
+            src = img['src']
+        print(src)
+        return src
 
 
 if __name__ == "__main__":
