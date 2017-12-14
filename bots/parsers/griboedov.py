@@ -9,7 +9,7 @@ from grab.spider import Task, Spider
 class GriboedovSpider(Spider):
 
     base_url = "http://www.griboedovclub.ru/"
-    initial_urls = [base_url + "board/?mo=13"]
+    initial_urls = [base_url + "board/"]
     upload_dir = "static/images/"
     filters = ['techno']
 
@@ -18,14 +18,19 @@ class GriboedovSpider(Spider):
         """Initial task."""
         print("Loaded griboedov events page")
         counter = 0
-      
         for elem in grab.doc.select(config.Griboedov.main_path):
             text = elem.text()
             text = text.replace('\n\n','\n')
-            if not elem.text():
-                counter+=1
-
-        print(counter)
+            counter+=1
+            if len(elem.text()) > 0:
+                p_count = 0    
+                for p in elem.select("p"):
+                    p_count+=1
+                    has_title = p.select("a/strong").exists()
+                    if has_title:
+                        print(p.text())
+                        
+           
     
     def task_load_info(self, grab,          
                        task, **kwargs):    
