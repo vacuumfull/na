@@ -36,9 +36,10 @@ class PonaminaluSpider(Spider):
         # Так как сайт являеться частичным агрегатором, тот тут надо писать условия разные
         print(task.url, task.info)
 
+        
 
 
 if __name__ == "__main__":
     # Создание бота на основе нашего Паука
-    bot = PonaminaluSpider()
-    bot.run()
+    BOT = PonaminaluSpider()
+    BOT.run()

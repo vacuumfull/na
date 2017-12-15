@@ -7,7 +7,6 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-
 import blog.api
 import event.api
 import place.api
@@ -24,6 +23,7 @@ def get_users(request, sessionid: str):
     list_users = [entry for entry in usernames]
     
     return JsonResponse(list_users, safe=False)
+
 
 
 def get_rating(request, sessionid: str, app: str, key: int):

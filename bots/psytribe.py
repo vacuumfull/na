@@ -8,9 +8,11 @@ from urllib.error import HTTPError
 from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 import pandas as pd
-import config
+from bots.config import Psytribe
 from grab import Grab
 from grab.spider import Task, Spider
+
+
 
 class PsyTribeSpider(Spider):
     """Somesite parser."""
@@ -20,15 +22,15 @@ class PsyTribeSpider(Spider):
     upload_dir = "static/images/"
 
 
-    def task_initial(self, grab, task):  # pylint: disable=unused-argument
+    def task_initial(self, grab, task):  
         """Initial task."""
         print("Loaded psytribe main page")
-        for elem in grab.doc.select(config.Psytribe.event_path):
+        for elem in grab.doc.select(Psytribe.event_path):
             info = {}
-            link = elem.select(config.Psytribe.link_path).text()
-            date = elem.select(config.Psytribe.date_path).text()
-            img_path = elem.select(config.Psytribe.img_path).text()
-            title = elem.select(config.Psytribe.title_path).text()
+            link = elem.select(Psytribe.link_path).text()
+            date = elem.select(Psytribe.date_path).text()
+            img_path = elem.select(Psytribe.img_path).text()
+            title = elem.select(Psytribe.title_path).text()
             info['link'] = self.base_url + link
             info['date'] = date
             info['title'] = title
@@ -37,8 +39,8 @@ class PsyTribeSpider(Spider):
                         info=copy.deepcopy(info))
 
 
-    def task_load_info(self, grab,          # pylint: disable=unused-argument
-                       task, **kwargs):     # pylint: disable=unused-argument
+    def task_load_info(self, grab,          
+                       task, **kwargs):     
         """ Обработка собственно карточки """
         time.sleep(1)
         info_list = {}
@@ -51,10 +53,10 @@ class PsyTribeSpider(Spider):
         info_list['link'] = task.info.get('link')
         info_list['content'] = html
         info_list['author'] = "parser"
-        info_list['tags'] = json.dumps([config.Psytribe.tag])
+        info_list['tags'] = json.dumps([Psytribe.tag])
         info_list['published'] = False
         info_list['price'] = "none"
-        print(info_list)
+
 
       
     @staticmethod
@@ -115,7 +117,7 @@ class PsyTribeSpider(Spider):
         """Load content from url"""
         grabber = Grab()
         grabber.go(url)
-        html = grabber.doc.select(config.Psytribe.article_path).html()
+        html = grabber.doc.select(Psytribe.article_path).html()
         return self.clear_html(html)
 
 
@@ -137,7 +139,7 @@ class PsyTribeSpider(Spider):
         """Upload image to dir."""
         img_info = self.format_img_path(img_path)
         target_path = (self.upload_dir +
-                       config.Psytribe.tag +
+                       Psytribe.tag +
                        "_" +
                        img_info.get('name') +
                        '.' +

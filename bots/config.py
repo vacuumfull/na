@@ -10,9 +10,7 @@ class Psytribe:
 
 
 class Griboedov:
-    main_path = "//div[@class='real_content']//table[@class='gbook']//tr//td[@class='tbody']"
-    date_path = "//div[@class='real_content']//table[@class='gbook']//tr[@class='thead']//td"
-    link_path = "a/@href"
-    title_path = "p/a/strong"
-    img_path = "p/strong/a/img/@src"
+    event_path = "//div[@class='real_content']//table[@class='gbook']//tr//td[@class='tbody']"
+    date_path = "//tr"
+   
 
