@@ -1,6 +1,7 @@
 import copy
+import time
 from grab.spider import Task, Spider
-
+from event.tasks import check_with_cache
 
 class PonaminaluSpider(Spider):
     # Обязательный аргумент стартовых URL
@@ -35,6 +36,8 @@ class PonaminaluSpider(Spider):
         # Тут большая и жирная логика, чего надо збарть уже со страницы, типа аннотаций и рпочего
         # Так как сайт являеться частичным агрегатором, тот тут надо писать условия разные
         print(task.url, task.info)
+
+        check_with_cache.delay(task.info)
 
         
 
