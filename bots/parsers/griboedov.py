@@ -1,7 +1,7 @@
 import json
 import time
 import datetime
-import config
+from bots.config import Griboedov
 from grab import Grab
 from bs4 import BeautifulSoup
 from grab.spider import Task, Spider
@@ -19,7 +19,7 @@ class GriboedovSpider(Spider):
         """Initial task."""
         print("Loaded griboedov events page")
         counter = 0
-        for elem in grab.doc.select(config.Griboedov.main_path):
+        for elem in grab.doc.select(Griboedov.main_path):
             text = elem.text()
             text = text.replace('\n\n','\n')
             counter+=1

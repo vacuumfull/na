@@ -1,7 +1,7 @@
-from django.core.cache import cache
+# event/tasks.py
 from under.celery import app
+from django.core.cache import cache
 
-
-@app.task(name='bots.tasks.get_parsed_result')
-def get_parsed_result(result):
-    print(result)
+@app.task(name='bots.tasks.bots_task')
+def bots_task():
+    cache.set('test', 'list_result', 3600*24)

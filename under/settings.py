@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'flatten',
     'blog',
     'message',
-    'bots'
+    'bots',
 ]
 
 MIDDLEWARE = [

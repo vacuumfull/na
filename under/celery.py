@@ -13,6 +13,6 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=0, hour=9)
     }
 }
- 
+
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()

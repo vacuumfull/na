@@ -1,5 +1,4 @@
 # event/tasks.py
- 
 from event.models import Event
 from under.celery import app
 from django.core.cache import cache

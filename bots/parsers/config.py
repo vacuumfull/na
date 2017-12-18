@@ -12,5 +12,3 @@ class Psytribe:
 class Griboedov:
     event_path = "//div[@class='real_content']//table[@class='gbook']//tr//td[@class='tbody']"
     date_path = "//tr"
-   
-
