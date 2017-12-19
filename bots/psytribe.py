@@ -20,7 +20,6 @@ class PsyTribeSpider(Spider):
     base_url = "http://psytribe.org"
     initial_urls = [base_url + "/"]
     upload_dir = "static/images/"
-   
 
 
     def task_initial(self, grab, task):  
