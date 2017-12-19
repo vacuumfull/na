@@ -61,7 +61,7 @@ def format_img_path(img_path):
     name = str(base64.b64encode(img_path.encode('utf-8')))
     img_info['ext'] = ext
     # срезаем лишние символы
-    img_info['name'] = name[10:-10]
+    img_info['name'] = name[:15]
     return img_info
 
 
