@@ -1,8 +1,11 @@
 # event/tasks.py
+import base64
+import time
+from urllib.error import HTTPError
+from urllib.request import urlretrieve
 from event.models import Event
 from under.celery import app
 from django.core.cache import cache
-import time
 
 
 @app.task(name='event.tasks.events_to_cache')
@@ -38,6 +41,37 @@ def check_or_update(events, info):
 def compare(dict1, dict2):
     diff = set(dict1.items()) & set(dict2.items())
     return len(diff)
+
+
+def format_img_path(img_path):
+    """Format image path."""
+    img_info = {}
+    splited = img_path.split(".")
+    #get extension
+    ext = splited[len(splited)-1]
+    name = str(base64.b64encode(img_path.encode('utf-8')))
+    img_info['ext'] = ext
+    # срезаем лишние символы
+    img_info['name'] = name[2:-3]
+    return img_info
+
+
+def upload_image(img_path):
+    """Upload image to dir."""
+    upload_dir = "static/images/"
+    img_info = format_img_path(img_path)
+    target_path = (upload_dir +
+                    "_" +
+                    img_info.get('name') +
+                    '.' +
+                    img_info.get('ext'))
+    try:
+        urlretrieve(img_path, target_path)
+        return target_path
+    except FileNotFoundError as err:
+        print(err)   # something wrong with local path
+    except HTTPError as err:
+        print(err)  # something wrong with url
 
 
 def update_cache(events, new_dict):

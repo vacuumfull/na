@@ -1,6 +1,7 @@
 import json
 import time
 import datetime
+import copy
 from event.tasks import check_with_cache
 from bots.config import Griboedov
 from grab import Grab
@@ -19,30 +20,39 @@ class GriboedovSpider(Spider):
     def task_initial(self, grab, task):  
         """Initial task."""
         print("Loaded griboedov events page")
+        now = datetime.datetime.now()
         counter = 0
         for elem in grab.doc.select(Griboedov.event_path):
             text = elem.text()
             text = text.replace('\n\n','\n')
             counter+=1
-            if len(elem.text()) > 0:
-                p_count = 0    
-                for p in elem.select("p"):
-                    p_count+=1
-                    has_title = p.select("a/strong").exists()
-                    if has_title:
-                        try:
-                            print(p.text())
-                            html = elem.select("p")[p_count].html()
-                            link = self.get_href(html)
-                            src = self.get_img_src(html)
-                        except IndexError:
-                            pass
+            if counter > now.day:
+                if len(elem.text()) > 0:
+                    p_count = 0    
+                    for p in elem.select("p"):
+                        p_count+=1
+                        has_title = p.select("a/strong").exists()
+                        if has_title:
+                            try:
+                                info = {}
+                                html = elem.select("p")[p_count].html()
+                                day = counter if counter > 10 else '0' + counter
+                                date = str(day) + str(now.month) + str(now.year)
+                                date = datetime.datetime.strptime(date, '%d%m%Y').date()
+                                info['title'] = p.select("a").text()
+                                info['link'] = self.get_href(html)
+                                info['image'] = self.get_img_src(html)
+                                info['date'] = date
+                                yield Task('load_info', url=info['link'], info=copy.deepcopy(info))
+                            except IndexError:
+                                pass
                         
            
     
     def task_load_info(self, grab,          
                        task, **kwargs):    
-        print('hi')
+        print(task.url, task.info)
+        check_with_cache.delay(task.info)
 
 
     @staticmethod
@@ -51,7 +61,6 @@ class GriboedovSpider(Spider):
         soup = BeautifulSoup(html)
         for a in soup.find_all('a', href=True):
             href = a['href']
-        print(href)
         return href
 
     @staticmethod
@@ -60,7 +69,6 @@ class GriboedovSpider(Spider):
         soup = BeautifulSoup(html)
         for img in soup.find_all('img', src=True):
             src = img['src']
-        print(src)
         return src
 
 

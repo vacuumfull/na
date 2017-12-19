@@ -31,6 +31,7 @@ class PonaminaluSpider(Spider):
                 if info['location'].find(item) > -1:
                     yield Task('load_info', url=info_url, info=copy.deepcopy(info))
 
+
     def task_load_info(self, grab, task, **kwargs):
         """ Обработка собственно карточки """
         # Тут большая и жирная логика, чего надо збарть уже со страницы, типа аннотаций и рпочего
