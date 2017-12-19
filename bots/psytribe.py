@@ -9,6 +9,7 @@ from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 import pandas as pd
 from bots.config import Psytribe
+from event.tasks import check_with_cache
 from grab import Grab
 from grab.spider import Task, Spider
 
@@ -43,6 +44,7 @@ class PsyTribeSpider(Spider):
                        task, **kwargs):     
         """ Обработка собственно карточки """
         time.sleep(1)
+        
         info_list = {}
         html = self.load_content(task.info.get('link'))
         img_path = self.upload_image(task.info.get('img'))
@@ -56,6 +58,8 @@ class PsyTribeSpider(Spider):
         info_list['tags'] = json.dumps([Psytribe.tag])
         info_list['published'] = False
         info_list['price'] = "none"
+
+        check_with_cache.delay(info_list)
 
 
       
