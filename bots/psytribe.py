@@ -14,13 +14,13 @@ from grab import Grab
 from grab.spider import Task, Spider
 
 
-
 class PsyTribeSpider(Spider):
     """Somesite parser."""
 
     base_url = "http://psytribe.org"
     initial_urls = [base_url + "/"]
     upload_dir = "static/images/"
+   
 
 
     def task_initial(self, grab, task):  
@@ -47,13 +47,12 @@ class PsyTribeSpider(Spider):
         
         info_list = {}
         html = self.load_content(task.info.get('link'))
-        img_path = self.upload_image(task.info.get('img'))
         date = self.format_date(task.info.get('date'))
         info_list['title'] = task.info.get('title')
         info_list['date'] = date
-        info_list['image'] = img_path
+        info_list['image'] = task.info.get('img')
         info_list['link'] = task.info.get('link')
-        info_list['content'] = html
+        info_list['description'] = html + task.info.get('link')
         info_list['author'] = "parser"
         info_list['tags'] = json.dumps([Psytribe.tag])
         info_list['published'] = False
@@ -62,19 +61,6 @@ class PsyTribeSpider(Spider):
         check_with_cache.delay(info_list)
 
 
-      
-    @staticmethod
-    def format_img_path(img_path):
-        """Format image path."""
-        img_info = {}
-        splited = img_path.split(".")
-        #get extension
-        ext = splited[len(splited)-1]
-        name = str(base64.b64encode(img_path.encode('utf-8')))
-        img_info['ext'] = ext
-        # срезаем лишние символы
-        img_info['name'] = name[2:-3]
-        return img_info
 
 
     def check_date(self, date):
@@ -136,25 +122,6 @@ class PsyTribeSpider(Spider):
             link.decompose()
 
         return str(soup)
-
-
-
-    def upload_image(self, img_path):
-        """Upload image to dir."""
-        img_info = self.format_img_path(img_path)
-        target_path = (self.upload_dir +
-                       Psytribe.tag +
-                       "_" +
-                       img_info.get('name') +
-                       '.' +
-                       img_info.get('ext'))
-        try:
-            urlretrieve(img_path, target_path)
-            return target_path
-        except FileNotFoundError as err:
-            print(err)   # something wrong with local path
-        except HTTPError as err:
-            print(err)  # something wrong with url
 
 
 if __name__ == "__main__":

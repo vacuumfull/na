@@ -27,5 +27,5 @@ def psytribe_task():
 def griboedov_task():
     BOT = GriboedovSpider()
     BOT.run()
-    time.sleep(10)
+    time.sleep(20)
     BOT.stop()

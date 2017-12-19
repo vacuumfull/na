@@ -35,12 +35,21 @@ def check_or_update(events, info):
         if compare(item, info) == 0:
             count += 1
     if count > 0:
-        update_cache(events, info)
+        info['image']= upload_image(info['image'])
+        if not info['title']:
+            info['title'] = 'какое-то событие' 
+        Event.objects.create(title=info['title'], description=info['description'], image=info['image'], date=info['date'], owner_id=1, published=False)
+        update_cache(events, info)     
 
 
 def compare(dict1, dict2):
     diff = set(dict1.items()) & set(dict2.items())
     return len(diff)
+
+
+def update_cache(events, new_dict):
+    events.append(new_dict)
+    cache.set('event_titles', events, 3600*24)
 
 
 def format_img_path(img_path):
@@ -52,7 +61,7 @@ def format_img_path(img_path):
     name = str(base64.b64encode(img_path.encode('utf-8')))
     img_info['ext'] = ext
     # срезаем лишние символы
-    img_info['name'] = name[2:-3]
+    img_info['name'] = name[10:-10]
     return img_info
 
 
@@ -73,7 +82,3 @@ def upload_image(img_path):
     except HTTPError as err:
         print(err)  # something wrong with url
 
-
-def update_cache(events, new_dict):
-    events.append(new_dict)
-    cache.set('event_titles', events, 3600*24)

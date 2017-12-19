@@ -11,8 +11,8 @@ from grab.spider import Task, Spider
 
 class GriboedovSpider(Spider):
 
-    base_url = "http://www.griboedovclub.ru/"
-    initial_urls = [base_url + "board/"]
+    base_url = "http://www.griboedovclub.ru"
+    initial_urls = [base_url + "/board/"]
     upload_dir = "static/images/"
     filters = ['techno']
 
@@ -36,13 +36,14 @@ class GriboedovSpider(Spider):
                             try:
                                 info = {}
                                 html = elem.select("p")[p_count].html()
-                                day = counter if counter > 10 else '0' + counter
+                                day = counter if counter > 9 else '0' + counter
                                 date = str(day) + str(now.month) + str(now.year)
                                 date = datetime.datetime.strptime(date, '%d%m%Y').date()
                                 info['title'] = p.select("a").text()
                                 info['link'] = self.get_href(html)
-                                info['image'] = self.get_img_src(html)
+                                info['image'] = self.base_url + self.get_img_src(html)
                                 info['date'] = date
+                                info['description'] = info['link']
                                 yield Task('load_info', url=info['link'], info=copy.deepcopy(info))
                             except IndexError:
                                 pass
