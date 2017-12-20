@@ -23,13 +23,14 @@
                     {{ place.description }}
                 </p>
             </div>
+       
             <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
                 <span class="yellow-text text-accent-2">
                     <i class="material-icons __circle_border_darkblue">star</i>
                 </span>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span class=" blue-grey-text text-darken-4 right">5/10</span>
+                <span class=" blue-grey-text text-darken-4 right  __font_exo __semi_bold" style="font-size:17px;">5/10</span>
             </div>
+           
             <div class="card-action">
                 <a title="Читать о месте" href="{% url 'place:view' place.slug %}" class="__more_link __font_exo blue-grey-text text-darken-4">
                     {% include "enter_arrow.html" %}

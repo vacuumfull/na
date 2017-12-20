@@ -34150,12 +34150,6 @@ var Dialog = _vue2.default.extend({
         this.init();
     },
 
-    watch: {
-        openedDialog: function openedDialog(val, nval) {
-            console.log(val);
-            console.log(nval);
-        }
-    },
     methods: {
         init: function init() {
             (0, _jquery2.default)('select').material_select();
@@ -34170,7 +34164,7 @@ var Dialog = _vue2.default.extend({
         getOffset: function getOffset() {
             console.log(this.openedDialog.messages.length);
             var self = this,
-                limit = 4,
+                limit = 20,
                 offset = Math.floor(self.openedDialog.messages.length / limit);
             return offset;
         },
@@ -34179,7 +34173,7 @@ var Dialog = _vue2.default.extend({
                 session = self.getSess(),
                 offset = self.getOffset(),
                 dialogId = self.openedDialog.dialog_id,
-                uri = '/api/1/messages/history/' + dialogId + '/' + session + '/' + offset;
+                uri = '/api/1/message/history/' + dialogId + '/' + session + '/' + offset;
             console.log(offset);
             _jquery2.default.get(uri).done(function (data) {
                 if (data.error) {
@@ -34203,14 +34197,12 @@ var Dialog = _vue2.default.extend({
                     });
                 }
             });
-            _vue2.default.set(this.openedDialog, 'messages', messagesAll);
-
             this.openedDialog = Object.assign({}, this.openDialog, { messages: messagesAll, open: true, dialog_id: dialogId, unread: [] });
         },
         getUserDialogs: function getUserDialogs() {
             var self = this,
                 session = self.getSess(),
-                uri = '/api/1/messages/dialogs/' + session;
+                uri = '/api/1/message/dialogs/' + session;
             _jquery2.default.get(uri).done(function (data) {
                 if (data.error) {
                     return console.error(data.error);
@@ -34274,7 +34266,7 @@ var Dialog = _vue2.default.extend({
             console.log(user);
             var self = this,
                 countUnread = 0,
-                uri = '/api/1/messages/read/',
+                uri = '/api/1/message/read/',
                 session = self.getSess(),
                 params = {
                 dialog: user.dialog_id,
@@ -37482,7 +37474,7 @@ exports.default = {
 /* 144 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"getter in users\">\n                                <a v-on:click=\"openUserDialog(getter)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                    <span v-if=\"getter.unread.length > 0\" class=\"new badge\">{{ getter.unread.length }}</span>\n                                </a>\n                            </template>\n                            \n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <template v-if=\"openedDialog.open\">\n                            <template v-if=\"openedDialog.messages.length > 0\" v-for=\"message in openedDialog.messages\">\n                                <div class=\"__message-item \" >\n                                    <p v-bind:class=\"[message.from_user === username ? rightClass : leftClass]\" class=\"__margin-top_xs __margin-bottom_xs \">\n                                        <span v-bind:class=\"{__bg_unread: message.read === false}\" class=\"__margin-right_xs grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span><br>\n                                        <span v-html=\"message.content\"></span>\n                                    </p>\n                                </div><br>\n                            </template>\n                            <p v-bind:class=\"{__hidden: openedDialog.messages.length < 4}\" v-on:click=\"getHistory(openedDialog)\"  class=\"center __history_messages\">\n                                <a>Смотреть предыдущие</a>\n                            </p>\n                          \n                            <div class=\"__padding-top_xxl\" v-if=\"openedDialog.messages.length === 0\">\n                                <p class=\"center\">Вы еще ничего не писали этому пользователю.</p>\n                            </div>   \n                     </template>\n                    \n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"getter in users\">\n                                <a v-on:click=\"openUserDialog(getter)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                    <span v-if=\"getter.unread.length > 0\" class=\"new badge\">{{ getter.unread.length }}</span>\n                                </a>\n                            </template>\n                            \n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <template v-if=\"openedDialog.open\">\n                            <template v-if=\"openedDialog.messages.length > 0\" v-for=\"message in openedDialog.messages\">\n                                <div class=\"__message-item \" >\n                                    <p v-bind:class=\"[message.from_user === username ? rightClass : leftClass]\" class=\"__margin-top_xs __margin-bottom_xs \">\n                                        <span v-bind:class=\"{__bg_unread: message.read === false}\" class=\"__margin-right_xs grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span><br>\n                                        <span v-html=\"message.content\"></span>\n                                    </p>\n                                </div><br>\n                            </template>\n                            <p v-if=\"openedDialog.messages.length >= 19\" v-on:click=\"getHistory\"  class=\"center __history_messages\">\n                                <a>Смотреть предыдущие</a>\n                            </p>\n                          \n                            <div class=\"__padding-top_xxl\" v-if=\"openedDialog.messages.length === 0\">\n                                <p class=\"center\">Вы еще ничего не писали этому пользователю.</p>\n                            </div>   \n                     </template>\n                    \n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 145 */
@@ -37972,17 +37964,31 @@ var Rate = _vue2.default.extend({
         };
     },
     created: function created() {
-        this.getRate();
-        this.session = this.getSess();
+        if (this.isLogin === true) {
+            this.session = this.getSess();
+            this.getRate();
+        } else {
+            this.getRateUnlogin();
+        }
     },
 
     methods: {
+        getRateUnlogin: function getRateUnlogin() {
+            var self = this,
+                uri = '/api/1/rating/' + self.unique + '/' + self.type + '/';
+            _jquery2.default.get(uri).done(function (data) {
+                if (data.value === null) {
+                    self.allRate = 0;
+                } else {
+                    self.allRate = data.value;
+                    self.colorStars(data.value);
+                }
+            });
+        },
         getRate: function getRate() {
             var self = this,
                 uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess();
-            console.log(uri);
             _jquery2.default.get(uri).done(function (data) {
-                console.log(data);
                 if (data.is_vote) {
                     self.allRate = data.value;
                     self.colorStars(data.value);
@@ -38044,7 +38050,7 @@ exports.default = Rate;
 /* 279 */
 /***/ (function(module, exports) {
 
-module.exports = "<div v-if=\"type != 'collective' && type != 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"!isLogin\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
+module.exports = "<div v-if=\"type !== 'collective' && type !== 'album'\" id=\"rate\">\n    <div class=\"all_rate right __padding-top_m\">\n        {{ allRate }} / 10\n    </div>\n    <div class=\"rating\">\n        <a v-if=\"isLogin === 'true'\" v-for=\"item in rate\"\n           v-on:click=\"setStars(item.mark)\" v-on:mouseleave=\"unsetStars\" v-on:mouseenter=\"colorStars(item.mark)\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n\n        <a v-if=\"isLogin === 'false'\" v-for=\"item in rate\"\n           v-on:click=\"successAction('Необходима регистрация!')\"\n           :id=\"item.mark\">\n            <span class=\"__rate_icons\"><i class=\"material-icons\">{{ item.name }}</i></span>\n        </a>\n    </div>\n</div>"
 
 /***/ }),
 /* 280 */
@@ -38115,7 +38121,7 @@ var Comment = _vue2.default.extend({
         },
         getComments: function getComments() {
             var self = this,
-                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.getSess() + '/' + self.offset;
+                uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.offset;
             _jquery2.default.get(uri).done(function (data) {
                 self.comments = data.comments;
             }).fail(function (error) {
@@ -38149,7 +38155,7 @@ exports.default = Comment;
 /* 281 */
 /***/ (function(module, exports) {
 
-module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"!isLogin\" >\n                        <label v-if=\"isLogin\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"!isLogin\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"!isLogin\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
+module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"isLogin === 'false'\" >\n                        <label v-if=\"isLogin === 'true'\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"isLogin === 'false'\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin === 'true'\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin === 'true'\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"isLogin === 'false'\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
 
 /***/ })
 /******/ ]);

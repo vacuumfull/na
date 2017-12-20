@@ -27,16 +27,31 @@ const Rate = Vue.extend({
         }
     },
     created(){
-        this.getRate()
-        this.session =  this.getSess();
+        if (this.isLogin === true){
+            this.session =  this.getSess();
+            this.getRate()
+        } else {
+             this.getRateUnlogin()
+        }
     },
     methods: {
+        getRateUnlogin(){
+            let self = this,
+                uri = `/api/1/rating/${self.unique}/${self.type}/`;
+            $.get(uri).done(data => {
+                if (data.value === null){
+                    self.allRate = 0 
+                } else {
+                    self.allRate = data.value;
+                    self.colorStars(data.value)
+                }
+               
+            })
+        },
         getRate(){
             let self = this,
                 uri = `/api/1/rating/${self.type}/${self.unique}/${this.getSess()}`;
-               console.log(uri);
             $.get(uri).done(data => {
-                console.log(data);
                 if (data.is_vote){
                     self.allRate = data.value;
                     self.colorStars(data.value);

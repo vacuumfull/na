@@ -14,7 +14,7 @@ const Comment = Vue.extend({
         }
     },
     created(){
-        this.getComments()
+        this.getComments()  
     },
     methods: {
         create(){
@@ -42,7 +42,7 @@ const Comment = Vue.extend({
         },
         getComments(){
             let self = this,
-                uri = `/api/1/comment/${self.type}/${self.unique}/${self.getSess()}/${self.offset}`;
+                uri = `/api/1/comment/${self.type}/${self.unique}/${self.offset}`;
             $.get(uri).done((data) => {
                 self.comments = data.comments
             }).fail((error) => {

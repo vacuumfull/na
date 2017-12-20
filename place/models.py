@@ -145,6 +145,16 @@ class RatingManager(models.Manager):
         return result
 
 
+    def average_unlogin(self, place_id: int) -> dict:
+
+        rows = Rating.objects.filter(place=place_id)
+        result = {
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
+        }
+        return result
+
+
 class Rating(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE,
                               verbose_name='Запись')

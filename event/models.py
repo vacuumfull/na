@@ -136,6 +136,16 @@ class RatingManager(models.Manager):
         return result
 
 
+    def average_unlogin(self, event_id: int) -> dict:
+
+        rows = Rating.objects.filter(event=event_id)
+        result = {
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
+        }
+        return result
+
+
 class Rating(models.Model):
     """Events Rating model."""
 

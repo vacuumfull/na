@@ -13,6 +13,7 @@ import place.api
 import message.api
 
 
+
 def get_users(request, sessionid: str):
     """Get users"""
     user = _get_user(sessionid)
@@ -24,6 +25,12 @@ def get_users(request, sessionid: str):
     
     return JsonResponse(list_users, safe=False)
 
+
+def get_rate_unlogin(request, key: int, app: str,):
+    result = {}
+    result = getattr(_load_module(app), 'get_rate_unlogin')(key)
+
+    return JsonResponse(result)
 
 
 def get_rating(request, sessionid: str, app: str, key: int):
@@ -151,7 +158,7 @@ def vote_rating(request):
     return result
 
 
-def get_comment(request, sessionid: str, app: str, key: int, offset: int=0):
+def get_comment(request, app: str, key: int, offset: int=0):
     """Get app comment."""
     result = {
         'comments': []

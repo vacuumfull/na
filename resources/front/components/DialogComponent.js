@@ -51,7 +51,7 @@ const Dialog = Vue.extend({
                 session = self.getSess(),
                 offset = self.getOffset(),
                 dialogId = self.openedDialog.dialog_id,
-                uri = `/api/1/messages/history/${dialogId}/${session}/${offset}`;
+                uri = `/api/1/message/history/${dialogId}/${session}/${offset}`;
                 console.log(offset)
             $.get(uri).done(data => {
                 if (data.error) {
@@ -81,7 +81,7 @@ const Dialog = Vue.extend({
         getUserDialogs() {
             let self = this,
                 session = self.getSess(),
-                uri = `/api/1/messages/dialogs/${session}`;
+                uri = `/api/1/message/dialogs/${session}`;
             $.get(uri).done(data => {
                 if (data.error) {
                     return console.error(data.error)
@@ -141,7 +141,7 @@ const Dialog = Vue.extend({
             console.log(user)
             let self = this,
                 countUnread = 0,
-                uri = '/api/1/messages/read/',
+                uri = '/api/1/message/read/',
                 session = self.getSess(),
                 params = {
                     dialog: user.dialog_id,

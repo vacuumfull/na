@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="row __padding-top_xxl __padding-bottom_xxl">
+<div class="row __padding-top_xxl __padding-bottom_l">
     <div class="col s8 offset-s2">
         <div class="panel panel-default">
             <div class="panel-heading __margin-bottom_xl ">
@@ -19,34 +19,46 @@
             <div class="panel-body  __padding-bottom_m">
                 <form id="signup-form" action="" method="POST" class="form-horizontal" role="form">
                 {% csrf_token %}
-                <div class="form-group">
-                    {{ form.username.errors }}
-                    {{ form.username.label_tag }}
-                    <div class="col-md-6">
-                        {{ form.username }}
+                    <div class="form-group row">
+                        <div class="col s12">
+                            {{ form.username.errors }}
+                            {{ form.username.label_tag }}
+         
+                            {{ form.username }}
+                
+                            {{ form.username.help_text }}
+                        </div>
                     </div>
-                    {{ form.username.help_text }}
-                </div>
-                <div class="form-group">
-                    {{ form.password1.errors }}
-                    {{ form.password1.label_tag }}
-                    <div class="col-md-6">
-                        {{ form.password1 }}
+                    <div class="form-group  __margin-top_xl">
+                        <div class="row">
+                            <div class="col s12">
+                                {{ form.password1.errors }}
+                                {{ form.password1.label_tag }}
+                
+                                {{ form.password1 }}
+                     
+                                {{ form.password1.help_text|safe }}
+                            </div>
+                        </div>
                     </div>
-                    {{ form.password1.help_text|safe }}
-                </div>
-                <div class="form-group">
-                    {{ form.password2.errors }}
-                    {{ form.password2.label_tag }}
-                    <div class="col-md-6">
-                        {{ form.password2 }}
+                    <div class="form-group __margin-top_xl">
+                        <div class="row">
+                            <div class="col s12">
+                                {{ form.password2.errors }}
+                                {{ form.password2.label_tag }}
+    
+                                {{ form.password2 }}
+                                {{ form.password2.help_text }}
+                            </div>
+                        </div>
                     </div>
-                    {{ form.password2.help_text }}
-                </div>
-                <div class="form-group">
-                    <div class="col-md-8 col-md-offset-4">
-                        <input name="next" value="/" type="hidden">
-                        <input type="submit" class="btn btn-primary" value="Зарегистрироваться">
+                    <div class="form-group  __margin-top_xxl __padding-top_m">
+                        <div class="row">
+                            <div class="col s8 offset-m4">
+                                <input name="next" value="/" type="hidden">
+                                <input type="submit" class="btn-large" value="Зарегистрироваться">
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

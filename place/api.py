@@ -2,6 +2,12 @@
 from place.models import Place, Comment, Rating
 
 
+def get_rate_unlogin(place_id: int) -> dict:
+    """Get rate for without login user"""
+    result = Rating.objects.average_unlogin(place_id)
+    return result
+
+
 def get_rating(place_id: int, user: object) -> dict:
     """Get place rating."""
     result = Rating.objects.average(place_id, user)

@@ -2,6 +2,12 @@
 from blog.models import Blog, Comment, Rating
 
 
+def get_rate_unlogin(blog_id: int) -> dict:
+    """Get rate for without login user"""
+    result = Rating.objects.average_unlogin(blog_id)
+    return result
+
+
 def get_rating(blog_id: int, user: object) -> dict:
     """Get blog rating."""
     result = Rating.objects.average(blog_id, user)

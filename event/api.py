@@ -2,6 +2,12 @@
 from event.models import Event, Comment, Rating
 
 
+def get_rate_unlogin(event_id: int) -> dict:
+    """Get rate for without login user"""
+    result = Rating.objects.average_unlogin(event_id)
+    return result
+
+
 def get_rating(event_id: int, user: object) -> dict:
     """Get blog rating."""
     result = Rating.objects.average(event_id, user)

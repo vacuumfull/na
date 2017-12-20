@@ -90,6 +90,7 @@ class CommentManager(models.Manager):
         rows = Comment.objects.filter(
             blog=blog_id, published=True)[offset:offset+20]
         return rows
+    
 
 
 class Comment(models.Model):
@@ -125,6 +126,16 @@ class RatingManager(models.Manager):
         rows = Rating.objects.filter(blog=blog_id)
         result = {
             'is_vote': rows.filter(user=user).exists(),
+            'value': rows.aggregate(Avg('value')).get('value__avg', 0),
+            'total': rows.count(),
+        }
+        return result
+
+
+    def average_unlogin(self, blog_id: int) -> dict:
+
+        rows = Rating.objects.filter(blog=blog_id)
+        result = {
             'value': rows.aggregate(Avg('value')).get('value__avg', 0),
             'total': rows.count(),
         }
