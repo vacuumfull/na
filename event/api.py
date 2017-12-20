@@ -17,9 +17,9 @@ def get_rating(event_id: int, user: object) -> dict:
 def vote_rating(event_id: int, user: object, vote: int) -> None:
     """Vote for blog post."""
     try:
-        blog = Event.objects.get(pk=event_id)
+        event = Event.objects.get(pk=event_id)
         Rating.objects.update_or_create(
-            blog=blog, user=user,
+            event=event, user=user,
             defaults={'value': vote})
     except Event.DoesNotExist:
         pass
@@ -34,7 +34,7 @@ def get_comment(event_id: int, offset: int) -> dict:
 def send_comment(event_id: int, user: object, comment: str) -> None:
     """Add comment for blog post."""
     try:
-        blog = Event.objects.get(pk=event_id)
-        Comment.objects.create(blog=blog, user=user, content=comment)
+        event = Event.objects.get(pk=event_id)
+        Comment.objects.create(event=event, user=user, content=comment)
     except Event.DoesNotExist:
         pass

@@ -27,7 +27,7 @@ const Rate = Vue.extend({
         }
     },
     created(){
-        if (this.isLogin === true){
+        if (this.isLogin === 'true'){
             this.session =  this.getSess();
             this.getRate()
         } else {
