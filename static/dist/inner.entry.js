@@ -37964,7 +37964,7 @@ var Rate = _vue2.default.extend({
         };
     },
     created: function created() {
-        if (this.isLogin === true) {
+        if (this.isLogin === 'true') {
             this.session = this.getSess();
             this.getRate();
         } else {

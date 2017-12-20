@@ -159,7 +159,9 @@ body nav .button-collapse{
 .dropdown-content.active > li > a {
     color: black
 }
-
+#nav-menu{
+    background-color:#1f1f1f;
+}
 .collection-item{
     position: relative;
 }
