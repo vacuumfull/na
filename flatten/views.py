@@ -17,3 +17,9 @@ class RulesView(TemplateView):
     """Rules page."""
 
     template_name = 'flatten/rules.html'
+
+
+class SearchView(TemplateView):
+    """Search page"""
+
+    template_name = 'flatten/search.html'

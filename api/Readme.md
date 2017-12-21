@@ -80,7 +80,7 @@ RESPONSE:
 
 REQUEST:
 
-`POST /api/1/messages/`
+`POST /api/1/message/`
 params:
 
 * login - getter login

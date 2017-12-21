@@ -30,7 +30,10 @@
 
 
 {% block js %}
-
 <script src="/static/dist/inner.entry.js"></script>
-
 {% endblock js %}
+
+
+{% block description %}
+<meta name="description" content="{{ band.description }}">
+{% endblock description %}

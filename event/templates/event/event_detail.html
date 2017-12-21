@@ -64,7 +64,10 @@
 
 
 {% block js %}
-
 <script src="/static/dist/inner.entry.js"></script>
-
 {% endblock js %}
+
+
+{% block description %}
+<meta name="description" content="{{ event.description }}">
+{% endblock description %}
