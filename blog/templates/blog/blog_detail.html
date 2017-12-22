@@ -50,8 +50,11 @@
 {% endblock js %}
 
 
+{% block title %}
+<title>{{ blog.title }}</title>
+{% endblock title %}
+
+
 {% block description %}
-
 <meta name="description" content="{{ blog.annotation }}">
-
 {% endblock description %}
