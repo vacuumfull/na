@@ -17,6 +17,22 @@ def image_path(_instance, filename):
     return '{}.{}'.format(file_path, ext)
 
 
+class BandManager(models.Manager):
+
+    def user_items(self, owner):
+        """User created blogs"""
+        result = Band.objects.filter(owner=owner).values('id', 'title', 'description', 'image', 'published', 'slug', 'created_at')
+        result_list = [i for i in result]
+        return result_list
+    
+
+    def published(self):
+        """All published post."""
+        result = Band.objects.filter(published=True)
+        result.order_by('created_at')
+        return result
+
+
 class Band(models.Model):
     """Bands model."""
 
@@ -38,6 +54,8 @@ class Band(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = BandManager()
 
     def __str__(self):
         return self.name

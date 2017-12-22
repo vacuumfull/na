@@ -1,10 +1,12 @@
 """Blog view."""
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
 from blog.models import Blog
+from event.models import Event 
 
 
 class IndexList(ListView):
@@ -49,3 +51,9 @@ class BlogUpdate(UpdateView):
     fields = [
         'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:index')
+
+
+class BlogsUserView(TemplateView):
+    """Added by user blogs"""
+
+    template_name = 'blog/blog_user_list.html'

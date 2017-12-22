@@ -1,4 +1,5 @@
 """Event view."""
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -42,3 +43,9 @@ class EventUpdate(UpdateView):
     fields = ['title', 'image', 'description', 'date', 'price',
               'bands', 'musicians', 'locations']
     success_url = reverse_lazy('event:index')
+
+
+class EventsUserView(TemplateView):
+    """User places list"""
+
+    template_name = 'event/event_user_list.html'

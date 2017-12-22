@@ -38,3 +38,15 @@ def send_comment(place_id: int, user: object, comment: str) -> None:
         Comment.objects.create(place=place, user=user, content=comment)
     except Place.DoesNotExist:
         pass
+
+
+def list_items(user: object) -> list:
+    result = Place.objects.user_items(owner=user)
+    return result
+
+
+def remove_item(item_id:int) -> None:
+    try: 
+        Place.objects.filter(id=item_id).remove()
+    except Place.DoesNotExist:
+        pass

@@ -1,4 +1,5 @@
 """Band view generic."""
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
@@ -40,3 +41,8 @@ class BandUpdate(UpdateView):
     model = Band
     fields = ['name', 'description', 'image', 'members']
     success_url = reverse_lazy('band:index')
+
+
+class BandsUserView(TemplateView):
+
+    template_name = 'band/band_user_list.html'

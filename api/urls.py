@@ -19,6 +19,11 @@ search_patterns = ([
     path('tags/', views.get_tags)
 ])
 
+place_patterns = ([
+    path('list/<str:app>/<str:sessionid>/', views.list_items),
+    path('remove/', views.remove_item)
+])
+
 urlpatterns = [
     # user info
     path('1/users/<str:sessionid>/', views.get_users),
@@ -34,4 +39,5 @@ urlpatterns = [
 
     path('1/message/', include(message_patterns)),
     path('1/search/', include(search_patterns)),
+    path('1/item/', include(place_patterns))
 ]

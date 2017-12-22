@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import _ from 'lodash';
-import Materialize from 'materialize-css';
 import Storage from '../mixins/StorageMixin';
 import Helper from '../mixins/HelperMixin';
 import template from '../../tmp/components/dialog.html';

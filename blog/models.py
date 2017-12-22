@@ -31,6 +31,12 @@ def image_path(_instance, filename):
 class BlogManager(models.Manager):
     """Blog manager."""
 
+    def user_items(self, author):
+        """User created blogs"""
+        result = Blog.objects.filter(author=author).values('id', 'title', 'annotation', 'image', 'published', 'slug', 'rubric', 'created_at')
+        result_list = [i for i in result]
+        return result_list
+
     def last_published(self):
         """Last published blog."""
         result = Blog.objects.published()[:4]

@@ -38,3 +38,15 @@ def send_comment(blog_id: int, user: object, comment: str) -> None:
         Comment.objects.create(blog=blog, user=user, content=comment)
     except Blog.DoesNotExist:
         pass
+
+
+def list_items(user: object) -> list:
+    result = Blog.objects.user_items(author=user)
+    return result
+
+
+def remove_item(item_id:int) -> None:
+    try: 
+        Blog.objects.filter(id=item_id).remove()
+    except Blog.DoesNotExist:
+        pass

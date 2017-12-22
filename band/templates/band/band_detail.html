@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div id="inner">
     <div class="container">
         <div class="row">
@@ -25,7 +24,6 @@
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ band.id }}" type="band"></comment-component>
     </div>
 </div>
-
 {% endblock content %}
 
 

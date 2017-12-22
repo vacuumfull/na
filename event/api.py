@@ -38,3 +38,15 @@ def send_comment(event_id: int, user: object, comment: str) -> None:
         Comment.objects.create(event=event, user=user, content=comment)
     except Event.DoesNotExist:
         pass
+
+
+def list_items(user: object) -> list:
+    result = Event.objects.user_items(owner=user)
+    return result
+
+
+def remove_item(item_id:int) -> None:
+    try: 
+        Event.objects.filter(id=item_id).remove()
+    except Event.DoesNotExist:
+        pass
