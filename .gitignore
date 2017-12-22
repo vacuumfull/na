@@ -8,3 +8,4 @@ __pycache__/
 /under/settings.py
 /src/
 /.idea/
+/static/dist/
