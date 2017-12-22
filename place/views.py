@@ -23,6 +23,12 @@ class PlaceView(DetailView):
     model = Place
 
 
+class PlacesUserView(TemplateView):
+    """User places list"""
+
+    template_name = 'place/place_user_list.html'
+
+
 class PlaceCreate(CreateView):
     """Create blog post."""
 
@@ -33,6 +39,7 @@ class PlaceCreate(CreateView):
     def form_valid(self, form):
         """Add locations formset to form."""
         instance = form.save(commit=False)
+        instance.owner = self.request.user
 
         location_formset = LocationFormSet(
             self.request.POST, instance=instance)
@@ -80,4 +87,4 @@ class PlaceUpdate(UpdateView):
 class MapView(TemplateView):
     """Maps page"""
 
-    template_name = 'place/places_map.html'
+    template_name = 'place/place_map.html'

@@ -151,6 +151,10 @@ body nav .button-collapse{
     -webkit-margin-end: 0px;
 }
 
+.__item_img-width{
+    width: 180px;
+}
+
 .wrapper .article > article > p {
     margin-top: 30px;
     margin-bottom: 5px;

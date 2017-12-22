@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="container">
     <div class="row">
         <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Места</h3>
-
         <div class="col s12">
             <div class="row">
                 {% for place in places %}
@@ -15,12 +13,19 @@
         </div>
     </div>
 </div>
-
 {% endblock content %}
 
 
 {% block js %}
-
 <script src="/static/dist/common.entry.js"></script>
-
 {% endblock js %}
+
+
+{% block title %}
+<title>NightAgenda | Список актуальных событий</title>
+{% endblock title %}
+
+
+{% block description %}
+<mate name="description" content="NightAgenda | Список актуальных событий в Санкт-Петербурге">
+{% endblock description %}

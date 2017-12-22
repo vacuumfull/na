@@ -18,7 +18,7 @@
                     </p>
                     {% endcomment %}
                     <article class="__margin-bottom_xl __margin-top_xl">
-                        <p>{{ blog.annotacdtion }}</p>
+                        <p>{{ blog.annotation }}</p>
                         <p>{{ blog.content|safe }}</p>
                     </article>
                     <p class="__margin-bottom_xs __margin-top_xs">
@@ -48,3 +48,13 @@
 <script src="/static/dist/inner.entry.js"></script>
 
 {% endblock js %}
+
+
+{% block title %}
+<title>{{ blog.title }}</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="{{ blog.annotation }}">
+{% endblock description %}

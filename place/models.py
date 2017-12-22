@@ -28,6 +28,11 @@ def icon_path(_instance, filename):
 class PlaceManager(models.Manager):
     """Place manager."""
 
+    def user_items(self, owner):
+        result = Place.objects.filter(owner=owner).values('id', 'title', 'description', 'icon', 'published', 'slug', 'created_at')
+        result_list = [i for i in result]
+        return result_list
+
     def published(self):
         result = Place.objects.filter(published=True)
         return result

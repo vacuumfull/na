@@ -38683,10 +38683,6 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _materializeCss = __webpack_require__(14);
-
-var _materializeCss2 = _interopRequireDefault(_materializeCss);
-
 var _StorageMixin = __webpack_require__(45);
 
 var _StorageMixin2 = _interopRequireDefault(_StorageMixin);

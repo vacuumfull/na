@@ -12,7 +12,13 @@
     <!-- CkEditor -->
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-    <title>Under</title>
+    
+    {% block title %}
+    {% endblock title %}
+
+    {% block description %}
+    {% endblock description %}
+
 </head>
 
 <body class="grey lighten-3">
@@ -35,6 +41,7 @@
     </div>
 
     {% include "footer.html" %}    
+    
     {% block js %}
     {% endblock js %}
 </body>

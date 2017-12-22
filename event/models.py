@@ -25,6 +25,11 @@ def image_path(_instance, filename):
 class EventManager(models.Manager):
     """Event manager."""
 
+    def user_items(self, owner):
+        result = Event.objects.filter(owner=owner).values('id', 'title', 'description', 'image', 'published', 'slug', 'date', 'created_at')
+        result_list = [i for i in result]
+        return result_list
+
     def last_published(self):
         """Last published upcoming events."""
         result = Event.objects.upcoming()[:4]
@@ -34,6 +39,12 @@ class EventManager(models.Manager):
         """Upcoming events."""
         result = Event.objects.filter(
             published=True, date__gte=timezone.now())
+        return result
+
+    def published(self):
+        """All published post."""
+        result = Event.objects.filter(published=True)
+        result.order_by('date')
         return result
 
 

@@ -10,6 +10,7 @@ from django.views.decorators.http import require_http_methods
 import blog.api
 import event.api
 import place.api
+import band.api
 import message.api
 
 
@@ -175,6 +176,36 @@ def get_comment(request, app: str, key: int, offset: int=0):
     return JsonResponse(result)
 
 
+def list_items(request, app: str, sessionid: str):
+    """Get user created items list"""
+    user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+
+    result = {}
+    result = getattr(_load_module(app), 'list_items')(user)
+
+    return JsonResponse(result, safe=False)
+
+    
+@csrf_exempt
+@require_http_methods(['POST'])
+def remove_item(request):
+    """Get user created items list"""
+    sessionid = request.POST.get('sessionid')
+    app = request.POST.get('app')
+    item_id = request.POST.get('item_id')
+    user = _get_user(sessionid)
+    if not user:
+        result = {'error': 'User must be authenticated!'}
+
+    getattr(_load_module(app), 'remove_item')(int(item_id))
+    result = {'success': 'Item successfully removed'}
+
+    return JsonResponse(result)
+
+
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def send_comment(request):
@@ -277,6 +308,8 @@ def remove_message(request):
     return JsonResponse(result)
 
 
+
+
 def _get_user(sessionid):
     """Get user info from sessionid token."""
     session = SessionStore(sessionid)
@@ -303,6 +336,7 @@ def _load_module(module_name: str) -> object:
         'blog': blog.api,
         'event': event.api,
         'place': place.api,
+        'band': band.api,
         'message': message.api
     }
 

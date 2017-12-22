@@ -10,8 +10,8 @@
                     <img class="responsive-img" src="{{ event.image.url }}">
                 </div>
                 <div class="article">
-                    <h1 class="__margin-top_xl __margin-bottom_xl">Событие</h1>
-                    <span id="hidden-id" class="__hidden">2</span>
+                    <h1 class="__margin-top_xl __margin-bottom_xl">{{ event.title }}</h1>
+                    <span id="hidden-id" class="__hidden">{{ event.id }}</span>
                     <p>
                         <span>Организатор: </span>
                         <strong id="getter-name">{{ event.owner.username }}</strong>
@@ -64,7 +64,15 @@
 
 
 {% block js %}
-
 <script src="/static/dist/inner.entry.js"></script>
-
 {% endblock js %}
+
+
+{% block title %}
+<title>Событие: {{ event.title }}</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="{{ event.description }}">
+{% endblock description %}
