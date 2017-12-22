@@ -19,18 +19,22 @@ const UserItems = Vue.extend({
     methods: {
         getItems(){
             let self = this,
-                url = `/api/1/item/list/${self.type}/${self.getSess()}`;
-                fetch(url, {method: 'GET'})
-                    .then(response => {
-                        return response.json()
-                    })
-                    .then(items => {
-                        self.items = items;
-                        if (self.items.length > 0) self.showTable = true;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    })
+                ses = self.getSess(),
+                url = `/api/1/item/list/${self.type}/${ses}`;
+            if (ses === false) {
+                window.location = window.location.origin + '/404'
+            }
+            fetch(url, {method: 'GET'})
+                .then(response => {
+                    return response.json()
+                })
+                .then(items => {
+                    self.items = items;
+                    if (self.items.length > 0) self.showTable = true;
+                })
+                .catch(error => {
+                    console.error(error)
+                })
 
         }
     }

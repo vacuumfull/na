@@ -31,7 +31,14 @@ export default {
             Materialize.toast(message, 4000);
         },
         getSess(){
-            return document.getElementById('session_id').innerHTML;
+            try {
+                let ses = document.getElementById('session_id').innerHTML
+                return ses;
+            } catch (e) {
+                console.error(e.message)
+                return false;
+            }
+            
         },
 	}
 }
