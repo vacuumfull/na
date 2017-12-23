@@ -43,11 +43,16 @@ const Comment = Vue.extend({
         getComments(){
             let self = this,
                 uri = `/api/1/comment/${self.type}/${self.unique}/${self.offset}`;
-            $.get(uri).done((data) => {
-                self.comments = data.comments
-            }).fail((error) => {
-                console.log(error)
-            })
+                fetch(uri, { method: "GET" })
+                    .then(response => {
+                        return response.json()
+                    })
+                    .then(data => {
+                        self.comments = data.comments
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
         },
         getSess(){
             return document.getElementById('session_id').innerHTML;

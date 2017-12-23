@@ -38937,9 +38937,11 @@ var Comment = _vue2.default.extend({
         getComments: function getComments() {
             var self = this,
                 uri = '/api/1/comment/' + self.type + '/' + self.unique + '/' + self.offset;
-            _jquery2.default.get(uri).done(function (data) {
+            fetch(uri, { method: "GET" }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
                 self.comments = data.comments;
-            }).fail(function (error) {
+            }).catch(function (error) {
                 console.log(error);
             });
         },

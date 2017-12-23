@@ -1,12 +1,14 @@
 """Blog view."""
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
+from django import forms
 
-from blog.models import Blog
-from event.models import Event 
+from blog.models import Blog, BlogForm
+from place.models import Place
 
 
 class IndexList(ListView):
@@ -33,14 +35,20 @@ class BlogCreate(CreateView):
     """Create blog post."""
 
     model = Blog
-    fields = [
-        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
-    success_url = reverse_lazy('blog:index')
+    fields = ['title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
+    success_url = reverse_lazy('blog:list')
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = BlogForm
+        return context
 
     def form_valid(self, form):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.author = self.request.user
+        form.author = self.request.user
         return super().form_valid(form)
 
 
@@ -50,7 +58,7 @@ class BlogUpdate(UpdateView):
     model = Blog
     fields = [
         'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
-    success_url = reverse_lazy('blog:index')
+    success_url = reverse_lazy('blog:list')
 
 
 class BlogsUserView(TemplateView):

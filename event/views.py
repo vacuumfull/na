@@ -27,7 +27,7 @@ class EventCreate(CreateView):
     model = Event
     fields = ['title', 'image', 'description', 'date', 'price',
               'bands', 'musicians', 'locations']
-    success_url = reverse_lazy('event:index')
+    success_url = reverse_lazy('event:list')
 
     def form_valid(self, form):
         """Add user info to form."""

@@ -2,13 +2,17 @@
 import os
 from uuid import uuid4
 
+from ckeditor.fields import CKEditorWidget
 from ckeditor.fields import RichTextField
+from django.forms import ModelForm
+from django import forms
 from django.db import models
 from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from uuslug import uuslug
+from django.db.models.query import QuerySet
 
 from event.models import Event
 from place.models import Place
@@ -148,6 +152,7 @@ class RatingManager(models.Manager):
         return result
 
 
+
 class Rating(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
                              verbose_name='Запись')
@@ -160,6 +165,22 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('blog', 'user')
+
+
+
+
+class BlogForm(forms.Form):
+
+
+    title = forms.CharField(label='Название')
+    image = forms.ImageField(label='Изображение')
+    annotation = forms.CharField(label='Аннотация')
+    rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
+    content = forms.CharField(label='Содержание', widget=CKEditorWidget)
+    place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
+    event = forms.ModelChoiceField(queryset=Event.objects.published(), label='Событие')
+  
+
 
 
 @receiver(pre_save, sender=Blog)

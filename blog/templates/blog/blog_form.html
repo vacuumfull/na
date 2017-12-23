@@ -35,16 +35,22 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s6">
-                                        {{ form.event.errors }}
-                                        {{ form.event }}
-                                        {{ form.event.label_tag }}
+                                        {% if form.event|length > 1 %}
+                                            {{ form.event.errors }}
+                                            {{ form.event }}
+                                            {{ form.event.label_tag }}
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s6">
-                                        {{ form.place.errors }}
-                                        {{ form.place }}
-                                        {{ form.place.label_tag }}
+                                        
+                                        {% if form.place|length > 1 %}
+                                            {{ form.place.errors }}
+                                            {{ form.place }}
+                                            {{ form.place.label_tag }}
+                                        {% endif %}
+                                        
                                     </div>
                                 </div>
                                 <div class="input-group">
