@@ -1,4 +1,5 @@
 import Materialize from 'materialize-css';
+import $ from 'jquery';
 
 export default {
 	methods: {
@@ -38,7 +39,12 @@ export default {
                 console.error(e.message)
                 return false;
             }
-            
         },
+        modalMusicOpen(){
+            $('#modal-music').modal('open');
+        },
+        modalMusicClose(){
+            $('#modal-music').modal('close');
+        }
 	}
 }

@@ -178,7 +178,7 @@ class BlogForm(forms.Form):
     rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
     content = forms.CharField(label='Содержание', widget=CKEditorWidget)
     place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
-    event = forms.ModelChoiceField(queryset=Event.objects.published(), label='Событие')
+    event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
   
 
 

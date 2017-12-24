@@ -36328,6 +36328,10 @@ var _materializeCss = __webpack_require__(14);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -36368,6 +36372,12 @@ exports.default = {
                 console.error(e.message);
                 return false;
             }
+        },
+        modalMusicOpen: function modalMusicOpen() {
+            (0, _jquery2.default)('#modal-music').modal('open');
+        },
+        modalMusicClose: function modalMusicClose() {
+            (0, _jquery2.default)('#modal-music').modal('close');
         }
     }
 };
@@ -54754,6 +54764,10 @@ var _MapComponent = __webpack_require__(291);
 
 var _MapComponent2 = _interopRequireDefault(_MapComponent);
 
+var _SettingsComponent = __webpack_require__(293);
+
+var _SettingsComponent2 = _interopRequireDefault(_SettingsComponent);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 new _vue2.default({
@@ -54764,7 +54778,8 @@ new _vue2.default({
         'left-modal': _LeftModalComponent2.default,
         'map-component': _MapComponent2.default,
         'user-menu': _UserMenuComponent2.default,
-        'datepicker': _vuejsDatepicker2.default
+        'datepicker': _vuejsDatepicker2.default,
+        'settings': _SettingsComponent2.default
     },
     data: {
         userInfo: {
@@ -54799,6 +54814,12 @@ new _vue2.default({
             (0, _jquery2.default)('#id_description').addClass('materialize-textarea');
             (0, _jquery2.default)('.__worktime textarea').addClass('materialize-textarea');
             (0, _jquery2.default)('.__remove-field label').text('Удалить место');
+            (0, _jquery2.default)('#modal-music').modal();
+            (0, _jquery2.default)('.chips').material_chip();
+            (0, _jquery2.default)('.chips-placeholder').material_chip({
+                placeholder: 'Печатать сюда ',
+                secondaryPlaceholder: 'еще?'
+            });
         },
         customFormatter: function customFormatter(date) {
 
@@ -55204,6 +55225,122 @@ exports.default = MapComponent;
 /***/ (function(module, exports) {
 
 module.exports = "<div id=\"map\"></div>"
+
+/***/ }),
+/* 293 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _vue = __webpack_require__(5);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _HelperMixin = __webpack_require__(46);
+
+var _HelperMixin2 = _interopRequireDefault(_HelperMixin);
+
+var _settings = __webpack_require__(294);
+
+var _settings2 = _interopRequireDefault(_settings);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Settings = _vue2.default.extend({
+	template: _settings2.default,
+	mixins: [_HelperMixin2.default],
+	data: function data() {
+		return {
+			settings: [],
+			extend: [],
+			preferMusic: [],
+			styles: [{ tag: 'house', image: '', id: 1 }, { tag: 'trance', image: '', id: 2 }, { tag: 'techno', image: '', id: 3 }, { tag: 'chillout', image: '', id: 4 }, { tag: 'acid techno', image: '', id: 5 }, { tag: 'psy forest', image: '', id: 6 }, { tag: 'ambient', image: '', id: 7 }, { tag: 'noize', image: '', id: 8 }, { tag: 'hard techno', image: '', id: 9 }, { tag: 'electronic', image: '', id: 10 }, { tag: 'psy chill', image: '', id: 11 }, { tag: 'downtempo', image: '', id: 12 }, { tag: 'trip hop', image: '', id: 13 }, { tag: 'dub', image: '', id: 14 }, { tag: 'raggie', image: '', id: 15 }, { tag: 'trap', image: '', id: 16 }, { tag: 'rap', image: '', id: 17 }, { tag: 'rock', image: '', id: 18 }]
+		};
+	},
+
+	watch: {
+		preferMusic: function preferMusic(val) {
+			var _this = this;
+
+			if (val === null) {
+				setTimeout(function () {
+					_this.modalMusicOpen();
+					_this.preferMusic = [];
+				}, 3000);
+			}
+		}
+	},
+	mounted: function mounted() {
+		this.getSettings();
+	},
+	created: function created() {
+		$('.chips').on('chip.add', function (e, chip) {
+			console.log(chip);
+		});
+
+		$('.chips').on('chip.delete', function (e, chip) {
+			console.log(chip);
+		});
+
+		$('.chips').on('chip.select', function (e, chip) {
+			console.log(chip);
+		});
+	},
+
+	methods: {
+		getSettings: function getSettings() {
+			var self = this,
+			    uri = '/api/1/settings/current/' + self.getSess();
+			fetch(uri, { method: "GET" }).then(function (response) {
+				return response.json();
+			}).then(function (items) {
+				self.settings = items.settings;
+				self.extend = items.extend;
+				self.preferMusic = items.extend[0].prefer_styles;
+			}).catch(function (error) {
+				return console.error(error);
+			});
+		},
+		selectMusicStyle: function selectMusicStyle(event) {
+			var selected = event.target.innerHTML;
+			this.preferMusic.unshift(selected);
+			event.target.className += ' teal lighten-2';
+			console.log(this.preferMusic);
+		},
+		addPreferMusic: function addPreferMusic() {
+			var self = this,
+			    uri = '/api/1/settings/music/',
+			    data = new FormData();
+			fetch(uri, {
+				method: "POST",
+				body: 'sessionid=' + self.getSess() + '&styles=' + JSON.stringify(self.preferMusic),
+				headers: {
+					"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+				}
+			}).then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				console.log(data);
+			}).catch(function (error) {
+				return console.error(error);
+			});
+		}
+	}
+});
+
+exports.default = Settings;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row\">\t\n\t<div class=\"col s6\">\n\t\t<table class=\"centered bordered __border __margin-bottom_xxl\">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th><h6>Ответ на ваш<br>коммент</h6></th>\n\t\t\t\t\t<th><h6>Коммент на пост,<br>события, место</h6></th>\n\t\t\t\t\t<th><h6>Оценка поста,<br>места, события</h6></th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<template v-for=\"(item, key) in settings\" >\n\t\t\t\t\t<tr class=\"hovered-row\">\n\t\t\t\t\t\t<td v-if=\"!settings.alert_comment\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_comment\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"!settings.alert_blog\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_blog\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"!settings.alert_rating\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_rating\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t</template>\n\t\t\t</tbody>\n\t\t</table>\t\t\n\t</div>\n\t<!-- Modal Structure -->\n\t<div id=\"modal-music\" class=\"modal modal-fixed-footer\">\n\t\t<div class=\"modal-content\">\n\t\t\t<h4 class=\"__margin-top_m __margin-bottom_m\">Какую музыку ты слушаешь?</h4>\n\t\t\t<p>\n\t\t\t\tПросим выбрать хотя бы одно музыкальное направление, которое ты предпочитаешь. \n\t\t\t\tЕсли в списке нет того, что тебе нравится, то напиши в поле ниже и нажми <b>Enter</b>.\n\t\t\t\tЕсли еще не определился с направлением или не знаешь, как оно называется, то \n\t\t\t\tукажи любимые музыкальные коллективы. \n\t\t\t</p>\n\t\t\t<p>\n\t\t\t\tНа основе твоих предпочтений, система будет подбирать для тебя события, места и не только.\n\t\t\t</p>\n\t\t\t<div class=\"music-field __margin-top_l __margin-bottom_l\">\n\t\t\t\t<div v-on:click=\"selectMusicStyle($event)\" v-for=\"style in styles\" class=\"chip\">{{ style.tag }}</div>\n\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"chips chips-placeholder\"></div>\n\t\t</div>\n\t\t<div class=\"modal-footer\">\n\t\t\t<a href=\"#!\" v-on:click='addPreferMusic' class=\"modal-action modal-close waves-effect waves-green btn-flat \">OK!</a>\n\t\t</div>\n\t</div>\n</div>"
 
 /***/ })
 /******/ ]);

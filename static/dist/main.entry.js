@@ -31807,6 +31807,10 @@ var _materializeCss = __webpack_require__(14);
 
 var _materializeCss2 = _interopRequireDefault(_materializeCss);
 
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -31847,6 +31851,12 @@ exports.default = {
                 console.error(e.message);
                 return false;
             }
+        },
+        modalMusicOpen: function modalMusicOpen() {
+            (0, _jquery2.default)('#modal-music').modal('open');
+        },
+        modalMusicClose: function modalMusicClose() {
+            (0, _jquery2.default)('#modal-music').modal('close');
         }
     }
 };

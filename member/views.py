@@ -1,6 +1,8 @@
+from django.shortcuts import redirect
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import TemplateView
 
 
 class SignupUser(FormView):
@@ -18,3 +20,13 @@ class SignupUser(FormView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return super().form_valid(form)
+
+
+class SettingsView(TemplateView):
+
+    template_name = 'member/settings.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/')
+        return super(SettingsView, self).dispatch(request, *args, **kwargs)

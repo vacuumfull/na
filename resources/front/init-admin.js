@@ -7,7 +7,7 @@ import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
 import UserMenu from './components/UserMenuComponent';
 import MapComponent from './components/MapComponent';
-
+import Settings from './components/SettingsComponent';
 
 
 new Vue({
@@ -18,7 +18,8 @@ new Vue({
         'left-modal': LeftModal,
         'map-component': MapComponent,
         'user-menu': UserMenu,
-        'datepicker': Datepicker
+        'datepicker': Datepicker,
+        'settings': Settings
     },
     data: {
         userInfo: {
@@ -50,6 +51,12 @@ new Vue({
             $('#id_description').addClass('materialize-textarea');
             $('.__worktime textarea').addClass('materialize-textarea');
             $('.__remove-field label').text('Удалить место');
+            $('#modal-music').modal();
+            $('.chips').material_chip();
+            $('.chips-placeholder').material_chip({
+                placeholder: 'Печатать сюда ',
+                secondaryPlaceholder: 'еще?',
+            });
         },
         customFormatter(date) {
             

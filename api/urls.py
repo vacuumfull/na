@@ -24,6 +24,12 @@ place_patterns = ([
     path('remove/', views.remove_item)
 ])
 
+settings_patterns = ([
+    path('current/<str:sessionid>/', views.get_user_settings),
+    path('update/', views.update_user_settings),
+    path('music/', views.update_user_prefer_styles),
+])
+
 urlpatterns = [
     # user info
     path('1/users/<str:sessionid>/', views.get_users),
@@ -39,5 +45,6 @@ urlpatterns = [
 
     path('1/message/', include(message_patterns)),
     path('1/search/', include(search_patterns)),
-    path('1/item/', include(place_patterns))
+    path('1/item/', include(place_patterns)),
+    path('1/settings/', include(settings_patterns))
 ]

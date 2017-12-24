@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
 from event.models import Event
 
@@ -49,3 +50,9 @@ class EventsUserView(TemplateView):
     """User places list"""
 
     template_name = 'event/event_user_list.html'
+
+    def dispath(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/')
+        return super(EventsUserView, self).dispath(request, *args, **kwargs)
+

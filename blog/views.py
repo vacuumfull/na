@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 from django import forms
+from django.shortcuts import redirect
 
 from blog.models import Blog, BlogForm
 from place.models import Place
@@ -65,3 +66,8 @@ class BlogsUserView(TemplateView):
     """Added by user blogs"""
 
     template_name = 'blog/blog_user_list.html'
+
+    def dispath(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/')
+        return super(BlogsUserView, self).dispath(request, *args, **kwargs)

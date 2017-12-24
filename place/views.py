@@ -5,6 +5,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
 from place.models import Place
 from place.forms import LocationFormSet
@@ -27,6 +28,11 @@ class PlacesUserView(TemplateView):
     """User places list"""
 
     template_name = 'place/place_user_list.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/')
+        return super(PlacesUserView, self).dispatch(request, *args, **kwargs)
 
 
 class PlaceCreate(CreateView):

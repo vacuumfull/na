@@ -22,6 +22,8 @@ class UserExtend(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to=avatar_path,
                                blank=True, null=True, verbose_name='Аватар')
+    prefer_styles = JSONField(blank=True, null=True,
+                        verbose_name='Предпочитаемые стили')
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')

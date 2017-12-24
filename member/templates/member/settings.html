@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="row __padding-top_xxl __padding-bottom_l">
+		<div class="col s12">
+			<h3>Настройки</h3>
+		</div>
+	</div>
+	<settings></settings>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/initAdmin.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Настройки пользователя</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="Страница настроек пользователя">
+{% endblock description %}

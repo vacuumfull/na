@@ -13,7 +13,6 @@ const UserItems = Vue.extend({
         }
     },
     mounted(){
-        console.log(this.type)
         this.getItems()
     },
     methods: {

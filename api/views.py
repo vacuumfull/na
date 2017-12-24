@@ -6,12 +6,14 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+import json
 
 import blog.api
 import event.api
 import place.api
 import band.api
 import message.api
+import member.api
 
 
 
@@ -27,9 +29,20 @@ def get_users(request, sessionid: str):
     return JsonResponse(list_users, safe=False)
 
 
-def get_rate_unlogin(request, key: int, app: str,):
+def get_rate_unlogin(request, key: int, app: str):
     result = {}
     result = getattr(_load_module(app), 'get_rate_unlogin')(key)
+
+    return JsonResponse(result)
+
+
+def get_user_settings(request, sessionid: str):
+    user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+
+    result = {}
+    result = getattr(_load_module('member'), 'get_settings')(user)
 
     return JsonResponse(result)
 
@@ -133,6 +146,49 @@ def get_tags(request):
     """Вывод самых попоулярных тэгов с указанием количества. Макс - 1000. Запрос стоит сделать кэшиуремым"""
 
     result = {'first searched tag': 113, 'second searched tag': 99, 'third searched tag': 87}
+    return JsonResponse(result)
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def update_user_settings(request): 
+    sessionid = request.POST.get('sessionid')
+    comment = request.POST.get('comment')
+    blog = request.POST.get('blog')
+    rating = request.POST.get('rating')
+    link = request.POST.get('link')
+    
+    params = {
+        'comment': comment,
+        'blog': blog,
+        'rating': rating,
+        'link': link
+    }
+    user = _get_user(sessionid)
+
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+    
+    getattr(_load_module('member'), 'update_settings')(user, params)
+
+    result = {'success': 'Settings successfully updated'}
+
+    return JsonResponse(result)
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def update_user_prefer_styles(request): 
+    """Update user prefer styles in extends"""
+    sessionid = request.POST.get('sessionid')
+    styles = json.loads(request.POST.get('styles'))
+    user = _get_user(sessionid)
+    if not user:
+        return JsonResponse({'error': 'User must be authenticated!'})
+    
+    getattr(_load_module('member'), 'update_prefer_styles')(user, styles)
+    result = {'success': 'Prefer styles successfully updated'}    
+
     return JsonResponse(result)
 
 
@@ -337,7 +393,8 @@ def _load_module(module_name: str) -> object:
         'event': event.api,
         'place': place.api,
         'band': band.api,
-        'message': message.api
+        'message': message.api,
+        'member': member.api
     }
 
     return module_dict[module_name]
