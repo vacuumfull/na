@@ -29,6 +29,14 @@ def get_users(request, sessionid: str):
     return JsonResponse(list_users, safe=False)
 
 
+def get_locations(request):
+    """Get places locations"""
+    result = {}
+    result = getattr(_load_module('place'), 'get_locations')()
+    print(result)
+    return JsonResponse(result, safe=False)
+
+
 def get_rate_unlogin(request, key: int, app: str):
     result = {}
     result = getattr(_load_module(app), 'get_rate_unlogin')(key)

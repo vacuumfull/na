@@ -1,5 +1,5 @@
 """Place api."""
-from place.models import Place, Comment, Rating
+from place.models import Place, Comment, Rating, Location
 
 
 def get_rate_unlogin(place_id: int) -> dict:
@@ -50,3 +50,12 @@ def remove_item(item_id:int) -> None:
         Place.objects.filter(id=item_id).remove()
     except Place.DoesNotExist:
         pass
+
+
+def get_locations() -> list:
+    """Get place locations"""
+    ids = Place.objects.filter(published=True).values_list('id', flat=True)
+    locations = Location.objects.filter(place_id__in=ids).values()
+    locations_list = [i for i in locations]
+
+    return locations_list

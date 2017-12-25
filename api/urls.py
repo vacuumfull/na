@@ -46,5 +46,6 @@ urlpatterns = [
     path('1/message/', include(message_patterns)),
     path('1/search/', include(search_patterns)),
     path('1/item/', include(place_patterns)),
-    path('1/settings/', include(settings_patterns))
+    path('1/settings/', include(settings_patterns)),
+    path('1/map/', views.get_locations),
 ]

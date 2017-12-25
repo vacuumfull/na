@@ -15,6 +15,7 @@ new Vue({
         'user-menu': UserMenu
     },
     data: {
+        map: null,
         places: [],
         userInfo: {
             name: ""
@@ -33,14 +34,23 @@ new Vue({
     mounted(){
         $('#left_message_window').modal();
         $(".button-collapse").sideNav();
+        this.getPlaces()
+    },
+    watch: {
+        places(val, newVal){
+            console.log(val, newVal)
+            if(val.length > 0){
+                this.setLocations()
+            }
+        }
     },
     methods: {
         getPlaces(){
             let self = this,
-                uri = "/map/api";
+                uri = "/api/1/map/";
             $.get(uri)
                 .done(function(data) {
-                    self.places = data.response;
+                    self.places = data;
                     self.setMap();
                 })
                 .fail(function(error) {
@@ -53,7 +63,8 @@ new Vue({
                     center: { lat: 59.93961241484262, lng: 30.321905688476562},
                     zoom: 12
                 })
-                this.setLocations(map);
+                this.map = map;
+               
             })
         },
         openModal(userInfo){
@@ -65,61 +76,46 @@ new Vue({
         transportMessagesCount(messagesCount){
             this.messagesUnreadCount = messagesCount;
         },
-        setLocations(map){
-            let self = this,
+        setLocations(){
+            GoogleMapsLoader.load((google) => {
+                let self = this,
                 infowindow = new google.maps.InfoWindow();
-            self.places.forEach(function(item){
-                let activeEvents = "",
-                    marker,
-                    coords = item.coordinates.split(","),
-                    position = {
-                    lat: parseFloat(coords[0]),
-                    lng: parseFloat(coords[1]),
-                };
+                
+                self.places.forEach((item) => {
 
-                if (item.icon === null){
+                    let activeEvents = "",
+                        marker,
+                        coords = item.maps.split(","),
+                        position = {
+                        lat: parseFloat(coords[0]),
+                        lng: parseFloat(coords[1]),
+                    };
+
                     marker = new google.maps.Marker({
                         position:  position,
-                        map: map,
+                        map: self.map,
                         title: item.title,
                         draggable: false,
                     });
-                } else {
-                    let shape = {
-                        coords: [1, 1, 1, 34, 32, 33, 34, 1],
-                        type: 'poly'
-                    };
-                    let image = {
-                        url: item.icon,
-                        size: new google.maps.Size(40, 44),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(0, 44)
-                    };
-                    marker = new google.maps.Marker({
-                        position: position,
-                        icon: image,
-                        shape: shape,
-                        map: map,
-                        title: item.title,
-                        draggable: true,
-                    });
-                }
-                if (item.active_events !== undefined){
-                    activeEvents += '<h6>Текущие события</h6><br>'
-                    item.active_events.forEach(function(event){
-                        activeEvents += '<a href="/events/'+ event.id +'">' + event.title + '</a><br>'
-                    });
-                }
+                   
+                    if (item.active_events !== undefined){
+                        activeEvents += '<h6>Текущие события</h6><br>'
+                        item.active_events.forEach(function(event){
+                            activeEvents += `<a href="/events/${event.id}">${event.title}</a><br>`
+                        });
+                    }
 
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow.setContent('<div>'+
-                        '<h6><a href="/places/'+ item.id +'">' + item.title + '</a></h6>' + '<br>' +
-                        '<strong>' + item.description + '</strong><br>' +
-                        '<br>' + activeEvents + '</div>');
-                    infowindow.open(map, this);
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.setContent('<div>'+
+                            '<h6><a href="/places/'+ item.id +'">' + item.title + '</a></h6>' + '<br>' +
+                            '<strong>' + item.description + '</strong><br>' +
+                            '<br>' + activeEvents + '</div>');
+                        infowindow.open(self.map, this);
+                    });
+
                 });
-
-            });
+            })
+           
         }
     }
 })
