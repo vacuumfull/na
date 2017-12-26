@@ -33,7 +33,7 @@ def get_locations(request):
     """Get places locations"""
     result = {}
     result = getattr(_load_module('place'), 'get_locations')()
-    print(result)
+  
     return JsonResponse(result, safe=False)
 
 

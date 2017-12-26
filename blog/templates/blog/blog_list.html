@@ -3,6 +3,7 @@
 {% block content %}
 
 <div class="container">
+   
     {% regroup blogs by rubric as rubric_list %}
 
     {% for rubric, blog_list in rubric_list %}
@@ -23,7 +24,5 @@
 
 
 {% block js %}
-
 <script src="/static/dist/common.entry.js"></script>
-
 {% endblock js %}

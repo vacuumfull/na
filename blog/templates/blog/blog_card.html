@@ -1,3 +1,4 @@
+{% load under_filters %}
 <div class="col s12 m4 l3">
     <div class="__post_block">
         <div class="card __border_subgray">
@@ -29,12 +30,14 @@
                         </span>
                         <span class=" grey-text text-darken-3 right">{{ blog.author.username }}</span>
                     </div>
+                    {% if blog.rating_set.all.count > 0 %}
                     <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
                         <span class="yellow-text text-accent-2">
                             <i class="material-icons __circle_border">star</i>
                         </span>
-                        <span class="grey-text text-darken-3 right">{{blog.rating.all}}/10</span>
+                        <span class="grey-text text-darken-3 right">{{ blog.rating_set|arg:blog.id|call:"rating" }}/10</span>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="card-action">

@@ -135,6 +135,12 @@ class Comment(models.Model):
 
 class RatingManager(models.Manager):
     """Place rating manager."""
+    
+    def rating(self, place_id):
+        rows = Rating.objects.filter(place=place_id)
+        rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        return rate
+
 
     def average(self, place_id: int, user: User) -> dict:
         """Average place rating.

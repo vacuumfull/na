@@ -85,6 +85,7 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+    
 
     class Meta:
         ordering = ['created_at', 'title', 'author']
@@ -119,6 +120,7 @@ class Comment(models.Model):
     def __str__(self):
         return "{}: {}".format(self.user, self.content)
 
+
     class Meta:
         ordering = ['created_at', 'user']
         verbose_name = 'Комментарий'
@@ -127,6 +129,12 @@ class Comment(models.Model):
 
 class RatingManager(models.Manager):
     """Blog manager."""
+
+    def rating(self, blog_id):
+        rows = Rating.objects.filter(blog=blog_id)
+        rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        return rate
+
 
     def average(self, blog_id: int, user: User) -> dict:
         """Average blog rating.
@@ -162,6 +170,7 @@ class Rating(models.Model):
     value = models.IntegerField(verbose_name='Оценка')
 
     objects = RatingManager()
+
 
     class Meta:
         unique_together = ('blog', 'user')

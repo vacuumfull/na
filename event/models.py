@@ -133,6 +133,12 @@ class Comment(models.Model):
 class RatingManager(models.Manager):
     """Events rating manager."""
 
+    def rating(self, event_id):
+        rows = Rating.objects.filter(event=event_id)
+        rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        return rate
+
+
     def average(self, event_id: int, user: User) -> dict:
         """Average event rating.
         is_vote - check voted this user in current event

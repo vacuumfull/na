@@ -1,3 +1,4 @@
+{% load under_filters %}
 <div class="col s12 m4 l3">
     <div class="__post_block">
         <div class="card __border_subgray">
@@ -23,14 +24,14 @@
                     {{ place.description }}
                 </p>
             </div>
-       
+            {% if place.rating_set.all.count > 0 %}
             <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
                 <span class="yellow-text text-accent-2">
                     <i class="material-icons __circle_border_darkblue">star</i>
                 </span>
-                <span class=" blue-grey-text text-darken-4 right  __font_exo __semi_bold" style="font-size:17px;">5/10</span>
+                <span class="blue-grey-text text-darken-4 right  __font_exo __semi_bold" style="font-size:17px;">{{ place.rating_set|arg:place.id|call:"rating" }}/10</span>
             </div>
-           
+            {% endif %}
             <div class="card-action">
                 <a title="Читать о месте" href="{% url 'place:view' place.slug %}" class="__more_link __font_exo blue-grey-text text-darken-4">
                     {% include "enter_arrow.html" %}

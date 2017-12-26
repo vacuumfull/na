@@ -1,3 +1,4 @@
+{% load under_filters %}
 <div class="col s12 m4 l3">
     <div class="__event_block">
         <div class="card __border_subgray">
@@ -34,7 +35,7 @@
                             <i class="material-icons">alarm</i>
                         </span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="  grey-text text-darken-3 right">{{ event.date|date:'d.m.Y H:i' }}</span>
+                        <span class="grey-text text-darken-3 right">{{ event.date|date:'d.m.Y H:i' }}</span>
                     </div>
                 </div>
             </div>
