@@ -30,7 +30,7 @@
                         </span>
                         <span class=" grey-text text-darken-3 right">{{ blog.author.username }}</span>
                     </div>
-                    {% if blog.rating_set.all.count > 0 %}
+                    {% if blog.rating_set.exists %}
                     <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
                         <span class="yellow-text text-accent-2">
                             <i class="material-icons __circle_border">star</i>

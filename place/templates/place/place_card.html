@@ -24,7 +24,7 @@
                     {{ place.description }}
                 </p>
             </div>
-            {% if place.rating_set.all.count > 0 %}
+            {% if place.rating_set.exists > 0 %}
             <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
                 <span class="yellow-text text-accent-2">
                     <i class="material-icons __circle_border_darkblue">star</i>
