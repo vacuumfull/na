@@ -13,6 +13,7 @@ from uuslug import uuslug
 
 from band.models import Band
 from place.models import Location
+from tag.models import Tag
 
 
 def image_path(_instance, filename):
@@ -75,6 +76,11 @@ class Event(models.Model):
     locations = models.ManyToManyField(
         Location, related_name='event_location',
         verbose_name='Место проведения')
+
+    tags = models.ManyToManyField(
+        Tag, related_name='event_tags',
+        related_query_name='event_tag',
+        verbose_name='Тэги')
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')

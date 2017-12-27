@@ -13,10 +13,11 @@ class LocationInLine(admin.StackedInline):
 
 @admin.register(Place)
 class AdminPlace(admin.ModelAdmin):
-    fields = ('title', 'image', 'icon', 'description', 'owner', 'published',
+    fields = ('title', 'image', 'icon', 'description', 'owner', 'published', 'tags',
               'musicians')
     inlines = [LocationInLine]
     list_display = ('title', 'published')
+    filter_horizontal = ('tags',)
     list_editable = ('published',)
     list_filter = ('published',)
     search_fields = ('title', 'address')

@@ -10,9 +10,10 @@ class AdminEvent(admin.ModelAdmin):
         ('Информация', {
             'fields': ('title', 'owner', 'date', 'price', 'description',
                        'image', 'published')}),
-        ('Содержание', {'fields': ('locations', 'bands', 'musicians')}),
+        ('Содержание', {'fields': ('tags','locations', 'bands', 'musicians')}),
     )
 
+    filter_horizontal = ('tags',)
     list_display = ('title', 'price', 'published', 'date')
     list_editable = ('published',)
     list_filter = ('published', 'date', 'price')

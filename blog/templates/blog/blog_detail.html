@@ -21,12 +21,14 @@
                         <p>{{ blog.annotation }}</p>
                         <p>{{ blog.content|safe }}</p>
                     </article>
+                    {% if blog.tags.exists %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Теги: </span>
                         {% for tag in blog.tags.all %}
                             <a href='#'>#{{ tag.name }} </a>
                         {% endfor %}
                     </p>
+                    {% endif %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Опубликован: </span>
                         <strong>{{ blog.created_at|date }}</strong>
