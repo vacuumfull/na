@@ -16,6 +16,7 @@ from django.db.models.query import QuerySet
 
 from event.models import Event
 from place.models import Place
+from tag.models import Tag
 
 
 RUBRICS_LIST = (
@@ -74,7 +75,9 @@ class Blog(models.Model):
     place = models.ForeignKey(Place, blank=True, null=True,
                               on_delete=models.SET_NULL,
                               verbose_name='Место')
-    # tags = models.ManyToManyField(verbose_name='Тэги')
+    tags = models.ManyToManyField(Tag, related_name='blog_tags',
+                                  related_query_name='blog_tag',
+                                  verbose_name='Тэги')
 
     published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
