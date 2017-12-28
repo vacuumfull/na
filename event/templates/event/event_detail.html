@@ -33,13 +33,13 @@
                         <strong>{{ event.date|date:'H:i d.m.Y'}}</strong>
                     </p>
                     {% if event.tags.exists %}
-                   <p class="__margin-bottom_xs __margin-top_xs">
-                       <span>Теги: </span>
-                       {% for tag in event.tags.all %}
-                           <a href='#'>#{{ tag.name }}</a>
-                       {% endfor %}
-                   </p>
-                   {% endif %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in event.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
                     <p>
                         <span>Коллективы: &nbsp;</span><br>
                         {% for band in event.bands.all %}

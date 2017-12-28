@@ -48,9 +48,17 @@ class BlogCreate(CreateView):
     def form_valid(self, form):
         """Add user info to form."""
         instance = form.save(commit=False)
+        tags = set()
+        tags.add(self.request.POST.get('tags'))
+        print(tags)
+        #instance.tags = tags
         instance.author = self.request.user
         form.author = self.request.user
+        form.tags = tags
+       # form.save_m2m()
         return super().form_valid(form)
+
+
 
 
 class BlogUpdate(UpdateView):

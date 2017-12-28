@@ -3,7 +3,7 @@
 {% block content %}
 
 <div id="posts_page" class="container">
-    <h4 class="center __margin-top_xxl">Добавить пост</h4>
+    <h4 class="center __margin-top_xxl  __margin-bottom_xxl">Добавить пост</h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -29,7 +29,9 @@
                                 <div class="input-group">
                                     <div class="input-field col s12">
                                         <div class="__tags-field">
-                                            Место для вписывания тегов
+                                            {{ form.tags.errors }}
+                                            {{ form.tags }}
+                                            {{ form.tags.label_tag }}
                                         </div>
                                     </div>
                                 </div>
@@ -44,13 +46,11 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s6">
-                                        
                                         {% if form.place|length > 1 %}
                                             {{ form.place.errors }}
                                             {{ form.place }}
                                             {{ form.place.label_tag }}
                                         {% endif %}
-                                        
                                     </div>
                                 </div>
                                 <div class="input-group">

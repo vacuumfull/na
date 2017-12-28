@@ -9,6 +9,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from uuslug import uuslug
 
+from tag.models import Tag
 
 def image_path(_instance, filename):
     """Path and name to logo file."""
@@ -48,7 +49,11 @@ class Band(models.Model):
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
-    # tags = models.ManyToManyField(verbose_name='Тэги')
+                        
+    tags = models.ManyToManyField(
+        Tag, related_name='band_tags',
+        related_query_name='band_tag',
+        verbose_name='Тэги')
 
     published = models.BooleanField(default=True, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
