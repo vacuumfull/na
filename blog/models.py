@@ -183,7 +183,6 @@ class Rating(models.Model):
 
 class BlogForm(forms.Form):
 
-
     title = forms.CharField(label='Название')
     image = forms.ImageField(label='Изображение')
     annotation = forms.CharField(label='Аннотация')
