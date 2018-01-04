@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 
 from blog.models import Blog, BlogForm
 from place.models import Place
+from tag.models import Tag
 
 
 class IndexList(ListView):
@@ -51,13 +52,15 @@ class BlogCreate(CreateView):
         tags = set()
         tags.add(self.request.POST.get('tags'))
         print(tags)
+        for name in tags:
+            Tag.objects.get_or_create(name=name.lower())
         #instance.tags = tags
         instance.author = self.request.user
         form.author = self.request.user
         form.tags = tags
+        form.save()
        # form.save_m2m()
         return super().form_valid(form)
-
 
 
 

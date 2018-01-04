@@ -38,7 +38,7 @@ class BlogManager(models.Manager):
 
     def user_items(self, author):
         """User created blogs"""
-        result = Blog.objects.filter(author=author).values('id', 'title', 'annotation', 'image', 'published', 'slug', 'rubric', 'created_at')
+        result = Blog.objects.filter(author=author).values('id', 'title', 'annotation', 'image', 'published', 'slug', 'rubric', 'created_at').reverse()
         result_list = [i for i in result]
         return result_list
 
@@ -179,6 +179,11 @@ class Rating(models.Model):
         unique_together = ('blog', 'user')
 
 
+class Tag(models.Model):
+
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
+                             verbose_name='Запись')
+    tag = models.ManyToManyField(Tag, related_name='tag_tag',  verbose_name='Тэги')
 
 
 class BlogForm(forms.Form):
@@ -192,7 +197,6 @@ class BlogForm(forms.Form):
     place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
     event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
   
-
 
 
 @receiver(pre_save, sender=Blog)
