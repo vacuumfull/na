@@ -179,7 +179,7 @@ class Rating(models.Model):
         unique_together = ('blog', 'user')
 
 
-class Tag(models.Model):
+class BlogTag(models.Model):
 
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
                              verbose_name='Запись')
