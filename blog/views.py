@@ -1,10 +1,11 @@
 """Blog view."""
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
 
 from blog.forms import BlogForm
 from blog.models import Blog
@@ -31,7 +32,7 @@ class BlogView(DetailView):
     model = Blog
 
 
-class BlogCreate(CreateView):
+class BlogCreate(LoginRequiredMixin, CreateView):
     """Create blog post."""
 
     model = Blog
@@ -61,7 +62,7 @@ class BlogCreate(CreateView):
 
 
 
-class BlogUpdate(UpdateView):
+class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
     model = Blog
@@ -70,12 +71,7 @@ class BlogUpdate(UpdateView):
     success_url = reverse_lazy('blog:list')
 
 
-class BlogsUserView(TemplateView):
+class BlogsUserView(LoginRequiredMixin, TemplateView):
     """Added by user blogs"""
 
     template_name = 'blog/blog_user_list.html'
-
-    def dispath(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('/')
-        return super(BlogsUserView, self).dispath(request, *args, **kwargs)
