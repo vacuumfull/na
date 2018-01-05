@@ -1,15 +1,13 @@
 """Blog view."""
 from django.views.generic import TemplateView
-from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
-from django import forms
 from django.shortcuts import redirect
 
-from blog.models import Blog, BlogForm
-from place.models import Place
+from blog.forms import BlogForm
+from blog.models import Blog
 from tag.models import Tag
 
 
@@ -48,18 +46,17 @@ class BlogCreate(CreateView):
 
     def form_valid(self, form):
         """Add user info to form."""
+        SEPARATOR = ' '
         instance = form.save(commit=False)
-        tags = set()
-        tags.add(self.request.POST.get('tags'))
-        print(tags)
-        for name in tags:
-            Tag.objects.get_or_create(name=name.lower())
-        #instance.tags = tags
         instance.author = self.request.user
-        form.author = self.request.user
-        form.tags = tags
-        form.save()
-       # form.save_m2m()
+        instance.save()
+
+        # create blog tags
+        tags = set(self.request.POST.get('tags').split(SEPARATOR))
+        for name in tags:
+            obj, _created = Tag.objects.get_or_create(name=name.lower())
+            obj.blog_tags.add(instance)
+
         return super().form_valid(form)
 
 

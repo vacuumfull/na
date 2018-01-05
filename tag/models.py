@@ -12,7 +12,7 @@ class TagManager(models.Manager):
 
 class Tag(models.Model):
     """Tag model"""
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=60, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
