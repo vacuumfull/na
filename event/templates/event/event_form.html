@@ -3,7 +3,7 @@
 {% block content %}
 
 <div id="events_page" class="container">
-    <h4 class="center __margin-top_xxl">Добавить событие</h4>
+    <h4 class="center __margin-top_xxl __margin-bottom_xl">Добавить событие</h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -45,22 +45,33 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s4">
-                                        {{ form.bands.errors }}
-                                        {{ form.bands }}
-                                        {{ form.bands.label_tag }}
+                                        {% if form.bands|length > 1 %}
+                                            {{ form.bands.errors }}
+                                            {{ form.bands }}
+                                            {{ form.bands.label_tag }} 
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s4">
-                                        {{ form.bands.errors }}
+                                        {{ form.musicians.errors }}
                                         {{ form.musicians }}
                                         {{ form.musicians.label_tag }}
+                                        <!--select id="id_musicians" name="musicians" >
+                                            <option value="">Выберите музыканта</option>
+                                            {% for musician in form.musicians %}
+                                                <option value="{{ musician.id }}">{{ musician.username }}</option>
+                                            {% endfor %}
+                                        </select-->
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s12">
-                                        <div class="__tags-field">
-                                            Место для вписывания тегов
+                                        <tags-component></tags-component>
+                                        {{ form.tags.errors }}
+                                        <div class="__tags-field __hidden">
+                                            {{ form.tags }}
+                                            {{ form.tags.label_tag }}
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +121,5 @@
 
 
 {% block js %}
-
 <script src="/static/dist/initAdmin.entry.js"></script>
-
 {% endblock js %}

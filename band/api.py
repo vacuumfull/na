@@ -7,6 +7,6 @@ def list_items(user: object) -> list:
 
 def remove_item(item_id:int) -> None:
     try: 
-        Band.objects.filter(id=item_id).remove()
+        Band.objects.filter(id=item_id).delete()
     except Band.DoesNotExist:
         pass

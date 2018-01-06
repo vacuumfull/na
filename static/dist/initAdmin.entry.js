@@ -54764,6 +54764,10 @@ var _MapComponent = __webpack_require__(291);
 
 var _MapComponent2 = _interopRequireDefault(_MapComponent);
 
+var _TagsComponent = __webpack_require__(321);
+
+var _TagsComponent2 = _interopRequireDefault(_TagsComponent);
+
 var _SettingsComponent = __webpack_require__(293);
 
 var _SettingsComponent2 = _interopRequireDefault(_SettingsComponent);
@@ -54777,6 +54781,7 @@ new _vue2.default({
         'left-messages': _LeftMessagesComponent2.default,
         'left-modal': _LeftModalComponent2.default,
         'map-component': _MapComponent2.default,
+        'tags-component': _TagsComponent2.default,
         'user-menu': _UserMenuComponent2.default,
         'datepicker': _vuejsDatepicker2.default,
         'settings': _SettingsComponent2.default
@@ -54815,11 +54820,6 @@ new _vue2.default({
             (0, _jquery2.default)('.__worktime textarea').addClass('materialize-textarea');
             (0, _jquery2.default)('.__remove-field label').text('Удалить место');
             (0, _jquery2.default)('#modal-music').modal();
-            (0, _jquery2.default)('.chips').material_chip();
-            (0, _jquery2.default)('.chips-placeholder').material_chip({
-                placeholder: 'Печатать сюда ',
-                secondaryPlaceholder: 'еще?'
-            });
         },
         customFormatter: function customFormatter(date) {
 
@@ -55341,6 +55341,119 @@ exports.default = Settings;
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"row\">\t\n\t<div class=\"col s6\">\n\t\t<table class=\"centered bordered __border __margin-bottom_xxl\">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th><h6>Ответ на ваш<br>коммент</h6></th>\n\t\t\t\t\t<th><h6>Коммент на пост,<br>события, место</h6></th>\n\t\t\t\t\t<th><h6>Оценка поста,<br>места, события</h6></th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<template v-for=\"(item, key) in settings\" >\n\t\t\t\t\t<tr class=\"hovered-row\">\n\t\t\t\t\t\t<td v-if=\"!settings.alert_comment\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_comment\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"!settings.alert_blog\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_blog\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"!settings.alert_rating\">\n\t\t\t\t\t\t\t<span class=\"red-text\">Не уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td v-if=\"settings.alert_rating\">\n\t\t\t\t\t\t\t<span class=\"green-text\">Уведомлять</span>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t</template>\n\t\t\t</tbody>\n\t\t</table>\t\t\n\t</div>\n\t<!-- Modal Structure -->\n\t<div id=\"modal-music\" class=\"modal modal-fixed-footer\">\n\t\t<div class=\"modal-content\">\n\t\t\t<h4 class=\"__margin-top_m __margin-bottom_m\">Какую музыку ты слушаешь?</h4>\n\t\t\t<p>\n\t\t\t\tПросим выбрать хотя бы одно музыкальное направление, которое ты предпочитаешь. \n\t\t\t\tЕсли в списке нет того, что тебе нравится, то напиши в поле ниже и нажми <b>Enter</b>.\n\t\t\t\tЕсли еще не определился с направлением или не знаешь, как оно называется, то \n\t\t\t\tукажи любимые музыкальные коллективы. \n\t\t\t</p>\n\t\t\t<p>\n\t\t\t\tНа основе твоих предпочтений, система будет подбирать для тебя события, места и не только.\n\t\t\t</p>\n\t\t\t<div class=\"music-field __margin-top_l __margin-bottom_l\">\n\t\t\t\t<div v-on:click=\"selectMusicStyle($event)\" v-for=\"style in styles\" class=\"chip\">{{ style.tag }}</div>\n\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"chips chips-placeholder\"></div>\n\t\t</div>\n\t\t<div class=\"modal-footer\">\n\t\t\t<a href=\"#!\" v-on:click='addPreferMusic' class=\"modal-action modal-close waves-effect waves-green btn-flat \">OK!</a>\n\t\t</div>\n\t</div>\n</div>"
+
+/***/ }),
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _vue = __webpack_require__(5);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _HelperMixin = __webpack_require__(46);
+
+var _HelperMixin2 = _interopRequireDefault(_HelperMixin);
+
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _tags = __webpack_require__(322);
+
+var _tags2 = _interopRequireDefault(_tags);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TagsComponent = _vue2.default.extend({
+	template: _tags2.default,
+	mixins: [_HelperMixin2.default],
+	data: function data() {
+		return {
+			tags: []
+		};
+	},
+	mounted: function mounted() {
+		this.init();
+	},
+
+	methods: {
+		init: function init() {
+			var self = this;
+			(0, _jquery2.default)('.chips').material_chip();
+			(0, _jquery2.default)('.chips-placeholder').material_chip({
+				placeholder: 'Печатать сюда ',
+				secondaryPlaceholder: 'еще?'
+			});
+			(0, _jquery2.default)('.chips').on('chip.add', function (e, chip) {
+				if (self.tags.length === 5) {
+					(0, _jquery2.default)('.chips').material_chip({
+						data: self.tags
+					});
+					return self.info('Не более 5 тэгов!');
+				}
+				if (self.tags.length <= 5) {
+					self.tags = (0, _jquery2.default)('.chips').material_chip('data');
+					self.setTags(self.tags);
+				}
+			});
+			(0, _jquery2.default)('.chips').on('chip.delete', function (e, chip) {
+				self.tags = (0, _jquery2.default)('.chips').material_chip('data');
+				if (self.tags.length === 0) {
+					return self.info('Нужен хотя бы 1 тэг!');
+				}
+			});
+		},
+		setTags: function setTags(tags) {
+			var str = '',
+			    input = document.getElementById('id_tags');
+			tags.forEach(function (item) {
+				str += item.tag + '|';
+			});
+			input.value = str;
+		}
+	}
+});
+
+exports.default = TagsComponent;
+
+/***/ }),
+/* 322 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"__tags-field\">\n\t<span>Тэги:</span>\n\t<div class=\"chips chips-placeholder\"></div>\n</div>"
 
 /***/ })
 /******/ ]);

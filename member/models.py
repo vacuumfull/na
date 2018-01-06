@@ -13,7 +13,7 @@ def avatar_path(_instance, filename):
     """Path and name to avatar."""
     file_path = os.path.join('avatars', str(uuid4()))
     ext = filename.split('.')[-1]
-    return '{}.{}'.format(file_path, ext)
+    return '{}.{}'.format(file_path, ext)    
 
 
 class UserExtend(models.Model):
@@ -27,6 +27,8 @@ class UserExtend(models.Model):
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
+
+    
 
 
 class UserSettings(models.Model):

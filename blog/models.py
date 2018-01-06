@@ -138,7 +138,6 @@ class RatingManager(models.Manager):
         rate = rows.aggregate(Avg('value')).get('value__avg', 0)
         return rate
 
-
     def average(self, blog_id: int, user: User) -> dict:
         """Average blog rating.
         is_vote - check voted this user in current blog
@@ -151,7 +150,6 @@ class RatingManager(models.Manager):
             'total': rows.count(),
         }
         return result
-
 
     def average_unlogin(self, blog_id: int) -> dict:
 
@@ -177,26 +175,6 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('blog', 'user')
-
-
-class BlogTag(models.Model):
-
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE,
-                             verbose_name='Запись')
-    tag = models.ManyToManyField(Tag, related_name='tag_tag',  verbose_name='Тэги')
-
-
-class BlogForm(forms.Form):
-
-    title = forms.CharField(label='Название')
-    image = forms.ImageField(label='Изображение')
-    annotation = forms.CharField(label='Аннотация')
-    tags = forms.CharField(label='Тэги')
-    rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
-    content = forms.CharField(label='Содержание', widget=CKEditorWidget)
-    place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
-    event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
-  
 
 
 @receiver(pre_save, sender=Blog)

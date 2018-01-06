@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from event.models import Event
-
+from event.forms import EventForm
+from tag.models import Tag
 
 class EventList(ListView):
     """Index list for events."""
@@ -23,17 +24,31 @@ class EventView(DetailView):
 
 
 class EventCreate(CreateView):
-    """Create blog post."""
+    """Create event."""
 
     model = Event
     fields = ['title', 'image', 'description', 'date', 'price',
               'bands', 'musicians', 'locations']
     success_url = reverse_lazy('event:list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = EventForm
+        return context
+
     def form_valid(self, form):
         """Add user info to form."""
+        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.owner = self.request.user
+        instance.save()
+        # create event tags
+        tags = set(self.request.POST.get('tags').split(SEPARATOR))
+        for name in tags:
+            if len(name) != 0: 
+                obj, _created = Tag.objects.get_or_create(name=name.lower())
+                obj.event_tags.add(instance)
+        
         return super().form_valid(form)
 
 

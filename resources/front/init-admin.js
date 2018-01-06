@@ -7,6 +7,7 @@ import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
 import UserMenu from './components/UserMenuComponent';
 import MapComponent from './components/MapComponent';
+import TagsComponent from './components/TagsComponent';
 import Settings from './components/SettingsComponent';
 
 
@@ -17,6 +18,7 @@ new Vue({
         'left-messages': LeftMessages,
         'left-modal': LeftModal,
         'map-component': MapComponent,
+        'tags-component': TagsComponent,
         'user-menu': UserMenu,
         'datepicker': Datepicker,
         'settings': Settings
@@ -52,11 +54,6 @@ new Vue({
             $('.__worktime textarea').addClass('materialize-textarea');
             $('.__remove-field label').text('Удалить место');
             $('#modal-music').modal();
-            $('.chips').material_chip();
-            $('.chips-placeholder').material_chip({
-                placeholder: 'Печатать сюда ',
-                secondaryPlaceholder: 'еще?',
-            });
         },
         customFormatter(date) {
             

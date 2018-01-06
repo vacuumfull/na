@@ -28,7 +28,8 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s12">
-                                        <div class="__tags-field">
+                                        <tags-component></tags-component>
+                                        <div class="__tags-field __hidden">
                                             {{ form.tags.errors }}
                                             {{ form.tags }}
                                             {{ form.tags.label_tag }}
@@ -106,7 +107,5 @@
 
 
 {% block js %}
-
 <script src="/static/dist/initAdmin.entry.js"></script>
-
 {% endblock js %}
