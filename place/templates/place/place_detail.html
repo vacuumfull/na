@@ -24,9 +24,14 @@
                         <span>Представитель:</span>
                         <strong id="getter-name">{{ place.owner.username }}</strong>
                     </p>
-                    <p><span>Тэги:&nbsp;&nbsp;</span>
-                        <strong>#лес villa&nbsp;</strong>
-                    </p>
+                    {% if place.tags.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in place.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
                     <article>{{ place.description }}</article>
                     <div class="__margin-top_xl">
                         <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">

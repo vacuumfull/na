@@ -21,10 +21,10 @@
                     <template v-if="type === 'band' || type === 'event' || type === 'blog'">
                         <th><h6>Постер</h6></th>
                     </template>
+                    <th class="__padding-right_m __padding-left_m"><h6>Дата<br>создания</h6></th>
                     <template v-if="type === 'event'">
                         <th class="__padding-right_m __padding-left_m"><h6>Дата<br>мероприятия</h6></th>
                     </template>
-                    <th class="__padding-right_m __padding-left_m"><h6>Дата<br>создания</h6></th>
                     <th><h6>Операции</h6></th>
                 </tr>
             </thead>
@@ -83,7 +83,7 @@
                             <a :href="'/places/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
                                 <i class="material-icons dp48">mode_edit</i>
                             </a>
-                            <a v-on:click="remove(item.id)" title="Удалить" class="btn-floating btn-large red">
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
                                 <i class="material-icons dp48">clear</i>
                             </a>
                         </td>
@@ -97,7 +97,7 @@
                             <a :href="'/blogs/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
                                 <i class="material-icons dp48">mode_edit</i>
                             </a>
-                            <a v-on:click="remove(item.id)" title="Удалить" class="btn-floating btn-large red">
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
                                 <i class="material-icons dp48">clear</i>
                             </a>
                         </td>
@@ -111,7 +111,7 @@
                             <a :href="'/events/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
                                 <i class="material-icons dp48">mode_edit</i>
                             </a>
-                            <a v-on:click="remove(item.id)" title="Удалить" class="btn-floating btn-large red">
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
                                 <i class="material-icons dp48">clear</i>
                             </a>
                         </td>
@@ -125,7 +125,7 @@
                             <a :href="'/bands/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
                                 <i class="material-icons dp48">mode_edit</i>
                             </a>
-                            <a v-on:click="remove(item.id)" title="Удалить" class="btn-floating btn-large red">
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
                                 <i class="material-icons dp48">clear</i>
                             </a>
                         </td>

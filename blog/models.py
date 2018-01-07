@@ -38,7 +38,7 @@ class BlogManager(models.Manager):
 
     def user_items(self, author):
         """User created blogs"""
-        result = Blog.objects.filter(author=author).values('id', 'title', 'annotation', 'image', 'published', 'slug', 'rubric', 'created_at')
+        result = Blog.objects.filter(author=author).values('id', 'title', 'annotation', 'image', 'published', 'slug', 'rubric', 'created_at').reverse()
         result_list = [i for i in result]
         return result_list
 
@@ -138,7 +138,6 @@ class RatingManager(models.Manager):
         rate = rows.aggregate(Avg('value')).get('value__avg', 0)
         return rate
 
-
     def average(self, blog_id: int, user: User) -> dict:
         """Average blog rating.
         is_vote - check voted this user in current blog
@@ -151,7 +150,6 @@ class RatingManager(models.Manager):
             'total': rows.count(),
         }
         return result
-
 
     def average_unlogin(self, blog_id: int) -> dict:
 
@@ -177,22 +175,6 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ('blog', 'user')
-
-
-
-
-class BlogForm(forms.Form):
-
-
-    title = forms.CharField(label='Название')
-    image = forms.ImageField(label='Изображение')
-    annotation = forms.CharField(label='Аннотация')
-    rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
-    content = forms.CharField(label='Содержание', widget=CKEditorWidget)
-    place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
-    event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
-  
-
 
 
 @receiver(pre_save, sender=Blog)

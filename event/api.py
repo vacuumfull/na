@@ -47,6 +47,6 @@ def list_items(user: object) -> list:
 
 def remove_item(item_id:int) -> None:
     try: 
-        Event.objects.filter(id=item_id).remove()
+        Event.objects.filter(id=item_id).delete()
     except Event.DoesNotExist:
         pass

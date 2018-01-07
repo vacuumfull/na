@@ -35,7 +35,27 @@ const UserItems = Vue.extend({
                     console.error(error)
                 })
 
-        }
+        },
+        removeItem(id, rowId){
+            let self = this,
+                uri = `/api/1/item/remove/`,
+                data = new FormData();
+                console.log(rowId)
+            fetch(uri, {
+                    method: "POST", 
+                    body: `sessionid=${self.getSess()}&app=${self.type}&item_id=${id}`,
+                    headers: {
+                        "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" 
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success){
+                        document.getElementById(rowId).remove()
+                    }
+                })
+                .catch(error => console.error(error))
+            }
     }
 })
 

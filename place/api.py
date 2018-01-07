@@ -47,7 +47,7 @@ def list_items(user: object) -> list:
 
 def remove_item(item_id:int) -> None:
     try: 
-        Place.objects.filter(id=item_id).remove()
+        Place.objects.filter(id=item_id).delete()
     except Place.DoesNotExist:
         pass
 

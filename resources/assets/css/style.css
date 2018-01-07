@@ -112,8 +112,8 @@ table.__left > thead> tr > th.__left{
     padding: 11px 15px 10px 25px;
     font-size: 17px;
     z-index: 99;
-    top: 220px;
-    position: absolute;
+    top: 223px;
+    position: fixed;
     left: -50px;
     transition: 0.5s ease;
 }
@@ -124,8 +124,8 @@ table.__left > thead> tr > th.__left{
     padding: 11px 15px 10px 25px;
     font-size: 17px;
     z-index: 99;
-    top: 173px;
-    position: absolute;
+    top: 176px;
+    position: fixed;
     left: -50px;
     transition: 0.5s ease;
 }
