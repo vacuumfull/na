@@ -142,6 +142,12 @@ class RatingManager(models.Manager):
     def rating(self, event_id):
         rows = Rating.objects.filter(event=event_id)
         rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        rate = str(round(rate, 1))
+    
+        if rate[-1] == '0':
+            shift = len(rate) - 2
+            rate = rate[:shift]
+        
         return rate
 
 

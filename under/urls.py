@@ -17,6 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
 from django.urls import include, path, re_path
+from django.conf.urls import handler404, handler500
 
 import api.urls
 import band.urls
@@ -26,6 +27,9 @@ import flatten.urls
 import member.urls
 import place.urls
 from under.views import IndexView
+
+handler404 = 'under.views.handler404'
+handler500 = 'under.views.handler404'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

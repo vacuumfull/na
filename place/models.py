@@ -69,6 +69,11 @@ class Place(models.Model):
         related_query_name='place_tag',
         verbose_name='Тэги')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
+    coordinates = models.CharField(max_length=150, verbose_name='Координаты')
+    worktime = models.CharField(max_length=255, blank=True, null=True,
+                                   verbose_name='Время работы')
+    address = models.CharField(max_length=255, blank=True, null=True,
+                                   verbose_name='Адрес')
 
     published = models.BooleanField(default=False, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)
@@ -144,6 +149,12 @@ class RatingManager(models.Manager):
     def rating(self, place_id):
         rows = Rating.objects.filter(place=place_id)
         rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        rate = str(round(rate, 1))
+    
+        if rate[-1] == '0':
+            shift = len(rate) - 2
+            rate = rate[:shift]
+            
         return rate
 
 

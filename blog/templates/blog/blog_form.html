@@ -29,8 +29,8 @@
                                 <div class="input-group">
                                     <div class="input-field col s12">
                                         <tags-component></tags-component>
+                                        {{ form.tags.errors }}
                                         <div class="__tags-field __hidden">
-                                            {{ form.tags.errors }}
                                             {{ form.tags }}
                                             {{ form.tags.label_tag }}
                                         </div>

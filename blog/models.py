@@ -136,6 +136,12 @@ class RatingManager(models.Manager):
     def rating(self, blog_id):
         rows = Rating.objects.filter(blog=blog_id)
         rate = rows.aggregate(Avg('value')).get('value__avg', 0)
+        rate = str(round(rate, 1))
+    
+        if rate[-1] == '0':
+            shift = len(rate) - 2
+            rate = rate[:shift]
+
         return rate
 
     def average(self, blog_id: int, user: User) -> dict:

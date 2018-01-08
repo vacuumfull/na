@@ -25,8 +25,8 @@ table.__left > thead> tr > th.__left{
 }
 
 .__left-dialog_btn{
-    position: absolute;
-    top: 219px;
+    position: fixed;
+    top: 222px;
     cursor: pointer;
     padding-top: 5px;
     padding-left: 9px;
@@ -50,8 +50,8 @@ table.__left > thead> tr > th.__left{
 }
 
 .__left-menu_btn{
-    position: absolute;
-    top: 173px;
+    position: fixed;
+    top: 176px;
     cursor: pointer;
     padding-top: 5px;
     padding-left: 9px;

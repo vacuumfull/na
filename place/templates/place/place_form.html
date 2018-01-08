@@ -5,7 +5,7 @@
 {% block content %}
 
 <div id="places_page" class="container">
-    <h4 class="center __margin-top_xxl">Добавить место</h4>
+    <h4 class="center __margin-top_xxl __margin-bottom_xl">Добавить место</h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -14,7 +14,7 @@
                     <div class="col s12">
                         <div class="row">
                             <div class="card-content black-text">
-                                <div class="col s12">
+                                <div class="col s12 __margin-bottom_xl">
                                     <div class="input-group">
                                         <div class="input-field col s7">
                                             {{ form.title.errors }}
@@ -30,22 +30,46 @@
                                         </div>
                                     </div>
                                     <div class="input-group">
+                                        <div class="input-field col s4">
+                                            {{ form.coordinates.errors }}
+                                            {{ form.coordinates }}
+                                            {{ form.coordinates.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s4">
+                                            {{ form.worktime.errors }}
+                                            {{ form.worktime }}
+                                            {{ form.worktime.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s4">
+                                            {{ form.address.errors }}
+                                            {{ form.address }}
+                                            {{ form.address.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s12">
+                                            <tags-component></tags-component>
+                                            {{ form.tags.errors }}
+                                            <div class="__tags-field __hidden">
+                                                {{ form.tags }}
+                                                {{ form.tags.label_tag }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
                                         <div class="input-field col s12">
                                             {{ form.description.errors }}
                                             {{ form.description }}
                                             {{ form.description.label_tag }}
                                         </div>
                                     </div>
-                                    <div class="input-group">
-                                        <div class="input-field col s12">
-                                            <div class="__tags-field">
-                                                Место для вписывания тегов
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <hr>
-                                <div class="col s12">
+                                <!--div class="col s12">
                                     <h4 class="__margin-left_s">Места где расположено заведение</h4>
                                     {{ location_formset.management_form }}
                                     {% for location_form in location_formset %}
@@ -82,8 +106,7 @@
                                             </div>
                                         </div>
                                     {% endfor %}
-                                </div>
-                                <hr>
+                                </div-->
                                 <div class="col s12 __margin-top_xxl">
                                     <div class="input-group">
                                         <div class="file-field input-field col s4">
@@ -123,7 +146,10 @@
                     </div>
                     <div class="col s6">
                         <div class="__padding-right_l">
-                            <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                            <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
+                                Добавить
+                                <i class="material-icons dp48 right">add</i>
+                            </button>
                         </div>
                     </div>
                 </div>

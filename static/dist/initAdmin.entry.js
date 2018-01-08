@@ -54800,7 +54800,7 @@ new _vue2.default({
 
         this.init();
         setTimeout(function () {
-            var mapInput = document.querySelectorAll('#map-coordinates > div > div > input')[0];
+            var mapInput = document.getElementById('id_coordinates');
             if (mapInput !== undefined) {
                 mapInput.addEventListener('click', function () {
                     _this.showModal = !_this.showModal;
@@ -54832,7 +54832,7 @@ new _vue2.default({
             (0, _jquery2.default)('#dialog_window').modal('open');
         },
         setCoordinates: function setCoordinates(coordinates) {
-            document.querySelectorAll('#map-coordinates > div > div > input')[0].value = coordinates;
+            document.getElementById('id_coordinates').value = coordinates;
         },
         transportMessagesCount: function transportMessagesCount(messagesCount) {
             this.messagesUnreadCount = messagesCount;
@@ -55193,7 +55193,6 @@ var MapComponent = _vue2.default.extend({
     mounted: function mounted() {
         _googleMaps2.default.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q';
     },
-    created: function created() {},
     setMarkerIcon: function setMarkerIcon() {
         var self = this;
         _googleMaps2.default.load(function (google) {
@@ -55453,7 +55452,7 @@ exports.default = TagsComponent;
 /* 322 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"__tags-field\">\n\t<span>Тэги:</span>\n\t<div class=\"chips chips-placeholder\"></div>\n</div>"
+module.exports = "<div class=\"__tags-field\">\n\t<span style=\"color: #9e9e9e;\">Тэги:</span>\n\t<div class=\"chips chips-placeholder\"></div>\n</div>"
 
 /***/ })
 /******/ ]);

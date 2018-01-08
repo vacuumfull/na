@@ -62,9 +62,6 @@ const MapComponent = Vue.extend({
     mounted(){
         GoogleMapsLoader.KEY = 'AIzaSyAafNNNfqmsn7VHcU0rg1uw8BO0daZrj6Q';
     },
-    created(){
-       
-    },
     setMarkerIcon(){
         let self = this;
         GoogleMapsLoader.load((google) => {

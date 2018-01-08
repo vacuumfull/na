@@ -27,7 +27,7 @@ class EventCreate(CreateView):
     """Create event."""
 
     model = Event
-    fields = ['title', 'image', 'description', 'date', 'price',
+    fields = ['title', 'image', 'description', 'date', 'price','tags',
               'bands', 'musicians', 'locations']
     success_url = reverse_lazy('event:list')
 
@@ -56,9 +56,24 @@ class EventUpdate(UpdateView):
     """Update blog post."""
 
     model = Event
-    fields = ['title', 'image', 'description', 'date', 'price',
+    fields = ['title', 'image', 'description', 'date', 'price', 'tags',
               'bands', 'musicians', 'locations']
     success_url = reverse_lazy('event:index')
+
+    def form_valid(self, form):
+        """Add user info to form."""
+        SEPARATOR = '|'
+        instance = form.save(commit=False)
+        instance.owner = self.request.user
+        instance.save()
+        # create event tags
+        tags = set(self.request.POST.get('tags').split(SEPARATOR))
+        for name in tags:
+            if len(name) != 0: 
+                obj, _created = Tag.objects.get_or_create(name=name.lower())
+                obj.event_tags.add(instance)
+        
+        return super().form_valid(form)
 
 
 class EventsUserView(TemplateView):

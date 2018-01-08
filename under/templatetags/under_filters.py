@@ -11,6 +11,7 @@ def callMethod(obj, methodName):
 
 def arg(obj, arg):
     """Setting argument as propery of RatingManager"""
+
     setattr(obj, 'rate', int(arg))
 
     return obj

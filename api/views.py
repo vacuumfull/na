@@ -37,7 +37,7 @@ def get_locations(request):
     return JsonResponse(result, safe=False)
 
 
-def get_rate_unlogin(request, key: int, app: str):
+def get_rating(request, key: int, app: str):
     result = {}
     result = getattr(_load_module(app), 'get_rate_unlogin')(key)
 
@@ -51,18 +51,6 @@ def get_user_settings(request, sessionid: str):
 
     result = {}
     result = getattr(_load_module('member'), 'get_settings')(user)
-
-    return JsonResponse(result)
-
-
-def get_rating(request, sessionid: str, app: str, key: int):
-    """Get app rating."""
-    user = _get_user(sessionid)
-    if not user:
-        return JsonResponse({'error': 'User must be authenticated!'})
-
-    result = {}
-    result = getattr(_load_module(app), 'get_rating')(key, user)
 
     return JsonResponse(result)
 

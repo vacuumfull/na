@@ -38789,16 +38789,11 @@ var Rate = _vue2.default.extend({
         };
     },
     created: function created() {
-        if (this.isLogin === 'true') {
-            this.session = this.getSess();
-            this.getRate();
-        } else {
-            this.getRateUnlogin();
-        }
+        this.getRate();
     },
 
     methods: {
-        getRateUnlogin: function getRateUnlogin() {
+        getRate: function getRate() {
             var self = this,
                 uri = '/api/1/rating/' + self.unique + '/' + self.type + '/';
             _jquery2.default.get(uri).done(function (data) {
@@ -38806,16 +38801,7 @@ var Rate = _vue2.default.extend({
                     self.allRate = 0;
                 } else {
                     self.allRate = data.value;
-                    self.colorStars(data.value);
-                }
-            });
-        },
-        getRate: function getRate() {
-            var self = this,
-                uri = '/api/1/rating/' + self.type + '/' + self.unique + '/' + this.getSess();
-            _jquery2.default.get(uri).done(function (data) {
-                if (data.is_vote) {
-                    self.allRate = data.value;
+                    self.allRate = self.allRate.toFixed(1);
                     self.colorStars(data.value);
                 }
             });

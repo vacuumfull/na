@@ -35,7 +35,7 @@ new Vue({
     mounted(){
         this.init()
         setTimeout(() => {
-            let mapInput = document.querySelectorAll('#map-coordinates > div > div > input')[0];
+            let mapInput = document.getElementById('id_coordinates');
             if (mapInput !== undefined){
                 mapInput.addEventListener('click', () => {
                     this.showModal = !this.showModal;
@@ -66,7 +66,7 @@ new Vue({
             $('#dialog_window').modal('open');
         },
         setCoordinates(coordinates){
-            document.querySelectorAll('#map-coordinates > div > div > input')[0].value = coordinates;
+            document.getElementById('id_coordinates').value = coordinates;
         },
         transportMessagesCount(messagesCount){
             this.messagesUnreadCount = messagesCount;

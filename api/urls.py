@@ -38,9 +38,7 @@ urlpatterns = [
          views.get_comment),
     path('1/send/', views.send_comment),
     # rating
-    path('1/rating/<str:app>/<int:key>/<str:sessionid>/',
-         views.get_rating),
-    path('1/rating/<int:key>/<str:app>/', views.get_rate_unlogin), 
+    path('1/rating/<int:key>/<str:app>/', views.get_rating), 
     path('1/vote/', views.vote_rating),
 
     path('1/message/', include(message_patterns)),
