@@ -16,6 +16,7 @@ class BandList(ListView):
 
     model = Band
     context_object_name = 'bands'
+    paginate_by = 16 
 
 
 class BandDetail(DetailView):
@@ -58,6 +59,20 @@ class BandUpdate(LoginRequiredMixin, UpdateView):
     model = Band
     fields = ['name', 'description', 'image', 'members']
     success_url = reverse_lazy('band:index')
+
+    def form_valid(self, form):
+        """Add user info to form."""
+        SEPARATOR = '|'
+        instance = form.save(commit=False)
+        instance.owner = self.request.user
+        instance.save()
+        # create blog tags
+        tags = set(self.request.POST.get('tags').split(SEPARATOR))
+        for name in tags:
+            if len(name) != 0: 
+                obj, _created = Tag.objects.get_or_create(name=name.lower())
+                obj.band_tags.add(instance)
+        return super().form_valid(form)
 
 
 class BandsUserView(LoginRequiredMixin, TemplateView):

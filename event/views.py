@@ -15,6 +15,7 @@ class EventList(ListView):
 
     queryset = Event.objects.upcoming()
     context_object_name = 'events'
+    paginate_by = 16 
 
 
 class EventView(DetailView):

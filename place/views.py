@@ -18,6 +18,7 @@ class PlaceList(ListView):
 
     queryset = Place.objects.published()
     context_object_name = 'places'
+    paginate_by = 16 
 
 
 class PlaceView(DetailView):

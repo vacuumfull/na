@@ -20,7 +20,8 @@ class IndexList(ListView):
 
     queryset = Blog.objects.published()
     context_object_name = 'blogs'
-
+    paginate_by = 16 
+ 
     def get_queryset(self):
         """Filter queryset if choise one rubric."""
         query = super().get_queryset()
