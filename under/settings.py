@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'message',
     'tag',
     'bots',
-    'under',
+    'under'
 ]
 
 MIDDLEWARE = [
@@ -167,7 +167,6 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 MEDIA_URL = '/media/'
-
 
 # REDIS related settings 
 REDIS_HOST = 'localhost'

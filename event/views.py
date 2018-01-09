@@ -1,4 +1,5 @@
 """Event view."""
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -24,7 +25,7 @@ class EventView(DetailView):
     model = Event
 
 
-class EventCreate(CreateView):
+class EventCreate(LoginRequiredMixin, CreateView):
     """Create event."""
 
     model = Event
@@ -53,7 +54,7 @@ class EventCreate(CreateView):
         return super().form_valid(form)
 
 
-class EventUpdate(UpdateView):
+class EventUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
     model = Event
@@ -77,13 +78,7 @@ class EventUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class EventsUserView(TemplateView):
+class EventsUserView(LoginRequiredMixin, TemplateView):
     """User places list"""
 
     template_name = 'event/event_user_list.html'
-
-    def dispath(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('/')
-        return super(EventsUserView, self).dispath(request, *args, **kwargs)
-

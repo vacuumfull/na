@@ -16,6 +16,8 @@ def avatar_path(_instance, filename):
     return '{}.{}'.format(file_path, ext)    
 
 
+
+
 class UserExtend(models.Model):
     """User extend model."""
 

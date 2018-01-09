@@ -1,8 +1,17 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import TemplateView
+from django.contrib.auth.models import Group
+
+
+AUTH_GROUPS =  {"user": "Пользователи",
+                "musician": "Музыканты",
+                "deputy": "Представители",
+                "organizer": "Организаторы"}
+
 
 
 class SignupUser(FormView):
@@ -18,15 +27,12 @@ class SignupUser(FormView):
         username = self.request.POST['username']
         password = self.request.POST['password1']
         user = authenticate(username=username, password=password)
+        group = Group.objects.get(name=AUTH_GROUPS.get(self.request.POST['status']))
+        group.user_set.add(user)
         login(self.request, user)
         return super().form_valid(form)
 
 
-class SettingsView(TemplateView):
+class SettingsView(LoginRequiredMixin, TemplateView):
 
     template_name = 'member/settings.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('/')
-        return super(SettingsView, self).dispatch(request, *args, **kwargs)
