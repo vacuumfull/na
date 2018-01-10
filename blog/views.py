@@ -75,13 +75,13 @@ class BlogCreate(LoginRequiredMixin, CreateView):
 
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
- 
-    model = Blog
+
 #    fields = [
  #      'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place', 'tags']
     success_url = reverse_lazy('blog:list')
-    form_class = BlogForm
-
+    form_class = BlogUpdateForm
+    model = Blog
+    template_name = 'blog/blog_update.html'
 
     def form_valid(self, form):
         """Add user info to form."""

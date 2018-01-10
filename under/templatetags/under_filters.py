@@ -24,6 +24,14 @@ def has_group(user, group_name):
     return group in user.groups.all() 
  
 
+def to_pipe_string(tags):
+    tags_string = ''
+    for tag in tags:
+        tags_string += tag.name + '|'
+    return tags_string
+
+
 register.filter("call", callMethod)
 register.filter("arg", arg)
 register.filter("has_group", has_group)
+register.filter("to_pipe_string", to_pipe_string)
