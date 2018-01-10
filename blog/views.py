@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from itertools import chain
 import json
 
-from blog.forms import BlogForm
+from blog.forms import BlogForm, BlogUpdateForm
 from blog.models import Blog
 from tag.models import Tag
 from member.models import UserExtend
@@ -75,11 +75,13 @@ class BlogCreate(LoginRequiredMixin, CreateView):
 
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
-
+ 
     model = Blog
-    fields = [
-        'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place', 'tags']
+#    fields = [
+ #      'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place', 'tags']
     success_url = reverse_lazy('blog:list')
+    form_class = BlogForm
+
 
     def form_valid(self, form):
         """Add user info to form."""
@@ -89,6 +91,7 @@ class BlogUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
+        print(tags)
         for name in tags:
             if len(name) != 0: 
                 obj, _created = Tag.objects.get_or_create(name=name.lower())

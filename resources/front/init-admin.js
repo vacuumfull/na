@@ -36,7 +36,7 @@ new Vue({
         this.init()
         setTimeout(() => {
             let mapInput = document.getElementById('id_coordinates');
-            if (mapInput !== undefined){
+            if (mapInput !== undefined && mapInput !== null){
                 mapInput.addEventListener('click', () => {
                     this.showModal = !this.showModal;
                     this.showMap = true;

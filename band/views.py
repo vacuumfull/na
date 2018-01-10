@@ -30,7 +30,7 @@ class BandCreate(LoginRequiredMixin, CreateView):
 
     model = Band
     fields = ['name', 'description', 'image', 'members']
-    success_url = reverse_lazy('band:index')
+    success_url = reverse_lazy('band:list')
 
 
     def get_context_data(self, **kwargs):

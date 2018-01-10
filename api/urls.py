@@ -30,6 +30,7 @@ settings_patterns = ([
     path('music/', views.update_user_prefer_styles),
 ])
 
+
 urlpatterns = [
     # user info
     path('1/users/<str:sessionid>/', views.get_users),
