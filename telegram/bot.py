@@ -1,9 +1,9 @@
 import time
-import config
+import telegram.config
 import telebot
 
 
-bot = telebot.TeleBot(config.token)
+bot = telebot.TeleBot(telegram.config.token)
 
 @bot.message_handler(content_types=["text"])
 def repeat_all_messages(message): 
@@ -11,12 +11,12 @@ def repeat_all_messages(message):
 
 
 def send_link(slug):
-    link = '{!s}{!s}'.format(config.base_url, slug)
-    bot.send_message(config.channel, link)
+    link = '{!s}{!s}'.format(telegram.config.base_url, slug)
+    bot.send_message(telegram.config.channel, link)
     time.sleep(1)
 
 def send_text(text):
-    bot.send_message(config.channel, text)
+    bot.send_message(telegram.config.channel, text)
     time.sleep(1)
 
 

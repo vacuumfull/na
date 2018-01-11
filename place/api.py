@@ -54,8 +54,8 @@ def remove_item(item_id:int) -> None:
 
 def get_locations() -> list:
     """Get place locations"""
-    ids = Place.objects.filter(published=True).values_list('id', flat=True)
-    locations = Location.objects.filter(place_id__in=ids).values()
-    locations_list = [i for i in locations]
+    places = Place.objects.filter(published=True).values('title', 'description', 'address', 'coordinates', 'worktime', 'slug')
+  
+    places_list = [i for i in places]
 
-    return locations_list
+    return places_list

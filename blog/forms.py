@@ -3,8 +3,7 @@ from django.forms import ModelForm
 
 from ckeditor.fields import CKEditorWidget
 
-from blog.models import Blog
-from blog.models import RUBRICS_LIST
+from blog.models import RUBRICS_LIST, Blog
 from event.models import Event
 from place.models import Place
 

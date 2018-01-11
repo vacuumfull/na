@@ -28,10 +28,10 @@ class IndexList(ListView):
         if self.request.user.is_authenticated:
             # Здесь нужно подумать над выводом того, что нравится пользователю
             stylesset = UserExtend.objects.filter(user_id=self.request.user.id).values('prefer_styles')
-            styles = json.loads(stylesset[0]['prefer_styles'])
-            query_styles = query.select_related().all()
-            tags = Tag.objects.filter(name__in=styles).get()
-            blogs = tags.blog_tags.all()
+           # styles = json.loads(stylesset[0]['prefer_styles'])
+           # query_styles = query.select_related().all()
+           # tags = Tag.objects.filter(name__in=styles).get()
+           # blogs = tags.blog_tags.all()
         else:
             if 'rubric' in self.kwargs:
                 query = query.filter(rubric=self.kwargs['rubric'])
@@ -76,8 +76,6 @@ class BlogCreate(LoginRequiredMixin, CreateView):
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
-#    fields = [
- #      'title', 'rubric', 'image', 'annotation', 'content', 'event', 'place', 'tags']
     success_url = reverse_lazy('blog:list')
     form_class = BlogUpdateForm
     model = Blog
@@ -91,7 +89,7 @@ class BlogUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        print(tags)
+  
         for name in tags:
             if len(name) != 0: 
                 obj, _created = Tag.objects.get_or_create(name=name.lower())

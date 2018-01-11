@@ -8,8 +8,9 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from event.models import Event
-from event.forms import EventForm
+from event.forms import EventForm, EventUpdateForm
 from tag.models import Tag
+
 
 class EventList(ListView):
     """Index list for events."""
@@ -58,9 +59,9 @@ class EventUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
     model = Event
-    fields = ['title', 'image', 'description', 'date', 'price', 'tags',
-              'bands', 'musicians', 'locations']
+    form_class = EventUpdateForm
     success_url = reverse_lazy('event:index')
+    template_name = 'event/event_update.html'
 
     def form_valid(self, form):
         """Add user info to form."""

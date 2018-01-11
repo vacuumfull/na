@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'message',
     'tag',
     'bots',
+    'telegram',
     'under'
 ]
 

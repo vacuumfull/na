@@ -36,12 +36,10 @@ const Search = Vue.extend({
         },
         search(key){
             let self = this,
-                uri = "/search/main";
+                uri = `/api/1/search/default/${key}`;
 
-            $.get(uri, {
-                    keyword: key
-                })
-                .done(function(data){
+            $.get(uri)
+                .done((data) => {
                     self.posts = data.response.posts;
                     self.events = data.response.events;
                     self.places = data.response.places;
@@ -76,13 +74,13 @@ const Search = Vue.extend({
         },
         getTags(){
             let self = this,
-                uri = "/search/tags";
+                uri = "/api/1/search/tags";
             $.get(uri)
-                .done(function(data){
-                    self.tags = data.response
-                }).fail(function(error){
+                .done((data) => {
+                    self.tags = data
+                }).fail((error) => {
                     console.log(error)
-            });
+                });
         }
     }
 })

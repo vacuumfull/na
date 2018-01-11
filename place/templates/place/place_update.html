@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load under_filters %}
 
 {% block content %}
 
@@ -54,7 +55,7 @@
                                             <tags-component></tags-component>
                                             {{ form.tags.errors }}
                                             <div class="__tags-field __hidden">
-                                                {{ form.tags }}
+                                                <input id="id_tags" type="text" name="tags" value="{{ form.tags.value|to_pipe_string }}" class="form-control" required  />
                                                 {{ form.tags.label_tag }}
                                             </div>
                                         </div>
@@ -137,13 +138,27 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s6">
+                    <div class="col s3">
                         <a class="left amber darken-3 __margin-left_m  btn-hovered waves-effect waves-light btn-large" href="{% url 'place:index' %}">
                             Отмена
                             <i class="material-icons right dp48">clear</i>
                         </a>
                     </div>
-                    <div class="col s6">
+                    <div class="col s3">
+                        {% if request.user.is_superuser %}
+                        <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
+                            Текст в телегу 
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="col s3">
+                        {% if request.user.is_superuser %}
+                        <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
+                            Ссылку в телегу 
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="col s3">
                         <div class="__padding-right_l">
                             <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
                                 Добавить
@@ -175,10 +190,10 @@
 
 
 {% block title %}
-<title>Создание места</title>
+<title>Редактирование места</title>
 {% endblock title %}
 
 
 {% block description %}
-<meta name="description" content="Создание места">
+<meta name="description" content="Редактирование места">
 {% endblock description %}

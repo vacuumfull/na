@@ -7,6 +7,8 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
+import telegram.bot 
+
 import json
 import re
 
@@ -20,6 +22,28 @@ import tag.api
 
 
 APPS_SET = set(['blog', 'band', 'place', 'event'])
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_telegram_info(request):
+    info = request.POST.get('info')
+    if request.user.is_superuser:
+        telegram.bot.send_text(info)
+        return JsonResponse({'success': 'Sended!'})
+    else:
+        return JsonResponse({'error': 'You do not have permission for this operation!'})
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_telegram_link(request):
+    info = request.POST.get('info')
+    if request.user.is_superuser:
+        telegram.bot.send_text(info)
+        return JsonResponse({'success': 'Sended!'})
+    else:
+        return JsonResponse({'error': 'You do not have permission for this operation!'})
 
 
 def get_users(request, sessionid: str):

@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from place.models import Place
-from place.forms import PlaceForm
+from place.forms import PlaceForm, PlaceUpdateForm
 from tag.models import Tag
 
 
@@ -64,8 +64,10 @@ class PlaceUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
     model = Place
-    fields = ['title', 'description', 'address', 'coordinates', 'worktime', 'musicians', 'image', 'icon', 'tags']
+    form_class = PlaceUpdateForm
     success_url = reverse_lazy('place:index')
+    template_name = 'place/place_update.html'
+
 
     def form_valid(self, form):
         """Add user info to form."""
@@ -80,6 +82,7 @@ class PlaceUpdate(LoginRequiredMixin, UpdateView):
                 obj, _created = Tag.objects.get_or_create(name=name.lower())
                 obj.place_tags.add(instance)
         return super().form_valid(form)
+
 
 
 class MapView(TemplateView):
