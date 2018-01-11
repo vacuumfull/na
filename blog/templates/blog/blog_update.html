@@ -94,12 +94,19 @@
                             </div>
                             <div class="col s3">
                                 {% if request.user.is_superuser %}
-                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegram()">
-                                    Отправить в телегу 
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
+                                    Текст в телегу 
                                 </a>
                                 {% endif %}
                             </div>
-                            <div class="col s6">
+                            <div class="col s3">
+                                {% if request.user.is_superuser %}
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
+                                    Ссылку в телегу 
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s3">
                                 <div class="__padding-right_l">
                                     <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
                                         Добавить
