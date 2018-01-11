@@ -36,7 +36,7 @@ new Vue({
         this.init()
         setTimeout(() => {
             let mapInput = document.getElementById('id_coordinates');
-            if (mapInput !== undefined){
+            if (mapInput !== undefined && mapInput !== null){
                 mapInput.addEventListener('click', () => {
                     this.showModal = !this.showModal;
                     this.showMap = true;
@@ -46,6 +46,7 @@ new Vue({
     },
     methods: {
         init(){
+            let currLocation = window.location.href;
             $(".button-collapse").sideNav();
             $('select').material_select();
             $('.tooltipped').tooltip({delay: 50});
@@ -54,10 +55,19 @@ new Vue({
             $('.__worktime textarea').addClass('materialize-textarea');
             $('.__remove-field label').text('Удалить место');
             $('#modal-music').modal();
+            if (currLocation.includes('/edit/')){
+				this.setEditDate()
+			}
         },
         customFormatter(date) {
             
             return;
+        },
+        setEditDate(){
+            let input =  document.getElementById('id_date');
+            if (input !== undefined && input !== null){
+                this.date = input.value
+            }
         },
         openModal(userInfo){
             this.userInfo = userInfo;
@@ -72,8 +82,42 @@ new Vue({
             this.messagesUnreadCount = messagesCount;
         },
         setDate(date){
-            this.date = moment(date).format('YYYY-MM-D')
-            document.getElementById('id_date').value = this.date;
+            input = document.getElementById('id_date')
+            if (input !== undefined && input !== null){
+                this.date = moment(date).format('YYYY-MM-D')
+                input.value = this.date;
+            }
+        },
+        sendTelegramInfo(){
+            let uri = `/api/1/telegram/info/`,
+                info = "";
+
+            if (window.location.href.includes('/blogs/')){
+                info = document.getElementById('id_annotation').value;
+            } else {
+                info = document.getElementById('id_description').value;
+            }
+
+            $.post(uri, {info: info})
+                .done(data => {
+                   
+                })
+                .fail(error => {
+                    console.error(error)
+                })
+        },
+        sendTelegramLink(){
+            let uri = `/api/1/telegram/link/`,
+                link = window.location.pathname.replace("edit/", "");        
+
+            $.post(uri, {link: link})
+                .done(data => {
+                   
+                })
+                .fail(error => {
+                    console.error(error)
+                })
         }
+
     }
 });

@@ -53990,7 +53990,7 @@ new _vue2.default({
         this.init();
         setTimeout(function () {
             var mapInput = document.getElementById('id_coordinates');
-            if (mapInput !== undefined) {
+            if (mapInput !== undefined && mapInput !== null) {
                 mapInput.addEventListener('click', function () {
                     _this.showModal = !_this.showModal;
                     _this.showMap = true;
@@ -54001,6 +54001,7 @@ new _vue2.default({
 
     methods: {
         init: function init() {
+            var currLocation = window.location.href;
             (0, _jquery2.default)(".button-collapse").sideNav();
             (0, _jquery2.default)('select').material_select();
             (0, _jquery2.default)('.tooltipped').tooltip({ delay: 50 });
@@ -54009,10 +54010,19 @@ new _vue2.default({
             (0, _jquery2.default)('.__worktime textarea').addClass('materialize-textarea');
             (0, _jquery2.default)('.__remove-field label').text('Удалить место');
             (0, _jquery2.default)('#modal-music').modal();
+            if (currLocation.includes('/edit/')) {
+                this.setEditDate();
+            }
         },
         customFormatter: function customFormatter(date) {
 
             return;
+        },
+        setEditDate: function setEditDate() {
+            var input = document.getElementById('id_date');
+            if (input !== undefined && input !== null) {
+                this.date = input.value;
+            }
         },
         openModal: function openModal(userInfo) {
             this.userInfo = userInfo;
@@ -54027,8 +54037,33 @@ new _vue2.default({
             this.messagesUnreadCount = messagesCount;
         },
         setDate: function setDate(date) {
-            this.date = (0, _moment2.default)(date).format('YYYY-MM-D');
-            document.getElementById('id_date').value = this.date;
+            input = document.getElementById('id_date');
+            if (input !== undefined && input !== null) {
+                this.date = (0, _moment2.default)(date).format('YYYY-MM-D');
+                input.value = this.date;
+            }
+        },
+        sendTelegramInfo: function sendTelegramInfo() {
+            var uri = '/api/1/telegram/info/',
+                info = "";
+
+            if (window.location.href.includes('/blogs/')) {
+                info = document.getElementById('id_annotation').value;
+            } else {
+                info = document.getElementById('id_description').value;
+            }
+
+            _jquery2.default.post(uri, { info: info }).done(function (data) {}).fail(function (error) {
+                console.error(error);
+            });
+        },
+        sendTelegramLink: function sendTelegramLink() {
+            var uri = '/api/1/telegram/link/',
+                link = window.location.pathname.replace("edit/", "");
+
+            _jquery2.default.post(uri, { link: link }).done(function (data) {}).fail(function (error) {
+                console.error(error);
+            });
         }
     }
 });
@@ -54457,7 +54492,8 @@ var TagsComponent = _vue2.default.extend({
 
 	methods: {
 		init: function init() {
-			var self = this;
+			var self = this,
+			    currLocation = window.location.href;
 			(0, _jquery2.default)('.chips').material_chip();
 			(0, _jquery2.default)('.chips-placeholder').material_chip({
 				placeholder: 'Печатать сюда ',
@@ -54481,6 +54517,9 @@ var TagsComponent = _vue2.default.extend({
 					return self.info('Нужен хотя бы 1 тэг!');
 				}
 			});
+			if (currLocation.includes('/edit/')) {
+				self.getCurrentTags();
+			}
 		},
 		setTags: function setTags(tags) {
 			var str = '',
@@ -54489,6 +54528,17 @@ var TagsComponent = _vue2.default.extend({
 				str += item.tag + '|';
 			});
 			input.value = str;
+		},
+		getCurrentTags: function getCurrentTags() {
+			var tags = document.getElementById('id_tags').value;
+			this.tags = tags.split('|').filter(function (x) {
+				return x !== "";
+			}).map(function (item) {
+				return item = { tag: item };
+			});
+			(0, _jquery2.default)('.chips').material_chip({
+				data: this.tags
+			});
 		}
 	}
 });

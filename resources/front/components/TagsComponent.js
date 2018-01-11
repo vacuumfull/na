@@ -16,7 +16,8 @@ const TagsComponent = Vue.extend({
 	},
 	methods: {
 		init(){
-			let self = this;
+			let self = this,
+				currLocation = window.location.href;
 			$('.chips').material_chip();
 			$('.chips-placeholder').material_chip({
 				placeholder: 'Печатать сюда ',
@@ -40,6 +41,9 @@ const TagsComponent = Vue.extend({
 					return self.info('Нужен хотя бы 1 тэг!')
 				}
 			});
+			if (currLocation.includes('/edit/')){
+				self.getCurrentTags()
+			}
 		},
 		setTags(tags){
 			let str = '', input = document.getElementById('id_tags');
@@ -47,6 +51,13 @@ const TagsComponent = Vue.extend({
 				str += item.tag + '|'
 			})
 			input.value = str
+		},
+		getCurrentTags(){
+			let tags = document.getElementById('id_tags').value;
+			this.tags = tags.split('|').filter(x => x !== "").map(item => item = {tag: item})
+			$('.chips').material_chip({
+				data: this.tags
+			});
 		}
 	}
 })

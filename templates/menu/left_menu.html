@@ -19,7 +19,6 @@
 
         <left-messages user-role="3" v-on:open-modal="openModal"></left-messages>
 
-       
         {% if user|has_group:"Пользователи" %}
             <li>
                 <a class="dropdown-button waves-effect" href="#!" data-activates="posts">
@@ -29,7 +28,6 @@
                 </a>
             </li>
         {% endif %}
-
 
         {% if user|has_group:"Музыканты" %}
             <li>
@@ -57,13 +55,6 @@
                 </a>
             </li>
             <li>
-                <a class="dropdown-button waves-effect" href="#!" data-activates="events">
-                    <i class="material-icons">event</i>
-                    События
-                    <i class="material-icons right">arrow_drop_down</i>
-                </a>
-            </li>
-            <li>
                 <a class="dropdown-button waves-effect" href="#!" data-activates="places">
                     <i class="material-icons">store_mall_directory</i>
                     Места
@@ -79,7 +70,7 @@
             </li>
         {% endif %}
 
-        {% if user|has_group:"Представители" %}
+        {% if user|has_group:"Организаторы" %}
              <li>
                 <a class="dropdown-button waves-effect" href="#!" data-activates="posts">
                     <i class="material-icons">description</i>
@@ -103,7 +94,6 @@
             </li>
         {% endif %}
 
-
         {% comment "" %}
         <li>
             <a class="dropdown-button waves-effect" href="#!" data-activates="albums">
@@ -113,6 +103,7 @@
             </a>
         </li>        
         {% endcomment %}
+
         <li>
             <a href="/admin/comment/list">
                 <i class="material-icons">question_answer</i>

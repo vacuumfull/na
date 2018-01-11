@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
+{% load under_filters %}
+
 {% block content %}
 
 <div id="events_page" class="container">
-    <h4 class="center __margin-top_xxl __margin-bottom_xl">Добавить событие</h4>
+    <h4 class="center __margin-top_xxl __margin-bottom_xl">Редактирование события</h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -70,7 +72,7 @@
                                         <tags-component></tags-component>
                                         {{ form.tags.errors }}
                                         <div class="__tags-field __hidden">
-                                            {{ form.tags }}
+                                            <input id="id_tags" type="text" name="tags" value="{{ form.tags.value|to_pipe_string }}" class="form-control" required  />
                                             {{ form.tags.label_tag }}
                                         </div>
                                     </div>
@@ -98,15 +100,32 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col s6">
+                            <div class="col s3">
                                 <a class="left amber darken-3 __margin-left_s  btn-hovered waves-effect waves-light btn-large" href="{% url 'event:index' %}">
                                     Отмена
                                     <i class="material-icons right dp48">clear</i>
                                 </a>
                             </div>
-                            <div class="col s6">
+                            <div class="col s3">
+                                {% if request.user.is_superuser %}
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
+                                    Отправить в телегу 
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s3">
+                                {% if request.user.is_superuser %}
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
+                                    Ссылку в телегу 
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s3">
                                 <div class="__padding-right_l">
-                                    <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                                    <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
+                                        Добавить
+                                        <i class="material-icons dp48 right">add</i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -126,10 +145,10 @@
 
 
 {% block title %}
-<title>Создание события</title>
+<title>Редактирование события</title>
 {% endblock title %}
 
 
 {% block description %}
-<meta name="description" content="Создание события">
+<meta name="description" content="Редактирование события">
 {% endblock description %}

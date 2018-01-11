@@ -38165,7 +38165,6 @@ new _vue2.default({
 
     watch: {
         places: function places(val, newVal) {
-            console.log(val, newVal);
             if (val.length > 0) {
                 this.setLocations();
             }
@@ -38213,7 +38212,7 @@ new _vue2.default({
 
                     var activeEvents = "",
                         marker = void 0,
-                        coords = item.maps.split(","),
+                        coords = item.coordinates.split(","),
                         position = {
                         lat: parseFloat(coords[0]),
                         lng: parseFloat(coords[1])
@@ -38229,12 +38228,12 @@ new _vue2.default({
                     if (item.active_events !== undefined) {
                         activeEvents += '<h6>Текущие события</h6><br>';
                         item.active_events.forEach(function (event) {
-                            activeEvents += '<a href="/events/' + event.id + '">' + event.title + '</a><br>';
+                            activeEvents += '<a href="/events/' + event.slug + '">' + event.title + '</a><br>';
                         });
                     }
 
                     google.maps.event.addListener(marker, 'click', function () {
-                        infowindow.setContent('<div>' + '<h6><a href="/places/' + item.id + '">' + item.title + '</a></h6>' + '<br>' + '<strong>' + item.description + '</strong><br>' + '<br>' + activeEvents + '</div>');
+                        infowindow.setContent('<div>' + '<h6><a href="/places/' + item.slug + '">' + item.title + '</a></h6>' + '<br>' + '<strong>' + item.description + '</strong><br>' + '<br>' + activeEvents + '</div>');
                         infowindow.open(self.map, this);
                     });
                 });

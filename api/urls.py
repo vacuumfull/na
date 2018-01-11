@@ -30,6 +30,7 @@ settings_patterns = ([
     path('music/', views.update_user_prefer_styles),
 ])
 
+
 urlpatterns = [
     # user info
     path('1/users/<str:sessionid>/', views.get_users),
@@ -46,4 +47,6 @@ urlpatterns = [
     path('1/item/', include(items_patterns)),
     path('1/settings/', include(settings_patterns)),
     path('1/map/', views.get_locations),
+    path('1/telegram/info/', views.send_telegram_info),
+    path('1/telegram/link/', views.send_telegram_link),
 ]

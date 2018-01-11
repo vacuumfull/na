@@ -54,6 +54,9 @@
 <script src="/static/dist/inner.entry.js"></script>
 {% endblock js %}
 
+{% block title %}
+<title>NightAgenda | Meсто {{ place.title }} </title>
+{% endblock title %}
 
 {% block description %}
 <meta name="description" content="{{ place.title }} - {{ place.description }}">

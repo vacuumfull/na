@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from band.models import Band
-from band.forms import BandForm 
+from band.forms import BandForm, BandUpdateForm
 from tag.models import Tag
 
 class BandList(ListView):
@@ -30,7 +30,7 @@ class BandCreate(LoginRequiredMixin, CreateView):
 
     model = Band
     fields = ['name', 'description', 'image', 'members']
-    success_url = reverse_lazy('band:index')
+    success_url = reverse_lazy('band:list')
 
 
     def get_context_data(self, **kwargs):
@@ -57,8 +57,9 @@ class BandUpdate(LoginRequiredMixin, UpdateView):
     """Update band post."""
 
     model = Band
-    fields = ['name', 'description', 'image', 'members']
+    form_class = BandUpdateForm
     success_url = reverse_lazy('band:index')
+    template_name = 'band/band_update.html'
 
     def form_valid(self, form):
         """Add user info to form."""

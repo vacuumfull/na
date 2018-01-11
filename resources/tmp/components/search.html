@@ -22,7 +22,7 @@
                 <div class="col s6">
                     <h4 class="center white-text">Облако тэгов</h4>
                     <div class="center">
-                        <span v-bind:style="{ fontSize: tagFont + tag + 'px'  }" v-on:click="setKeyword(key)" v-for="(tag, key) in tags" class="white-text __search-tag">#@{{ key }}&nbsp;&nbsp;</span>
+                        <span v-bind:style="{ fontSize: tagFont + tag.count + 'px'  }" v-on:click="setKeyword(tag.name)" v-for="(tag, key) in tags" class="white-text __search-tag">#{{ tag.name }}&nbsp;&nbsp;</span>
                     </div>
                 </div>
             </div>

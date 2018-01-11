@@ -6,7 +6,11 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+
+import telegram.bot 
+
 import json
+import re
 
 import blog.api
 import event.api
@@ -14,7 +18,32 @@ import place.api
 import band.api
 import message.api
 import member.api
+import tag.api
 
+
+APPS_SET = set(['blog', 'band', 'place', 'event'])
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_telegram_info(request):
+    info = request.POST.get('info')
+    if request.user.is_superuser:
+        telegram.bot.send_text(info)
+        return JsonResponse({'success': 'Sended!'})
+    else:
+        return JsonResponse({'error': 'You do not have permission for this operation!'})
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def send_telegram_link(request):
+    info = request.POST.get('info')
+    if request.user.is_superuser:
+        telegram.bot.send_text(info)
+        return JsonResponse({'success': 'Sended!'})
+    else:
+        return JsonResponse({'error': 'You do not have permission for this operation!'})
 
 
 def get_users(request, sessionid: str):
@@ -79,70 +108,52 @@ def get_dialogs(request, sessionid:str):
 
 
 def search_default(request, keyword:str):
-    keyword = 'techno'
+    """Get result from all tags"""
+    result = {}
+
+    blogs_result = getattr(_load_module('tag'), 'search_in_blogs')(str(keyword))
+    events_result = getattr(_load_module('tag'), 'search_in_events')(str(keyword))
+    places_result = getattr(_load_module('tag'), 'search_in_places')(str(keyword))
+    bands_result = getattr(_load_module('tag'), 'search_in_bands')(str(keyword))
+
     result = {
-                'id': 121,
-                'type':'event',
-                'title': 'Local Techno',
-                'description': 'Local Techno овзвращается в город',
-                'image': '/static/events/poster/local.bmp',
-                'date': '2018-01-18',
-                'price': '300',
-                'tags': 'techno, localtechno',
-                'slug': 'local_techno_return',
-                'created_at': '2018-01-01',
-                'owner': 'Kosenkoff',
-            }
-    return JsonResponse(result)
+        'blogs': blogs_result,
+        'events': events_result,
+        'places': places_result,
+        'bands': bands_result
+    }
+
+    return JsonResponse(result, safe=False)
 
 
 def search_type(request, app:str, keyword:str):
-    print('searched type')
-    app = 'event'
-    keyword = 'techno'
-    result = {
-        '1':{
-            'id': 121,
-            'title': 'Local Techno',
-            'description': 'Local Techno овзвращается в город',
-            'image': '/static/events/poster/local.bmp',
-            'date': '2018-01-18',
-            'price': '300',
-            'tags': 'techno, localtechno',
-            'slug': 'local_techno_return',
-            'created_at': '2018-01-01',
-            'owner': 'Kosenkoff',
-        },
-        '2': {
-            'id': 130,
-            'title': 'Gamma Festival',
-            'description': 'Логос анонсировал начало Гамма Фестиваля',
-            'image': '/static/events/poster/local.bmp',
-            'date': '2018-06-22',
-            'price': '2100',
-            'tags': 'techno, gammafestival, m_division',
-            'slug': 'gammafestivalagain',
-            'created_at': '2018-01-01',
-            'owner': 'Logos',
-        }
-    }
-    return JsonResponse(result)
+    """Поиск по тэгу и типу"""
+    result = {}
+    if app in APPS_SET:
+        result = getattr(_load_module('tag'), 'search_in_' + app + 's')(str(keyword))
+    else:
+        result = {'error': 'There is no such type of app'}
+
+    return JsonResponse(result, safe=False)
 
 
 
 def search_tags(request, keyword:str):
     """вывод похожих тэгов по ключу. Можно ограничить 30"""
-    print('fast search')
-    keyword = 'пизд'
-    result = ('пиздюк', 'пиздец', 'пиздюли', 'пиздэйшен', 'пиздаболка', 'пизда')
+    keyword = re.sub('<[^<]+?>', '', keyword)
+    result = {}
+    result = getattr(_load_module('tag'), 'fast_search_tags')(str(keyword))
+
     return JsonResponse(result, safe=False)
 
 
 def get_tags(request):
     """Вывод самых попоулярных тэгов с указанием количества. Макс - 1000. Запрос стоит сделать кэшиуремым"""
 
-    result = {'first searched tag': 113, 'second searched tag': 99, 'third searched tag': 87}
-    return JsonResponse(result)
+    result = {}
+    result = getattr(_load_module('tag'), 'count_tags')()
+
+    return JsonResponse(result, safe=False)
 
 
 @csrf_exempt
@@ -390,7 +401,8 @@ def _load_module(module_name: str) -> object:
         'place': place.api,
         'band': band.api,
         'message': message.api,
-        'member': member.api
+        'member': member.api,
+        'tag': tag.api,
     }
 
     return module_dict[module_name]

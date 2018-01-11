@@ -151,6 +151,15 @@ body nav .button-collapse{
     -webkit-margin-end: 0px;
 }
 
+.__headname{
+    font-size: 45px;
+}
+.__psize{
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
 .__item_img-width{
     width: 180px;
 }
