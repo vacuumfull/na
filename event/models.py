@@ -10,6 +10,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from uuslug import uuslug
+from taggit.managers import TaggableManager
 
 from band.models import Band
 from place.models import Place
@@ -76,11 +77,7 @@ class Event(models.Model):
         Place, related_name='event_location',
         verbose_name='Место проведения')
 
-    # tags = models.ManyToManyField(
-    #     Tag, related_name='event_tags',
-    #     related_query_name='event_tag',
-    #     verbose_name='Тэги')
-
+    tags = TaggableManager(verbose_name='Тэги', related_name='event_tags')
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
