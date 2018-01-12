@@ -47,52 +47,36 @@ class BlogCreate(LoginRequiredMixin, CreateView):
     """Create blog post."""
 
     model = Blog
-    fields = ['title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
+    fields = (
+        'title', 'rubric', 'image', 'annotation', 'content',
+        'event', 'place', 'tags')
     success_url = reverse_lazy('blog:list')
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = BlogForm
-        return context
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.author = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        # for name in tags:
-        #     if len(name) != 0: 
-        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
-        #         obj.blog_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
 
 
 
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
-
-    success_url = reverse_lazy('blog:list')
-    form_class = BlogUpdateForm
+    
     model = Blog
-    template_name = 'blog/blog_update.html'
+    fields = (
+        'title', 'rubric', 'image', 'annotation', 'content',
+        'event', 'place', 'tags')
+    success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.author = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-  
-        # for name in tags:
-        #     if len(name) != 0: 
-        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
-        #         obj.blog_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
 
 
