@@ -31,24 +31,12 @@ class BandCreate(LoginRequiredMixin, CreateView):
     fields = ['name', 'description', 'image', 'members']
     success_url = reverse_lazy('band:list')
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = BandForm
-        return context
-
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.owner = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        # for name in tags:
-        #     if len(name) != 0: 
-        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
-        #         obj.band_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
 
 
@@ -56,22 +44,15 @@ class BandUpdate(LoginRequiredMixin, UpdateView):
     """Update band post."""
 
     model = Band
-    form_class = BandUpdateForm
+    fields = ['name', 'description', 'image', 'members', 'tags']
     success_url = reverse_lazy('band:index')
-    template_name = 'band/band_update.html'
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.owner = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        # for name in tags:
-        #     if len(name) != 0: 
-        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
-        #         obj.band_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
 
 
