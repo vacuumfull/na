@@ -10,7 +10,6 @@ from django.shortcuts import redirect
 
 from place.models import Place
 from place.forms import PlaceForm, PlaceUpdateForm
-from tag.models import Tag
 
 
 class PlaceList(ListView):
@@ -48,10 +47,10 @@ class PlaceCreate(LoginRequiredMixin, CreateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.place_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.place_tags.add(instance)
         return super().form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -77,10 +76,10 @@ class PlaceUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.place_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.place_tags.add(instance)
         return super().form_valid(form)
 
 

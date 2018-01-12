@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'flatten',
     'blog',
     'message',
-    'tag',
     'bots',
     'telegram',
     'under'

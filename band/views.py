@@ -9,7 +9,6 @@ from django.shortcuts import redirect
 
 from band.models import Band
 from band.forms import BandForm, BandUpdateForm
-from tag.models import Tag
 
 class BandList(ListView):
     """Index list bands."""
@@ -46,10 +45,10 @@ class BandCreate(LoginRequiredMixin, CreateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.band_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.band_tags.add(instance)
         return super().form_valid(form)
 
 
@@ -69,10 +68,10 @@ class BandUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.band_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.band_tags.add(instance)
         return super().form_valid(form)
 
 

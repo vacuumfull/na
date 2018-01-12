@@ -9,7 +9,6 @@ from django.shortcuts import redirect
 
 from event.models import Event
 from event.forms import EventForm, EventUpdateForm
-from tag.models import Tag
 
 
 class EventList(ListView):
@@ -47,10 +46,10 @@ class EventCreate(LoginRequiredMixin, CreateView):
         instance.save()
         # create event tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.event_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.event_tags.add(instance)
         
         return super().form_valid(form)
 
@@ -71,10 +70,10 @@ class EventUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         # create event tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.event_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.event_tags.add(instance)
         
         return super().form_valid(form)
 

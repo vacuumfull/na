@@ -14,7 +14,7 @@ class AdminBlog(admin.ModelAdmin):
         ('Содержание', {'fields': ('content', 'published', 'tags')}),
         ('Связки', {'fields': ('event', 'place')}),
     )
-    filter_horizontal = ('tags',)
+    # filter_horizontal = ('tags',)
     list_display = ('title', 'rubric', 'author', 'published', 'created_at')
     list_editable = ('rubric', 'published',)
     list_filter = ('rubric', 'published', 'created_at')

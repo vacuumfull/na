@@ -12,7 +12,6 @@ import json
 
 from blog.forms import BlogForm, BlogUpdateForm
 from blog.models import Blog
-from tag.models import Tag
 from member.models import UserExtend
 
 class IndexList(ListView):
@@ -65,10 +64,10 @@ class BlogCreate(LoginRequiredMixin, CreateView):
         instance.save()
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.blog_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.blog_tags.add(instance)
         return super().form_valid(form)
 
 
@@ -90,10 +89,10 @@ class BlogUpdate(LoginRequiredMixin, UpdateView):
         # create blog tags
         tags = set(self.request.POST.get('tags').split(SEPARATOR))
   
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.blog_tags.add(instance)
+        # for name in tags:
+        #     if len(name) != 0: 
+        #         obj, _created = Tag.objects.get_or_create(name=name.lower())
+        #         obj.blog_tags.add(instance)
         return super().form_valid(form)
 
 
