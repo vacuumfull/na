@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from event.models import Event
-from event.forms import EventForm, EventUpdateForm
+from event.forms import EventModelForm
 
 
 class EventList(ListView):
@@ -16,7 +16,7 @@ class EventList(ListView):
 
     queryset = Event.objects.upcoming()
     context_object_name = 'events'
-    paginate_by = 16 
+    paginate_by = 16
 
 
 class EventView(DetailView):
@@ -28,10 +28,8 @@ class EventView(DetailView):
 class EventCreate(LoginRequiredMixin, CreateView):
     """Create event."""
 
+    form_class = EventModelForm
     model = Event
-    fields = (
-        'title', 'image', 'description', 'date', 'price', 'tags',
-        'bands', 'musicians')
     success_url = reverse_lazy('event:list')
 
     def form_valid(self, form):
@@ -46,10 +44,8 @@ class EventCreate(LoginRequiredMixin, CreateView):
 class EventUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
+    form_class = EventModelForm
     model = Event
-    fields = (
-        'title', 'image', 'description', 'date', 'price', 'tags',
-        'bands', 'musicians')
     success_url = reverse_lazy('event:index')
 
     def form_valid(self, form):

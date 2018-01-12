@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from itertools import chain
 import json
 
-from blog.forms import BlogForm, BlogUpdateForm
+from blog.forms import BlogModelForm
 from blog.models import Blog
 from member.models import UserExtend
 
@@ -19,8 +19,8 @@ class IndexList(ListView):
 
     queryset = Blog.objects.published()
     context_object_name = 'blogs'
-    paginate_by = 16 
- 
+    paginate_by = 16
+
     def get_queryset(self):
         """Filter queryset if choise one rubric."""
         query = super().get_queryset()
@@ -34,7 +34,7 @@ class IndexList(ListView):
         else:
             if 'rubric' in self.kwargs:
                 query = query.filter(rubric=self.kwargs['rubric'])
-        return query.order_by('created_at').reverse() 
+        return query.order_by('created_at').reverse()
 
 
 class BlogView(DetailView):
@@ -46,10 +46,8 @@ class BlogView(DetailView):
 class BlogCreate(LoginRequiredMixin, CreateView):
     """Create blog post."""
 
+    form_class = BlogModelForm
     model = Blog
-    fields = (
-        'title', 'rubric', 'image', 'annotation', 'content',
-        'event', 'place', 'tags')
     success_url = reverse_lazy('blog:list')
 
     def form_valid(self, form):
@@ -61,14 +59,11 @@ class BlogCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
-    
+
+    form_class = BlogModelForm
     model = Blog
-    fields = (
-        'title', 'rubric', 'image', 'annotation', 'content',
-        'event', 'place', 'tags')
     success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):

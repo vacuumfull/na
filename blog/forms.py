@@ -7,29 +7,18 @@ from blog.models import RUBRICS_LIST, Blog
 from event.models import Event
 from place.models import Place
 
-class BlogForm(forms.Form):
 
-    title = forms.CharField(label='Название')
-    image = forms.ImageField(label='Изображение')
-    annotation = forms.CharField(label='Аннотация')
-    tags = forms.CharField(label='Тэги')
-    rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
-    content = forms.CharField(label='Содержание', widget=CKEditorWidget)
-    place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
-    event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
+class BlogModelForm(ModelForm):
 
-
-class BlogUpdateForm(ModelForm):
-
-    title = forms.CharField(label='Название')
-    image = forms.ImageField(label='Изображение')
-    annotation = forms.CharField(label='Аннотация')
-    tags = forms.CharField(label='Тэги', widget=forms.TextInput(attrs={'class':'form-control'}))
-    rubric = forms.ChoiceField(label='Рубрика', widget=forms.Select(), choices=RUBRICS_LIST, required=True)
-    content = forms.CharField(label='Содержание', widget=CKEditorWidget)
-    place = forms.ModelChoiceField(queryset=Place.objects.published(), label='Место проведения')
-    event = forms.ModelChoiceField(queryset=Event.objects.upcoming(), label='Событие')
+    rubric = forms.ChoiceField(
+        label='Рубрика', choices=RUBRICS_LIST,
+        widget=forms.Select(), required=True)
+    place = forms.ModelChoiceField(
+        queryset=Place.objects.published(), label='Место проведения')
+    event = forms.ModelChoiceField(
+        queryset=Event.objects.published(), label='Событие')
 
     class Meta:
-        model = Blog  
-        fields = ('title', 'rubric', 'image', 'annotation', 'content', 'event', 'place', 'tags')
+        model = Blog
+        fields = ('title', 'rubric', 'image', 'annotation', 'content',
+                  'place', 'event', 'tags')
