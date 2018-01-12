@@ -31,7 +31,7 @@ class EventCreate(LoginRequiredMixin, CreateView):
 
     model = Event
     fields = ['title', 'image', 'description', 'date', 'price','tags',
-              'bands', 'musicians', 'locations']
+              'bands', 'musicians']
     success_url = reverse_lazy('event:list')
 
     def get_context_data(self, **kwargs):

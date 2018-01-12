@@ -1,21 +1,13 @@
 """Admin models from Places app"""
 from django.contrib import admin
 
-from place.models import Comment, Location, Place
-
-
-class LocationInLine(admin.StackedInline):
-    """InLine admin model locations for Places."""
-
-    model = Location
-    extra = 1
+from place.models import Comment, Place
 
 
 @admin.register(Place)
 class AdminPlace(admin.ModelAdmin):
     fields = ('title', 'image', 'icon', 'description', 'owner', 'published', 'tags',
               'musicians')
-    inlines = [LocationInLine]
     list_display = ('title', 'published')
     filter_horizontal = ('tags',)
     list_editable = ('published',)

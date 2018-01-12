@@ -12,7 +12,7 @@ from django.utils import timezone
 from uuslug import uuslug
 
 from band.models import Band
-from place.models import Location
+from place.models import Place
 from tag.models import Tag
 
 
@@ -74,7 +74,7 @@ class Event(models.Model):
         blank=True,
         verbose_name='Музыканты')
     locations = models.ManyToManyField(
-        Location, related_name='event_location',
+        Place, related_name='event_location',
         verbose_name='Место проведения')
 
     tags = models.ManyToManyField(

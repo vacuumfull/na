@@ -69,7 +69,7 @@ class Place(models.Model):
         related_query_name='place_tag',
         verbose_name='Тэги')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
-    coordinates = models.CharField(max_length=150, verbose_name='Координаты')
+    coordinates = models.CharField(max_length=150, verbose_name='Координаты', default='')
     worktime = models.CharField(max_length=255, blank=True, null=True,
                                    verbose_name='Время работы')
     address = models.CharField(max_length=255, blank=True, null=True,
@@ -89,26 +89,6 @@ class Place(models.Model):
         ordering = ['title', 'created_at']
         verbose_name = 'Место'
         verbose_name_plural = 'Места'
-
-
-class Location(models.Model):
-    """Locatino model for Place."""
-
-    place = models.ForeignKey(Place, on_delete=models.CASCADE,
-                              verbose_name='Заведение')
-    maps = models.CharField(max_length=100, blank=True, null=True,
-                            verbose_name='Координаты на карте')
-    address = models.CharField(max_length=255, verbose_name='Адрес')
-    worktime = models.TextField(blank=True, null=True,
-                                verbose_name='Информация о работе',)
-
-    def __str__(self):
-        return self.address
-
-    class Meta:
-        ordering = ['address']
-        verbose_name = 'Адрес'
-        verbose_name_plural = 'Адреса'
 
 
 class CommentManager(models.Manager):

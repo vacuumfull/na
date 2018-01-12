@@ -1,5 +1,5 @@
 """Place api."""
-from place.models import Place, Comment, Rating, Location
+from place.models import Place, Comment, Rating
 
 
 def get_rate_unlogin(place_id: int) -> dict:
