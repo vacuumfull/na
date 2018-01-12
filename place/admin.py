@@ -6,10 +6,9 @@ from place.models import Comment, Place
 
 @admin.register(Place)
 class AdminPlace(admin.ModelAdmin):
-    fields = ('title', 'image', 'icon', 'description', 'owner', 'published', 'tags',
-              'musicians')
+    fields = ('title', 'image', 'icon', 'description', 'owner', 'published',
+              'musicians', 'tags')
     list_display = ('title', 'published')
-    # filter_horizontal = ('tags',)
     list_editable = ('published',)
     list_filter = ('published',)
     search_fields = ('title', 'address')

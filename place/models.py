@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from taggit.managers import TaggableManager
 from uuslug import uuslug
 
 
@@ -63,10 +64,7 @@ class Place(models.Model):
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
 
-    # tags = models.ManyToManyField(
-    #     Tag, related_name='place_tags',
-    #     related_query_name='place_tag',
-    #     verbose_name='Тэги')
+    tags = TaggableManager(verbose_name='Тэги', related_name='place_tags')
     # ratings = models.ManyToManyField(verbose_name='Рейтинг')
     coordinates = models.CharField(max_length=150, verbose_name='Координаты', default='')
     worktime = models.CharField(max_length=255, blank=True, null=True,
