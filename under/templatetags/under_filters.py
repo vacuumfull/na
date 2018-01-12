@@ -25,10 +25,10 @@ def has_group(user, group_name):
  
 
 def to_pipe_string(tags):
-    tags_string = ''
-    for tag in tags:
-        tags_string += tag.name + '|'
-    return tags_string
+    """Tags objects filter if not string."""
+    if not isinstance(tags, str):
+        tags = ','.join(tag.name for tag in tags)
+    return tags
 
 
 register.filter("call", callMethod)

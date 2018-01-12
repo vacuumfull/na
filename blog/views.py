@@ -10,9 +10,8 @@ from django.urls import reverse_lazy
 from itertools import chain
 import json
 
-from blog.forms import BlogForm, BlogUpdateForm
+from blog.forms import BlogModelForm
 from blog.models import Blog
-from tag.models import Tag
 from member.models import UserExtend
 
 class IndexList(ListView):
@@ -20,8 +19,8 @@ class IndexList(ListView):
 
     queryset = Blog.objects.published()
     context_object_name = 'blogs'
-    paginate_by = 16 
- 
+    paginate_by = 16
+
     def get_queryset(self):
         """Filter queryset if choise one rubric."""
         query = super().get_queryset()
@@ -35,7 +34,7 @@ class IndexList(ListView):
         else:
             if 'rubric' in self.kwargs:
                 query = query.filter(rubric=self.kwargs['rubric'])
-        return query.order_by('created_at').reverse() 
+        return query.order_by('created_at').reverse()
 
 
 class BlogView(DetailView):
@@ -47,53 +46,32 @@ class BlogView(DetailView):
 class BlogCreate(LoginRequiredMixin, CreateView):
     """Create blog post."""
 
+    form_class = BlogModelForm
     model = Blog
-    fields = ['title', 'rubric', 'image', 'annotation', 'content', 'event', 'place']
     success_url = reverse_lazy('blog:list')
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = BlogForm
-        return context
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.author = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.blog_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
-
 
 
 class BlogUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
-    success_url = reverse_lazy('blog:list')
-    form_class = BlogUpdateForm
+    form_class = BlogModelForm
     model = Blog
-    template_name = 'blog/blog_update.html'
+    success_url = reverse_lazy('blog:index')
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.author = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-  
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.blog_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
 
 

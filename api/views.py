@@ -18,7 +18,7 @@ import place.api
 import band.api
 import message.api
 import member.api
-import tag.api
+# import tag.api
 
 
 APPS_SET = set(['blog', 'band', 'place', 'event'])
@@ -402,7 +402,7 @@ def _load_module(module_name: str) -> object:
         'band': band.api,
         'message': message.api,
         'member': member.api,
-        'tag': tag.api,
+        # 'tag': tag.api,
     }
 
     return module_dict[module_name]

@@ -10,10 +10,9 @@ class AdminEvent(admin.ModelAdmin):
         ('Информация', {
             'fields': ('title', 'owner', 'date', 'price', 'description',
                        'image', 'published')}),
-        ('Содержание', {'fields': ('tags','locations', 'bands', 'musicians')}),
+        ('Содержание', {'fields': ('locations', 'bands', 'musicians', 'tags')}),
     )
 
-    filter_horizontal = ('tags',)
     list_display = ('title', 'price', 'published', 'date')
     list_editable = ('published',)
     list_filter = ('published', 'date', 'price')
@@ -21,7 +20,7 @@ class AdminEvent(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class AdminBlogComment(admin.ModelAdmin):
+class AdminEventComment(admin.ModelAdmin):
     """Admin panel for Blog comment system."""
 
     list_display = ('event', 'user', 'published', 'created_at')

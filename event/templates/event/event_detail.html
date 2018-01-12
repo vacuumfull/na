@@ -19,7 +19,7 @@
                     <p>
                         <span>Место: </span><br>
                         {% for location in event.locations.all %}
-                            <a href="{% url 'place:view' location.place.slug %}">
+                            <a href="{% url 'place:view' location.slug %}">
                                 <strong>{{ location.address }}</strong><br>
                             </a>
                         {% endfor %}
