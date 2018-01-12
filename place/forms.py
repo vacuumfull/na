@@ -1,6 +1,6 @@
 from django.forms import inlineformset_factory, ModelForm
 from django import forms
-from place.models import Location, Place
+from place.models import Place
 from django.contrib.auth.models import User
 
 queryset = User.objects.values('id', 'username')
