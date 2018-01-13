@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'message',
     'bots',
     'telegram',
-    'under'
+    'under',
+    'tag'
 ]
 
 MIDDLEWARE = [
