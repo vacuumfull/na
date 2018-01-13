@@ -52,7 +52,7 @@ class Place(models.Model):
     description = models.TextField(blank=True, null=True,
                                    verbose_name='Описание')
     image = models.ImageField(upload_to=image_path, verbose_name='Логотип')
-    icon = models.ImageField(upload_to=icon_path, verbose_name='Иконка')
+    icon = models.ImageField(upload_to=icon_path, blank=True, verbose_name='Иконка')
 
     owner = models.ForeignKey(
         User, related_name='place_owner',

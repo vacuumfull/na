@@ -7,8 +7,9 @@ from place.models import Place
 
 class PlaceModelForm(ModelForm):
 
-    musicians = forms.MultipleChoiceField(
-        label='Участники', choices=User.objects.values_list('id', 'username'))
+    musicians = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(groups__name="Музыканты"),
+        label='Музыканты', initial=0)
 
     class Meta:
         model = Place

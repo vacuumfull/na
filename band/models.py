@@ -24,7 +24,7 @@ class BandManager(models.Manager):
     def user_items(self, owner):
         """User created blogs"""
         result = Band.objects.filter(owner=owner).values(
-            'id', 'title', 'description', 'image', 'published', 'slug', 'created_at')
+            'id', 'name', 'description', 'image', 'published', 'slug', 'created_at')
         result_list = [i for i in result]
         return result_list
     

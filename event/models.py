@@ -75,6 +75,7 @@ class Event(models.Model):
         verbose_name='Музыканты')
     locations = models.ManyToManyField(
         Place, related_name='event_location',
+        blank=True,
         verbose_name='Место проведения')
 
     tags = TaggableManager(verbose_name='Тэги', related_name='event_tags')

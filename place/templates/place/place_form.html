@@ -24,7 +24,18 @@
                                     <div class="input-group">
                                         <div class="input-field col s5">
                                             {{ form.musicians.errors }}
-                                            {{ form.musicians }}
+                                            {% if form.musicians|length > 0 %}
+                                                <select id="id_musicians" name="musicians" multiple class="initialized">
+                                                    <option value="" disabled>Выберите музыкантов</option>
+                                                    {% for musician in form.musicians %}
+                                                        {{ musician }}
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <select id="id_musicians" name="musicians" class="initialized">
+                                                    <option value="">Никого нет</option>
+                                                </select>
+                                            {% endif %}
                                             {{ form.musicians.label_tag }}
                                         </div>
                                     </div>

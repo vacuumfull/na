@@ -82,7 +82,7 @@ new Vue({
             this.messagesUnreadCount = messagesCount;
         },
         setDate(date){
-            input = document.getElementById('id_date')
+            let input = document.getElementById('id_date')
             if (input !== undefined && input !== null){
                 this.date = moment(date).format('YYYY-MM-D')
                 input.value = this.date;

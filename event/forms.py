@@ -10,15 +10,24 @@ from event.models import Event
 
 class EventModelForm(ModelForm):
 
-    musicians = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_superuser=False, is_staff=False, is_active=True),
-        label='Музыканты')
+    musicians = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(groups__name="Музыканты"),
+        label='Музыканты', initial=0)
     bands = forms.ModelChoiceField(
         queryset=Band.objects.published(), label='Коллективы')
     locations = forms.ModelChoiceField(
-        queryset=Place.objects.all(), label='Заведения')
+        queryset=Place.objects.published(), label='Заведения', initial=0)
 
     class Meta:
         model = Event
         fields = ('title', 'image', 'description', 'date', 'price',
                   'musicians', 'bands', 'locations', 'tags')
+
+
+    def __init__(self, *args, **kwargs):
+        super(EventModelForm, self).__init__(*args, **kwargs)
+        
+        for key in self.fields:
+            self.fields['musicians'].required = False
+            self.fields['bands'].required = False
+            self.fields['locations'].required = False

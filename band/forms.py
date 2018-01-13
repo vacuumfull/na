@@ -6,8 +6,10 @@ from band.models import Band
 
 
 class BandModelForm(ModelForm):
-    members = forms.MultipleChoiceField(
-        label='Участники', choices=User.objects.values_list('id', 'username'))
+    
+    members = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(groups__name="Музыканты"),
+        label='Музыканты', initial=0)
 
     class Meta:
         model = Band

@@ -35,6 +35,7 @@ class EventCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Add user info to form."""
         instance = form.save(commit=False)
+        print(form['bands'])
         instance.owner = self.request.user
         instance.save()
         form.save_m2m()
