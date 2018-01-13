@@ -7,9 +7,9 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from taggit.managers import TaggableManager
 from uuslug import uuslug
 
-from tag.models import Tag
 
 def image_path(_instance, filename):
     """Path and name to logo file."""
@@ -22,7 +22,8 @@ class BandManager(models.Manager):
 
     def user_items(self, owner):
         """User created blogs"""
-        result = Band.objects.filter(owner=owner).values('id', 'title', 'description', 'image', 'published', 'slug', 'created_at')
+        result = Band.objects.filter(owner=owner).values(
+            'id', 'title', 'description', 'image', 'published', 'slug', 'created_at')
         result_list = [i for i in result]
         return result_list
     
@@ -49,11 +50,7 @@ class Band(models.Model):
 
     socials = JSONField(blank=True, null=True,
                         verbose_name='Социальные ссылки')
-                        
-    tags = models.ManyToManyField(
-        Tag, related_name='band_tags',
-        related_query_name='band_tag',
-        verbose_name='Тэги')
+    tags = TaggableManager(verbose_name='Тэги', related_name='band_tags')
 
     published = models.BooleanField(default=True, verbose_name='Активно')
     slug = models.SlugField(max_length=200, unique=True)

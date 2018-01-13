@@ -9,8 +9,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from place.models import Place
-from place.forms import PlaceForm, PlaceUpdateForm
-from tag.models import Tag
+from place.forms import PlaceModelForm
 
 
 class PlaceList(ListView):
@@ -18,7 +17,7 @@ class PlaceList(ListView):
 
     queryset = Place.objects.published()
     context_object_name = 'places'
-    paginate_by = 16 
+    paginate_by = 16
 
 
 class PlaceView(DetailView):
@@ -36,53 +35,33 @@ class PlacesUserView(LoginRequiredMixin, TemplateView):
 class PlaceCreate(LoginRequiredMixin, CreateView):
     """Create blog post."""
 
+    form_class = PlaceModelForm
     model = Place
-    fields = ['title', 'description', 'address', 'coordinates', 'worktime', 'musicians', 'image', 'icon']
     success_url = reverse_lazy('place:list')
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.owner = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.place_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = PlaceForm
-        return context
 
 
 class PlaceUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
 
+    form_class = PlaceModelForm
     model = Place
-    form_class = PlaceUpdateForm
     success_url = reverse_lazy('place:index')
-    template_name = 'place/place_update.html'
-
 
     def form_valid(self, form):
         """Add user info to form."""
-        SEPARATOR = '|'
         instance = form.save(commit=False)
         instance.owner = self.request.user
         instance.save()
-        # create blog tags
-        tags = set(self.request.POST.get('tags').split(SEPARATOR))
-        for name in tags:
-            if len(name) != 0: 
-                obj, _created = Tag.objects.get_or_create(name=name.lower())
-                obj.place_tags.add(instance)
+        form.save_m2m()
         return super().form_valid(form)
-
 
 
 class MapView(TemplateView):

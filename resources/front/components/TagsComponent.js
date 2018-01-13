@@ -48,13 +48,13 @@ const TagsComponent = Vue.extend({
 		setTags(tags){
 			let str = '', input = document.getElementById('id_tags');
 			tags.forEach(item => {
-				str += item.tag + '|'
+				str += item.tag + ','
 			})
 			input.value = str
 		},
 		getCurrentTags(){
 			let tags = document.getElementById('id_tags').value;
-			this.tags = tags.split('|').filter(x => x !== "").map(item => item = {tag: item})
+			this.tags = tags.split(',').filter(x => x !== "").map(item => item = {tag: item})
 			$('.chips').material_chip({
 				data: this.tags
 			});
