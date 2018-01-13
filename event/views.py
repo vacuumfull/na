@@ -47,7 +47,8 @@ class EventUpdate(LoginRequiredMixin, UpdateView):
 
     form_class = EventModelForm
     model = Event
-    success_url = reverse_lazy('event:index')
+    success_url = reverse_lazy('event:list')
+    template_name = 'event/event_update.html'
 
     def form_valid(self, form):
         """Add user info to form."""

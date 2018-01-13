@@ -13,9 +13,9 @@ class EventModelForm(ModelForm):
     musicians = forms.ModelMultipleChoiceField(
         queryset=User.objects.filter(groups__name="Музыканты"),
         label='Музыканты', initial=0)
-    bands = forms.ModelChoiceField(
-        queryset=Band.objects.published(), label='Коллективы')
-    locations = forms.ModelChoiceField(
+    bands = forms.ModelMultipleChoiceField(
+        queryset=Band.objects.published(), label='Коллективы', initial=0)
+    locations = forms.ModelMultipleChoiceField(
         queryset=Place.objects.published(), label='Заведения', initial=0)
 
     class Meta:

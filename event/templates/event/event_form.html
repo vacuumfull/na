@@ -58,7 +58,7 @@
                                     <div class="input-field col s4">
                                         {{ form.bands.errors }}
                                         {% if form.bands|length > 0 %}
-                                            <select name="bands" id="id_bands" class="initialized">
+                                            <select name="bands" id="id_bands" multiple class="initialized">
                                                 <option value="" disabled>Выберите коллектив</option>
                                                 {% for band in form.bands %}
                                                     {{ band }}
