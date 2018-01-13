@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Models for places app."""
 import os
 from uuid import uuid4
@@ -90,8 +91,8 @@ class Place(models.Model):
 
 class CommentManager(models.Manager):
     """Place comments manager."""
-
-    def get_last_comments(self, place_id: int, offset: int=0):
+    
+    def get_last_comments(self, place_id: str, offset: int=0):
         """Get last comment with offset in place."""
         rows = Comment.objects.filter(
             place=place_id, published=True)[offset:offset+20]

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Models for Bands app."""
 import os
 from uuid import uuid4
