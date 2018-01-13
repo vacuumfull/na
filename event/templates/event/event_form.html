@@ -38,31 +38,56 @@
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s4">
-                                        {{ form.locations.errors }}
-                                        {{ form.locations }}
-                                        {{ form.locations.label_tag }}
+                                    {{ form.locations.errors }}
+                                    {% if form.locations|length > 0 %}
+                                        <select name="locations" id="id_locations"  class="initialized">
+                                            <option value="" disabled>Выберите место</option>
+                                            {% for place in form.locations %}
+                                                {{ place }}
+                                            {% endfor %}
+                                        </select>
+                                    {% else %}
+                                        <select name="locations" id="id_locations" class="initialized">
+                                            <option value="">Ничего нет</option>
+                                        </select>
+                                    {% endif %}
+                                    {{ form.locations.label_tag }}
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s4">
-                                        {% if form.bands|length > 1 %}
-                                            {{ form.bands.errors }}
-                                            {{ form.bands }}
-                                            {{ form.bands.label_tag }} 
+                                        {{ form.bands.errors }}
+                                        {% if form.bands|length > 0 %}
+                                            <select name="bands" id="id_bands" multiple class="initialized">
+                                                <option value="" disabled>Выберите коллектив</option>
+                                                {% for band in form.bands %}
+                                                    {{ band }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="bands" id="id_bands" class="initialized">
+                                                <option value="" disabled>Ничего нет</option>
+                                            </select>
                                         {% endif %}
+                                        {{ form.bands.label_tag }}
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s4">
                                         {{ form.musicians.errors }}
-                                        {{ form.musicians }}
+                                        {% if form.musicians|length > 0 %}
+                                            <select id="id_musicians" name="musicians" multiple class="initialized">
+                                                <option value="" disabled>Выберите музыкантов</option>
+                                                {% for musician in form.musicians %}
+                                                    {{ musician }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select id="id_musicians" name="musicians" class="initialized">
+                                                <option value="">Никого нет</option>
+                                            </select>
+                                        {% endif %}
                                         {{ form.musicians.label_tag }}
-                                        <!--select id="id_musicians" name="musicians" >
-                                            <option value="">Выберите музыканта</option>
-                                            {% for musician in form.musicians %}
-                                                <option value="{{ musician.id }}">{{ musician.username }}</option>
-                                            {% endfor %}
-                                        </select-->
                                     </div>
                                 </div>
                                 <div class="input-group">

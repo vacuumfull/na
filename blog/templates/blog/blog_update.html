@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
-{% load under_filters %}
-
 {% block content %}
 
 <div id="posts_page" class="container">
-    <h4 class="center __margin-top_xxl  __margin-bottom_xxl">Редактиовать пост</h4>
+    <h4 class="center __margin-top_xxl  __margin-bottom_xxl">Редактировать пост</h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -33,27 +31,45 @@
                                         <tags-component></tags-component>
                                         {{ form.tags.errors }}
                                         <div class="__tags-field __hidden">
-											<input type="text" name="tags" value="{{ form.tags.value|to_pipe_string }}" class="form-control" required id="id_tags" />
+                                            {{ form.tags }}
                                             {{ form.tags.label_tag }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s6">
-                                        {% if form.event|length > 1 %}
-                                            {{ form.event.errors }}
-                                            {{ form.event }}
-                                            {{ form.event.label_tag }}
+                                        {{ form.event.errors }}
+                                        {% if form.event|length > 0 %}
+                                            <select name="event" id="id_event" class="initialized">
+                                                <option value="">Выберите событие</option>
+                                                {% for event in form.event %}
+                                                    {{ event }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="event" id="id_event" class="initialized">
+                                                <option value="">Ничего нет</option>
+                                            </select>
                                         {% endif %}
+                                        {{ form.event.label_tag }}
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <div class="input-field col s6">
-                                        {% if form.place|length > 1 %}
-                                            {{ form.place.errors }}
-                                            {{ form.place }}
-                                            {{ form.place.label_tag }}
+                                        {{ form.place.errors }} 
+                                        {% if form.place|length > 0 %}
+                                            <select name="place" id="id_place" class="initialized">
+                                                <option value="">Выберите место</option>
+                                                {% for place in form.place %}
+                                                    {{ place }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="place" id="id_place" class="initialized">
+                                                <option value="">Ничего нет</option>
+                                            </select>
                                         {% endif %}
+                                        {{ form.place.label_tag }}
                                     </div>
                                 </div>
                                 <div class="input-group">
@@ -91,27 +107,24 @@
                                     Отмена
                                     <i class="material-icons right dp48">clear</i>
                                 </a>
-                            </div>
-                            <div class="col s3">
-                                {% if request.user.is_superuser %}
-                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
-                                    Текст в телегу 
-                                </a>
-                                {% endif %}
-                            </div>
-                            <div class="col s3">
-                                {% if request.user.is_superuser %}
-                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
-                                    Ссылку в телегу 
-                                </a>
-                                {% endif %}
-                            </div>
+							</div>
+							<div class="col s3">
+								{% if request.user.is_superuser %}
+								<a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
+									Отправить в телегу 
+								</a>
+								{% endif %}
+							</div>
+							<div class="col s3">
+								{% if request.user.is_superuser %}
+								<a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
+									Ссылку в телегу 
+								</a>
+								{% endif %}
+							</div>
                             <div class="col s3">
                                 <div class="__padding-right_l">
-                                    <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
-                                        Добавить
-                                        <i class="material-icons dp48 right">add</i>
-                                    </button>
+                                    <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
                                 </div>
                             </div>
                         </div>
@@ -131,10 +144,10 @@
 
 
 {% block title %}
-<title>Редактирование записи</title>
+<title>Создание записи</title>
 {% endblock title %}
 
 
 {% block description %}
-<meta name="description" content="Редактирование записи">
+<meta name="description" content="Создание записи">
 {% endblock description %}

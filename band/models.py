@@ -24,7 +24,7 @@ class BandManager(models.Manager):
     def user_items(self, owner):
         """User created blogs"""
         result = Band.objects.filter(owner=owner).values(
-            'id', 'title', 'description', 'image', 'published', 'slug', 'created_at')
+            'id', 'name', 'description', 'image', 'published', 'slug', 'created_at')
         result_list = [i for i in result]
         return result_list
     
@@ -67,6 +67,39 @@ class Band(models.Model):
         ordering = ['name', 'created_at']
         verbose_name = 'Коллектив'
         verbose_name_plural = 'Коллективы'
+
+
+class CommentManager(models.Manager):
+    """Events comments manager."""
+
+    def get_last_comments(self, band_id: int, offset: int=0):
+        """Get last comment with offset in event."""
+        rows = Comment.objects.filter(
+            band=band_id, published=True).order_by('created_at').reverse()[offset:offset+20]
+        return rows
+
+
+class Comment(models.Model):
+    """Events comment model."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name='Пользователь',
+                             related_name='band_commentator')
+    band = models.ForeignKey(Band, on_delete=models.CASCADE,
+                              verbose_name='Запись')
+    content = models.CharField(max_length=250, verbose_name='Содержание')
+    published = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CommentManager()
+
+    def __str__(self):
+        return "{}: {}".format(self.user, self.content)
+
+    class Meta:
+        ordering = ['created_at', 'user']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
 
 @receiver(pre_save, sender=Band)

@@ -52,7 +52,7 @@ class Place(models.Model):
     description = models.TextField(blank=True, null=True,
                                    verbose_name='Описание')
     image = models.ImageField(upload_to=image_path, verbose_name='Логотип')
-    icon = models.ImageField(upload_to=icon_path, verbose_name='Иконка')
+    icon = models.ImageField(upload_to=icon_path, blank=True, verbose_name='Иконка')
 
     owner = models.ForeignKey(
         User, related_name='place_owner',
@@ -95,7 +95,7 @@ class CommentManager(models.Manager):
     def get_last_comments(self, place_id: str, offset: int=0):
         """Get last comment with offset in place."""
         rows = Comment.objects.filter(
-            place=place_id, published=True)[offset:offset+20]
+            place=place_id, published=True).order_by('created_at').reverse()[offset:offset+20]
         return rows
 
 

@@ -54848,7 +54848,7 @@ new _vue2.default({
             this.messagesUnreadCount = messagesCount;
         },
         setDate: function setDate(date) {
-            input = document.getElementById('id_date');
+            var input = document.getElementById('id_date');
             if (input !== undefined && input !== null) {
                 this.date = (0, _moment2.default)(date).format('YYYY-MM-D');
                 input.value = this.date;

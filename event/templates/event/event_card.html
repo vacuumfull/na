@@ -26,9 +26,11 @@
                         <span class="red-text text-darken-4">
                             <i class="material-icons">location_on</i>
                         </span>
-                        <a href="{% url 'place:view' event.locations.all.0.slug %}">
-                            <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
-                        </a>
+                        {% if event.locations.exists %}
+                            <a href="{% url 'place:view' event.locations.all.0.slug %}">
+                                <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
+                            </a>
+                        {% endif %}
                     </div>
                     <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
                         <span class="red-text text-darken-4">
