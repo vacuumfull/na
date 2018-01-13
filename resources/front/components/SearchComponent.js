@@ -1,25 +1,27 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import Materialize from 'materialize-css';
+import Helper from '../mixins/HelperMixin';
 import template from '../../tmp/components/search.html';
 
 const Search = Vue.extend({
     template,
+    mixins: [Helper],
     data() {
         return {
             tagFont: 12,
             showField: false,
             isFilled: false,
-            showSearchResult: false,
-            showPosts: false,
-            showEvents: false,
-            showPlaces: false,
+            showSearchResult: true,
             keyword: "",
             tags: [],
-            posts: [],
+            blogs: [],
             events: [],
             places: [],
         }
+    },
+    mounted(){
+        this.getTags()
     },
     methods: {
         setKeyword(key){
@@ -28,44 +30,19 @@ const Search = Vue.extend({
             self.isFilled = true
             self.search(self.keyword);
         },
-        successAction(message){
-            Materialize.toast(message, 4000);
-        },
-        link(string){
-            window.location = window.location.origin + string;
-        },
         search(key){
             let self = this,
                 uri = `/api/1/search/default/${key}`;
 
             $.get(uri)
                 .done((data) => {
-                    self.posts = data.response.posts;
-                    self.events = data.response.events;
-                    self.places = data.response.places;
-                    if (self.places.length > 0){
-                        self.showPlaces = true;
-                    } else {
-                        self.showPlaces = false;
-                    }
-                    if (self.posts.length > 0){
-                        self.showPosts = true;
-                    } else {
-                        self.showPosts = false;
-                    }
-                    if (self.events.length > 0){
-                        self.showEvents = true;
-                    } else {
-                        self.showEvents = false;
-                    }
+                    self.blogs = data.blogs;
+                    self.events = data.events;
+                    self.places = data.places;
                     if (self.events.length > 0 || self.places.length > 0 || self.posts.length > 0){
-                        self.successAction("Что-то нашлось!");
-                        let main = document.getElementById("main_page");
-                        if (main != null){
-                            main.remove();
-                        }
+                        self.info("Что-то нашлось!");
                     } else {
-                        self.successAction("Ничего нет по запросу!");
+                        self.info("Ничего нет по запросу!");
                     }
 
                 }).fail(function(error){
@@ -77,6 +54,7 @@ const Search = Vue.extend({
                 uri = "/api/1/search/tags";
             $.get(uri)
                 .done((data) => {
+                    console.log(data)
                     self.tags = data
                 }).fail((error) => {
                     console.log(error)

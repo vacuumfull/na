@@ -1,11 +1,5 @@
 <section id="search-block">
-    <div id="search" v-bind:class="{ __open: showField }" class="grey darken-4">
-        <a v-on:click="showField = !showField; getTags();"><i class="material-icons">search</i></a>
-    </div>
-    <div class="searchfield" v-bind:class="{ __open: showField }">
-        <div v-on:click="showField = !showField" class="__close_circle">
-            <i class="material-icons">close</i>
-        </div>
+    <div class="searchfield __open" >
         <div class="container">
             <div class="row">
                 <div class="col s6">
@@ -22,15 +16,15 @@
                 <div class="col s6">
                     <h4 class="center white-text">Облако тэгов</h4>
                     <div class="center">
-                        <span v-bind:style="{ fontSize: tagFont + tag.count + 'px'  }" v-on:click="setKeyword(tag.name)" v-for="(tag, key) in tags" class="white-text __search-tag">#{{ tag.name }}&nbsp;&nbsp;</span>
+                        <span v-bind:style="{ fontSize: tagFont + key + 'px'  }" v-on:click="setKeyword(tag)" v-for="(key, tag) in tags" class="white-text __search-tag">#{{ tag }}&nbsp;&nbsp;</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div v-if="showPosts||showEvents||showPlaces" class="container">
+    <div v-if="events.length > 0||events.length > 0||places.length > 0" class="container">
         <div class="row">
-            <div v-if="showEvents" class="col s12">
+            <div v-if="events.length > 0" class="col s12">
                 <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">происходящее</h3>
                 <div class="row">
 
@@ -39,37 +33,37 @@
                             <div class="card __border_subgray">
                                 <div class="card-image __preview_img">
                                     <div class="__img_inner">
-                                        <img :src="event.image">
+                                        <img :src="'/media/' + event.image">
                                     </div>
                                 </div>
-                                <div v-bind:class="{activator: event.content != undefined}" class="card-content __title_block __relative ">
-                                         <span class="card-title __font_exo">
-                                             @{{event.title}}
-                                             <i v-if="event.content != undefined" class="material-icons right __open_more_icon">gamepad</i>
-                                        </span>
+                                <div v-bind:class="{activator: event.description !== undefined}" class="card-content __title_block __relative ">
+                                    <span class="card-title __font_exo">
+                                        {{event.title}}
+                                        <i v-if="event.description !== undefined" class="material-icons right __open_more_icon">gamepad</i>
+                                    </span>
                                 </div>
                                 <div class="card-reveal  __relative">
                                         <span class="card-title __font_exo">
-                                            @{{ event.title }}
+                                            {{ event.title }}
                                             <i class="material-icons right __close_more_icon">close</i>
                                         </span>
-                                    <div v-html="event.content">
+                                    <div v-html="event.description">
                                     </div>
                                 </div>
                                 <div class="__block_more_info">
                                     <div class="__font_exo __semi_bold">
                                         <div v-if="event.place != undefined" class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
                                             <span class="red-text text-darken-4"><i class="material-icons">location_on</i></span>
-                                            <span class=" grey-text text-darken-3 right">@{{ event.place  }}</span>
+                                            <span class=" grey-text text-darken-3 right">{{ event.place__title  }}</span>
 
                                         </div>
                                         <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
-                                            <span class="red-text text-darken-4"><i class="material-icons">alarm</i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="  grey-text text-darken-3 right">@{{ event.date_formatted    }}</span>
+                                            <span class="red-text text-darken-4"><i class="material-icons">alarm</i></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="  grey-text text-darken-3 right">{{ formatDate(event.date) }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="event.link != undefined" class="card-action" v-on:click="link(event.link)">
-                                    <a title="Узнать больше о событии" class="__more_link __font_exo red-text text-accent-4" :href="event.link">
+                                <div class="card-action">
+                                    <a title="Узнать больше о событии" class="__more_link __font_exo red-text text-accent-4" :href="'/events/' + event.slug">
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
@@ -84,49 +78,45 @@
                 </div>
             </div>
 
-            <div v-if="showPosts" class="col s12">
+            <div v-if="blogs.length > 0" class="col s12">
                 <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">посты</h3>
                 <div class="row">
-                    <div v-for="post in posts" class="col s12 m4 l3">
+                    <div v-for="post in blogs" class="col s12 m4 l3">
                         <div class="__post_block">
                             <div class="card __border_subgray">
                                 <div class="card-image __preview_img">
                                     <div class="__img_inner">
-                                        <img :src="post.image">
+                                        <img :src="'/media/' + post.image">
                                     </div>
                                 </div>
-                                <div v-bind:class="{activator: post.introtext != undefined}" class="card-content __title_block __relative ">
-                                         <span class="card-title __font_exo">
-                                             @{{post.title}}
-                                             <i v-if="post.introtext != undefined" class="material-icons right __open_more_icon">gamepad</i>
-                                        </span>
+                                <div v-bind:class="{activator: post.annotation != undefined}" class="card-content __title_block __relative ">
+                                    <span class="card-title __font_exo">
+                                        {{post.title}}
+                                        <i v-if="post.annotation!= undefined" class="material-icons right __open_more_icon">gamepad</i>
+                                    </span>
                                 </div>
-                                <div v-if="post.introtext != undefined" class="card-reveal  __relative">
+                                <div v-if="post.annotation != undefined" class="card-reveal  __relative">
                                         <span class="card-title __font_exo">
-                                            @{{ post.title }}
+                                            {{ post.title }}
                                             <i class="material-icons right __close_more_icon">close</i>
                                         </span>
-                                    <div v-html="post.introtext">
+                                    <div v-html="post.annotation">
                                     </div>
                                 </div>
                                 <div class=" __padding-top_xs __rubric_preview_block __padding-left_s __padding-right_s ">
                                     <span title="Рубрика" class=" teal-text text-darken-4"><i class="material-icons __rubric_icon_size">format_list_bulleted</i></span>
-                                    <span class="__rubric_size right __semi_bold __font_exo grey-text text-darken-3">@{{ post.rubric_name }}</span>
+                                    <span class="__rubric_size right __semi_bold __font_exo grey-text text-darken-3">{{ post.rubric }}</span>
                                 </div>
                                 <div class="__block_more_info">
                                     <div class="__font_exo __semi_bold">
                                         <div class="  __margin-top_xs __padding-left_8 __padding-right_s">
                                             <span title="Автор" class=" teal-text text-darken-4"><i class="material-icons __author_icon_size">account_circle</i></span>
-                                            <span class=" grey-text text-darken-3 right"> @{{ post.author }}</span>
-                                        </div>
-                                        <div v-if="post.mark != 0" class="__margin-bottom_xs __padding-left_s __padding-right_s">
-                                            <span class="yellow-text text-accent-2"><i class="material-icons __circle_border">star</i></span>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="grey-text text-darken-3 right">@{{ post.mark }}/10</span>
+                                            <span class=" grey-text text-darken-3 right"> {{ post.author__username }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-action">
-                                    <a title="Читать запись" class="__more_link __font_exo teal-text text-darken-4" :href="'/posts/' + post.pubric + '/' + post.id">
+                                    <a title="Читать запись" class="__more_link __font_exo teal-text text-darken-4" :href="'/blogs/' + post.slug">
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
@@ -142,7 +132,7 @@
                 </div>
             </div>
 
-            <div v-if="showPlaces" class="col s12">
+            <div v-if="places.length > 0" class="col s12">
                 <h3 class="center __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">места</h3>
                 <div class="row">
                     <div v-for="place in places" class="col s12 m4 l3">
@@ -151,31 +141,27 @@
                                 <div v-if="place.image != undefined" class="card-image">
                                     <div class="card-image __preview_img">
                                         <div class="__img_inner_place">
-                                            <img :src="place.image">
+                                            <img :src="'/media/' + place.image">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div v-bind:class="{activator: place.description != undefined}"  class="card-content __title_block __relative">
                                          <span class="card-title __font_exo">
-                                             @{{place.title}}
+                                             {{place.title}}
                                              <i v-if="place.description != undefined" class="material-icons right __open_more_icon">gamepad</i>
                                         </span>
                                 </div>
 
                                 <div v-if="place.description != undefined" class="card-reveal  __relative">
                                         <span class="card-title __font_exo">
-                                            @{{place.title}}
+                                            {{place.title}}
                                             <i class="material-icons right __close_more_icon">close</i>
                                         </span>
                                     <p v-html="place.description"></p>
                                 </div>
-                                <div v-if="place.mark != 0" class="__margin-bottom_xs __padding-left_s __padding-right_s">
-                                    <span class="yellow-text text-accent-2 "><i class="material-icons __circle_border_darkblue">star</i></span>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class=" blue-grey-text text-darken-4 right">@{{ place.mark }}/10</span>
-                                </div>
-
-                                <div class="card-action"  v-on:click="link('/places/' + place.id)">
+                            
+                                <div class="card-action"  :href"'/places/' + place.slug">
                                     <a title="Читать о месте" class="__more_link __font_exo  blue-grey-text text-darken-4" :href="'/places/' + place.id">
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
