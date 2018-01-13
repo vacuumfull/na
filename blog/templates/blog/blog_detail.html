@@ -43,7 +43,9 @@
             </div>
         </div>
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></rate-component>
-        <hr>
+    </div>
+    <hr>
+    <div class="container">
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></comment-component>
     </div>
 </div>

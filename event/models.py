@@ -105,7 +105,7 @@ class CommentManager(models.Manager):
     def get_last_comments(self, event_id: int, offset: int=0):
         """Get last comment with offset in event."""
         rows = Comment.objects.filter(
-            event=event_id, published=True)[offset:offset+20]
+            event=event_id, published=True).order_by('created_at').reverse()[offset:offset+20]
         return rows
 
 
