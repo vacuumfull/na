@@ -1,11 +1,17 @@
-# Ignore python cache
+# Ignore cache files
 __pycache__/
-/upload/
+*.pyc
+.gitignore
+
+# Vendor content
 /dist/
 /node_modules/
-.gitignore
-/under/settings.pyc
-/under/settings.py
 /src/
 /.idea/
 /static/dist/
+
+# Upload content
+/upload/
+
+# WTF? O_o
+/under/settings.py
