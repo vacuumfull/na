@@ -17,10 +17,10 @@
                         <strong id="getter-name">{{ event.owner.username }}</strong>
                     </p>
                     <p>
-                        <span>Место: </span><br>
+                        <span>Место: </span>
                         {% for location in event.locations.all %}
                             <a href="{% url 'place:view' location.slug %}">
-                                <strong>{{ location.address }}</strong><br>
+                                <strong>{{ location.title }}</strong><br>
                             </a>
                         {% endfor %}
                     </p>
@@ -40,18 +40,22 @@
                             {% endfor %}
                         </p>
                     {% endif %}
-                    <p>
-                        <span>Коллективы: &nbsp;</span>
-                        {% for band in event.bands.all %}
-                            <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
-                        {% endfor %}
-                    </p>
-                    <p>
-                        <span> Музыканты: &nbsp;</span>
-                        {% for musician in event.musicians.all %}
-                            <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
-                        {% endfor %}
-                    </p>
+                    {% if event.bands.exists %}
+                        <p>
+                            <span>Коллективы: &nbsp;</span>
+                            {% for band in event.bands.all %}
+                                <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    {% if event.musicians.exists %}
+                        <p>
+                            <span> Музыканты: &nbsp;</span>
+                            {% for musician in event.musicians.all %}
+                                <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
                     <article class="__margin-top_xl">
                         <p>{{ event.description }}</p>
                     </article>
