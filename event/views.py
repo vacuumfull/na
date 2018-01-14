@@ -1,11 +1,12 @@
 """Event view."""
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
 
 from event.models import Event
 from event.forms import EventModelForm
@@ -25,9 +26,10 @@ class EventView(DetailView):
     model = Event
 
 
-class EventCreate(LoginRequiredMixin, CreateView):
+class EventCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Create event."""
 
+    permission_required = 'event.add_event'
     form_class = EventModelForm
     model = Event
     success_url = reverse_lazy('event:list')
@@ -42,13 +44,19 @@ class EventCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EventUpdate(LoginRequiredMixin, UpdateView):
+class EventUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Update blog post."""
 
+    permission_required = 'event.change_event'
     form_class = EventModelForm
     model = Event
     success_url = reverse_lazy('event:list')
     template_name = 'event/event_update.html'
+
+    def get_object(self, queryset=None):
+        """Return 404 if user not owner object."""
+        return get_object_or_404(
+            self.model, slug=self.kwargs["slug"], owner=self.request.user)
 
     def form_valid(self, form):
         """Add user info to form."""
@@ -57,6 +65,14 @@ class EventUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         form.save_m2m()
         return super().form_valid(form)
+
+
+class EventDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """Delete event post."""
+
+    permission_required = 'event.delete_event'
+    model = Event
+    success_url = reverse_lazy('event:index')
 
 
 class EventsUserView(LoginRequiredMixin, TemplateView):
