@@ -27,7 +27,7 @@ class BandManager(models.Manager):
             'id', 'name', 'description', 'image', 'published', 'slug', 'created_at')
         result_list = [i for i in result]
         return result_list
-    
+
 
     def published(self):
         """All published post."""
