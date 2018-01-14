@@ -33,6 +33,11 @@ class BandCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Band
     success_url = reverse_lazy('band:list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['create'] = True
+        return context
+
     def form_valid(self, form):
         """Add user info to form."""
         instance = form.save(commit=False)
