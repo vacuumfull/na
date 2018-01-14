@@ -29,7 +29,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('last_login', 'date_joined')
         }),
         ('Базовые настройки', {
-            'fields': ('is_active', 'is_staff', 'is_superuser')})
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'user_permissions')})
     )
     inlines = (UserExtendInline, UserSettingInline)
     readonly_fields = ('last_login', 'date_joined')

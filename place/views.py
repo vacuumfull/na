@@ -1,12 +1,12 @@
 """Places with locations view."""
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http.response import HttpResponseRedirect
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
 
 from place.models import Place
 from place.forms import PlaceModelForm
@@ -32,9 +32,10 @@ class PlacesUserView(LoginRequiredMixin, TemplateView):
     template_name = 'place/place_user_list.html'
 
 
-class PlaceCreate(LoginRequiredMixin, CreateView):
+class PlaceCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Create blog post."""
 
+    permission_required = 'place.add_place'
     form_class = PlaceModelForm
     model = Place
     success_url = reverse_lazy('place:list')
@@ -48,14 +49,20 @@ class PlaceCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PlaceUpdate(LoginRequiredMixin, UpdateView):
+class PlaceUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Update blog post."""
 
+    permission_required = 'place.change_place'
     form_class = PlaceModelForm
     model = Place
     success_url = reverse_lazy('place:list')
     template_name = 'place/place_update.html'
 
+    def get_object(self, queryset=None):
+        """Return 404 if user not owner object."""
+        return get_object_or_404(
+            self.model, slug=self.kwargs["slug"], owner=self.request.user)
+
     def form_valid(self, form):
         """Add user info to form."""
         instance = form.save(commit=False)
@@ -63,6 +70,14 @@ class PlaceUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         form.save_m2m()
         return super().form_valid(form)
+
+
+class PlaceDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """Delete place post."""
+
+    permission_required = 'place.delete_place'
+    model = Place
+    success_url = reverse_lazy('place:index')
 
 
 class MapView(TemplateView):

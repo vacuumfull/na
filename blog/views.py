@@ -1,9 +1,10 @@
 """Blog view."""
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
@@ -43,9 +44,10 @@ class BlogView(DetailView):
     model = Blog
 
 
-class BlogCreate(LoginRequiredMixin, CreateView):
+class BlogCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Create blog post."""
 
+    permission_required = 'blog.add_blog'
     form_class = BlogModelForm
     model = Blog
     success_url = reverse_lazy('blog:list')
@@ -59,13 +61,19 @@ class BlogCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdate(LoginRequiredMixin, UpdateView):
+class BlogUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Update blog post."""
 
+    permission_required = 'blog.change_blog'
     form_class = BlogModelForm
     model = Blog
     success_url = reverse_lazy('blog:index')
     template_name = 'blog/blog_update.html'
+
+    def get_object(self, queryset=None):
+        """Return 404 if user not owner object."""
+        return get_object_or_404(
+            self.model, slug=self.kwargs["slug"], author=self.request.user)
 
     def form_valid(self, form):
         """Add user info to form."""
@@ -74,6 +82,14 @@ class BlogUpdate(LoginRequiredMixin, UpdateView):
         instance.save()
         form.save_m2m()
         return super().form_valid(form)
+
+
+class BlogDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """Delete blog post."""
+
+    permission_required = 'blog.delete_blog'
+    model = Blog
+    success_url = reverse_lazy('blog:index')
 
 
 class BlogsUserView(LoginRequiredMixin, TemplateView):

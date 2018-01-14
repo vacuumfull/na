@@ -3,7 +3,13 @@
 {% block content %}
 
 <div id="band_page" class="container">
-    <h4 class="center __margin-bottom_xxl __margin-top_xxl">Добавить коллектив, лэйбл, промо-группу</h4>
+    <h4 class="center __margin-bottom_xxl __margin-top_xxl">
+        {% if create %}
+            Добавить коллектив, лэйбл, промо-группу
+        {% else %}
+            Редактировать {{ form.name.value }}
+        {% endif %}
+    </h4>
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
@@ -77,7 +83,15 @@
                             </div>
                             <div class="col s6">
                                 <div class="__padding-right_l">
-                                    <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                                    <input
+                                        type="submit"
+                                        class="right waves-effect waves-light btn-large __margin-left_l"
+                                        {% if create %}
+                                            value="Добавить"
+                                        {% else %}
+                                            value="Изменить"
+                                        {% endif %}
+                                    >
                                 </div>
                             </div>
                         </div>
