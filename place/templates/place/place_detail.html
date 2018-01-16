@@ -11,19 +11,27 @@
                 </div>
                 <div class="article">
                     <h1>{{ place.title }}</h1>
-                    <p><span>Адрес и время работы:</span><br>
-                        {% for location in place.location_set.all %}
-                            <strong>{{ location.address }}</strong>
-                            <strong>{{ location.worktime }}</strong>
-                        {% endfor %}                
+
+                    {% if place.address.exists %}
+                        <p>
+                            <span>Адрес:{{ place.address }}</span>
+                        </p>
+                    {% endif %}
+                    {% if place.worktime.exists %}
+                    <p>
+                        <span>Время работы:{{ place.worktime }}</span>
                     </p>
+                    {% endif %}
+
                     {% comment "Social links dictiobary" %}
                         <p><span>Cайт:</span><strong>https://vk.com/lesbar</strong></p>
                     {% endcomment %}
-                    <p class="">
-                        <span>Представитель:</span>
-                        <strong id="getter-name">{{ place.owner.username }}</strong>
-                    </p>
+                    {% if place.owner.exists %}
+                        <p class="">
+                            <span>Представитель:</span>
+                            <strong id="getter-name">{{ place.owner.username }}</strong>
+                        </p>
+                    {% endif %}
                     {% if place.tags.exists %}
                         <p class="__margin-bottom_xs __margin-top_xs">
                             <span>Теги: </span>
