@@ -38,7 +38,8 @@ def check_or_update(events, info):
         info['image']= upload_image(info['image'])
         if not info['title']:
             info['title'] = 'какое-то событие' 
-        Event.objects.create(title=info['title'], description=info['description'], image=info['image'], date=info['date'], owner_id=1, published=False)
+        
+        Event.objects.create(title=info['title'], description=info['description'], image=info['image'][7:], date=info['date'], owner_id=1, published=False)
         update_cache(events, info)     
 
 
@@ -61,13 +62,13 @@ def format_img_path(img_path):
     name = str(base64.b64encode(img_path.encode('utf-8')))
     img_info['ext'] = ext
     # срезаем лишние символы
-    img_info['name'] = name[:15]
+    img_info['name'] = name[3:-4]
     return img_info
 
 
 def upload_image(img_path):
     """Upload image to dir."""
-    upload_dir = "static/images/"
+    upload_dir = "upload/parser_images/"
     img_info = format_img_path(img_path)
     target_path = (upload_dir +
                     "_" +

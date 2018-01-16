@@ -12,23 +12,35 @@
                 <div class="article">
                     <h1 class="__margin-top_xl __margin-bottom_xl">{{ event.title }}</h1>
                     <span id="hidden-id" class="__hidden">{{ event.id }}</span>
+                    {% if event.owner is not null %}
                     <p>
                         <span>Организатор: </span>
                         <strong id="getter-name">{{ event.owner.username }}</strong>
                     </p>
+<<<<<<< HEAD
                     <p>
                         <span>Место: </span>
+=======
+                    {% endif %}
+                    {% if event.locations.exists %}
+                    <p  class="__margin-bottom_xs __margin-top_xs">
+                        <span>Место: </span><br>
+>>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                         {% for location in event.locations.all %}
                             <a href="{% url 'place:view' location.slug %}">
                                 <strong>{{ location.title }}</strong><br>
                             </a>
                         {% endfor %}
                     </p>
-                    <p>
-                        <span>Цена: </span>
-                        <strong>{{ event.price }} р.</strong>
-                    </p>
-                    <p>
+                    {% endif %}
+                    {% if event.price is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Цена: </span>
+                            <strong>{{ event.price }} р.</strong>
+                        </p>
+                    {% endif %}
+
+                    <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Дата: </span>
                         <strong>{{ event.date|date:'H:i d.m.Y'}}</strong>
                     </p>
@@ -41,7 +53,11 @@
                         </p>
                     {% endif %}
                     {% if event.bands.exists %}
+<<<<<<< HEAD
                         <p>
+=======
+                        <p class="__margin-bottom_xs __margin-top_xs">
+>>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                             <span>Коллективы: &nbsp;</span>
                             {% for band in event.bands.all %}
                                 <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
@@ -49,7 +65,11 @@
                         </p>
                     {% endif %}
                     {% if event.musicians.exists %}
+<<<<<<< HEAD
                         <p>
+=======
+                        <p class="__margin-bottom_xs __margin-top_xs">
+>>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                             <span> Музыканты: &nbsp;</span>
                             {% for musician in event.musicians.all %}
                                 <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
@@ -63,7 +83,7 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ event.id }}" type="event"></rate-component>
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ event.id }}" type="event"></comment-component>

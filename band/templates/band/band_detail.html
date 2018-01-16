@@ -10,10 +10,20 @@
                 </div>
                 <div class="article __margin-bottom_l">
                     <h1>{{ band.title }}</h1>
-                    <p>
-                        <span>Представитель: </span>
-                        <strong id="getter-name">{{ band.owner.username }}</strong>
-                    </p>
+                    {% if band.owner is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Представитель: </span>
+                            <strong id="getter-name">{{ band.owner.username }}</strong>
+                        </p>
+                    {% endif %}
+                    {% if band.musicians.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Музыканты: </span>
+                            {% for musician in band.musicians.all %}
+                                <a href='#'>#{{ musician.username }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
                     {% if band.tags.exists %}
                         <p class="__margin-bottom_xs __margin-top_xs">
                             <span>Теги: </span>
@@ -29,7 +39,7 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ band.id }}" type="band"></comment-component>
     </div>

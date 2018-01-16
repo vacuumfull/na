@@ -11,12 +11,7 @@
                 </div>
                 <div class="article">
                     <h1>{{ blog.title }}</h1>
-                    {% comment "Тут должны быть ТЭГИ"%}
-                    <p class="__margin-bottom_xs __margin-top_xs">
-                        <span>Тэги:&nbsp;</span>
-                        <strong></strong>
-                    </p>
-                    {% endcomment %}
+
                     <article class="__margin-bottom_xl __margin-top_xl">
                         <p>{{ blog.annotation }}</p>
                         <p>{{ blog.content|safe }}</p>
@@ -49,7 +44,7 @@
         </div>
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></rate-component>
     </div>
-    <hr>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></comment-component>
     </div>

@@ -11,19 +11,27 @@
                 </div>
                 <div class="article">
                     <h1>{{ place.title }}</h1>
-                    <p><span>Адрес и время работы:</span><br>
-                        {% for location in place.location_set.all %}
-                            <strong>{{ location.address }}</strong>
-                            <strong>{{ location.worktime }}</strong>
-                        {% endfor %}                
-                    </p>
+
+                    {% if place.address is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Адрес:{{ place.address }}</span>
+                        </p>
+                    {% endif %}
+                    {% if place.worktime is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Время работы:{{ place.worktime }}</span>
+                        </p>
+                    {% endif %}
+
                     {% comment "Social links dictiobary" %}
                         <p><span>Cайт:</span><strong>https://vk.com/lesbar</strong></p>
                     {% endcomment %}
-                    <p class="">
-                        <span>Представитель:</span>
-                        <strong id="getter-name">{{ place.owner.username }}</strong>
-                    </p>
+                    {% if place.owner is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Представитель:</span>
+                            <strong id="getter-name">{{ place.owner.username }}</strong>
+                        </p>
+                    {% endif %}
                     {% if place.tags.exists %}
                         <p class="__margin-bottom_xs __margin-top_xs">
                             <span>Теги: </span>
@@ -32,8 +40,13 @@
                             {% endfor %}
                         </p>
                     {% endif %}
+<<<<<<< HEAD
                     <article>{{ place.description }}</article>
                     <div class="__margin-top_xl __margin-bottom_xl">
+=======
+                    <article class="__margin-top_xl">{{ place.description }}</article>
+                    <div class="__margin-top_xl">
+>>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                         <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">
                             &nbsp;&nbsp;Я хозяин этого места!
                         </a>
@@ -42,7 +55,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <hr class="__margin-top_xуxl __margin-bottom_xl">
+=======
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
+>>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
