@@ -26,7 +26,7 @@
                     {% comment "Social links dictiobary" %}
                         <p><span>Cайт:</span><strong>https://vk.com/lesbar</strong></p>
                     {% endcomment %}
-                    {% if place.owner.exists %}
+                    {% if place.owner is not null %}
                         <p class="">
                             <span>Представитель:</span>
                             <strong id="getter-name">{{ place.owner.username }}</strong>
