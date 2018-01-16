@@ -16,11 +16,14 @@
                         <p>{{ blog.annotation }}</p>
                         <p>{{ blog.content|safe }}</p>
                     </article>
+                    
+                    {% if blog.event is not null %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         Так или иначе посвящен событию 
                         <a href="/events/{{blog.event.slug}}">{{ blog.event }}</a>
                     </p>
-                  
+                    {% endif %}
+
                     {% if blog.tags.exists %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Теги: </span>

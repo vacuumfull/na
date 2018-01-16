@@ -17,15 +17,11 @@
                         <span>Организатор: </span>
                         <strong id="getter-name">{{ event.owner.username }}</strong>
                     </p>
-<<<<<<< HEAD
-                    <p>
-                        <span>Место: </span>
-=======
                     {% endif %}
+                    
                     {% if event.locations.exists %}
                     <p  class="__margin-bottom_xs __margin-top_xs">
                         <span>Место: </span><br>
->>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                         {% for location in event.locations.all %}
                             <a href="{% url 'place:view' location.slug %}">
                                 <strong>{{ location.title }}</strong><br>

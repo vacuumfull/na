@@ -77,7 +77,7 @@ const Rate = Vue.extend({
             self.colorStars(mark)
 
             $.post(uri, params).done(data => {
-                if (data.is_vote){
+                if (data.value){
                     self.colorStars(data.value);
                     self.successAction("Оценка учтена!");
                     self.getRate()
