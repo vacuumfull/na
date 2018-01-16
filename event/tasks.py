@@ -67,7 +67,7 @@ def format_img_path(img_path):
 
 def upload_image(img_path):
     """Upload image to dir."""
-    upload_dir = "static/images/"
+    upload_dir = "upload/parser_images/"
     img_info = format_img_path(img_path)
     target_path = (upload_dir +
                     "_" +
