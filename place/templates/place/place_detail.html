@@ -33,7 +33,7 @@
                         </p>
                     {% endif %}
                     <article>{{ place.description }}</article>
-                    <div class="__margin-top_xl">
+                    <div class="__margin-top_xl __margin-bottom_xl">
                         <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">
                             &nbsp;&nbsp;Я хозяин этого места!
                         </a>
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr class="__margin-top_xуxl __margin-bottom_xl">
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
