@@ -49,11 +49,7 @@
                         </p>
                     {% endif %}
                     {% if event.bands.exists %}
-<<<<<<< HEAD
-                        <p>
-=======
                         <p class="__margin-bottom_xs __margin-top_xs">
->>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                             <span>Коллективы: &nbsp;</span>
                             {% for band in event.bands.all %}
                                 <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
@@ -61,11 +57,7 @@
                         </p>
                     {% endif %}
                     {% if event.musicians.exists %}
-<<<<<<< HEAD
-                        <p>
-=======
                         <p class="__margin-bottom_xs __margin-top_xs">
->>>>>>> 09a057ae44a5bf34705ae6d4b0e055c3cbc906e1
                             <span> Музыканты: &nbsp;</span>
                             {% for musician in event.musicians.all %}
                                 <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
