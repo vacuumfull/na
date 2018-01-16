@@ -146,10 +146,10 @@
                                     </div>
                                 </div>
 
-                                <div v-bind:class="{activator: place.description != undefined}"  class="card-content __title_block __relative">
+                                <div v-bind:class="{activator: place.description !== undefined}"  class="card-content __title_block __relative">
                                          <span class="card-title __font_exo">
                                              {{place.title}}
-                                             <i v-if="place.description != undefined" class="material-icons right __open_more_icon">gamepad</i>
+                                             <i v-if="place.description !== undefined" class="material-icons right __open_more_icon">gamepad</i>
                                         </span>
                                 </div>
 
@@ -161,8 +161,8 @@
                                     <p v-html="place.description"></p>
                                 </div>
                             
-                                <div class="card-action"  :href"'/places/' + place.slug">
-                                    <a title="Читать о месте" class="__more_link __font_exo  blue-grey-text text-darken-4" :href="'/places/' + place.id">
+                                <div class="card-action"  :href="'/places/' + place.slug">
+                                    <a title="Читать о месте" class="__more_link __font_exo  blue-grey-text text-darken-4" :href="'/places/' + place.slug">
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
                                         <i class="material-icons __icon-margin_xs left">play_arrow</i>
