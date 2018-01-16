@@ -12,22 +12,22 @@
                 <div class="article">
                     <h1>{{ place.title }}</h1>
 
-                    {% if place.address.exists %}
-                        <p>
+                    {% if place.address is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
                             <span>Адрес:{{ place.address }}</span>
                         </p>
                     {% endif %}
-                    {% if place.worktime.exists %}
-                    <p>
-                        <span>Время работы:{{ place.worktime }}</span>
-                    </p>
+                    {% if place.worktime is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Время работы:{{ place.worktime }}</span>
+                        </p>
                     {% endif %}
 
                     {% comment "Social links dictiobary" %}
                         <p><span>Cайт:</span><strong>https://vk.com/lesbar</strong></p>
                     {% endcomment %}
                     {% if place.owner is not null %}
-                        <p class="">
+                        <p  class="__margin-bottom_xs __margin-top_xs">
                             <span>Представитель:</span>
                             <strong id="getter-name">{{ place.owner.username }}</strong>
                         </p>
@@ -40,7 +40,7 @@
                             {% endfor %}
                         </p>
                     {% endif %}
-                    <article>{{ place.description }}</article>
+                    <article class="__margin-top_xl">{{ place.description }}</article>
                     <div class="__margin-top_xl">
                         <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">
                             &nbsp;&nbsp;Я хозяин этого места!
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
