@@ -38839,7 +38839,6 @@ var Rate = _vue2.default.extend({
             self.colorStars(mark);
 
             _jquery2.default.post(uri, params).done(function (data) {
-                console.log(data);
                 if (data.value) {
                     self.colorStars(data.value);
                     self.successAction("Оценка учтена!");
