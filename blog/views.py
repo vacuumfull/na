@@ -25,16 +25,16 @@ class IndexList(ListView):
     def get_queryset(self):
         """Filter queryset if choise one rubric."""
         query = super().get_queryset()
-        if self.request.user.is_authenticated:
+        #if self.request.user.is_authenticated:
             # Здесь нужно подумать над выводом того, что нравится пользователю
-            stylesset = UserExtend.objects.filter(user_id=self.request.user.id).values('prefer_styles')
+           # stylesset = UserExtend.objects.filter(user_id=self.request.user.id).values('prefer_styles')
            # styles = json.loads(stylesset[0]['prefer_styles'])
            # query_styles = query.select_related().all()
            # tags = Tag.objects.filter(name__in=styles).get()
            # blogs = tags.blog_tags.all()
-        else:
-            if 'rubric' in self.kwargs:
-                query = query.filter(rubric=self.kwargs['rubric'])
+        #else:
+        if 'rubric' in self.kwargs:
+            query = query.filter(rubric=self.kwargs['rubric'])
         return query.order_by('created_at').reverse()
 
 

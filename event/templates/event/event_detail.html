@@ -18,12 +18,13 @@
                         <strong id="getter-name">{{ event.owner.username }}</strong>
                     </p>
                     {% endif %}
+                    
                     {% if event.locations.exists %}
                     <p  class="__margin-bottom_xs __margin-top_xs">
                         <span>Место: </span><br>
                         {% for location in event.locations.all %}
                             <a href="{% url 'place:view' location.slug %}">
-                                <strong>{{ location.address }}</strong><br>
+                                <strong>{{ location.title }}</strong><br>
                             </a>
                         {% endfor %}
                     </p>

@@ -16,6 +16,14 @@
                         <p>{{ blog.annotation }}</p>
                         <p>{{ blog.content|safe }}</p>
                     </article>
+                    
+                    {% if blog.event is not null %}
+                    <p class="__margin-bottom_xs __margin-top_xs">
+                        Так или иначе посвящен событию 
+                        <a href="/events/{{blog.event.slug}}">{{ blog.event }}</a>
+                    </p>
+                    {% endif %}
+
                     {% if blog.tags.exists %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Теги: </span>
@@ -39,7 +47,7 @@
         </div>
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></rate-component>
     </div>
-    <hr >
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ blog.id }}" type="blog"></comment-component>
     </div>
