@@ -197,6 +197,10 @@ body nav .button-collapse{
     cursor:pointer;
 }
 
+#place-map{
+    max-height: 300px;
+}
+
 footer > div.footer-copyright {
     max-width: none !important;
 }

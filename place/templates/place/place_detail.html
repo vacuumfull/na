@@ -5,11 +5,19 @@
 <div id="inner">
     <div class="container">
         <div class="row">
-            <div class="col s12">
+            <div class="col s6">
                 <div class="head_block __margin-top_xxl">
                     <img class="responsive-img " src="{{ place.image.url }}">
                 </div>
+            </div>
+            <div class="col s6">
+                {% if place.coordinates %}
+                    <place-map title="{{ place.title }}" coordinates="{{ place.coordinates }}"></place-map>
+                {% endif %}
+            </div>
+            <div class="col s12">
                 <div class="article">
+
                     <h1>{{ place.title }}</h1>
 
                     {% if place.address is not null %}
@@ -46,6 +54,7 @@
                             &nbsp;&nbsp;Я хозяин этого места!
                         </a>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -15,3 +15,10 @@ class PlaceModelForm(ModelForm):
         model = Place
         fields = ('title', 'description', 'address', 'coordinates',
                   'worktime', 'image', 'icon', 'musicians', 'tags')
+
+
+    def __init__(self, *args, **kwargs):
+        super(PlaceModelForm, self).__init__(*args, **kwargs)
+        
+        for key in self.fields:
+            self.fields['musicians'].required = False
