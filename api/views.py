@@ -219,7 +219,7 @@ def vote_rating(request):
 
     getattr(_load_module(app), 'vote_rating')(key, user, vote)
 
-    result = get_rating(request, key, app)
+    result = get_rating(request, sessionid, app, key)
     return result
 
 

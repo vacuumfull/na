@@ -6,6 +6,7 @@ import LeftModal from './components/LeftModalComponent';
 import UserMenu from './components/UserMenuComponent';
 import Rate from './components/RateComponent';
 import Comment from './components/CommentComponent';
+import PlaceMap  from './components/PlaceMapComponent';
 
 new Vue({
     el: '#index',
@@ -15,7 +16,8 @@ new Vue({
         'left-modal': LeftModal,
         'rate-component': Rate,
         'user-menu': UserMenu,
-        'comment-component': Comment
+        'place-map': PlaceMap,
+        'comment-component': Comment,  
     },
     data: {
         userInfo: {

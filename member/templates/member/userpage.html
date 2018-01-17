@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load under_filters %}
+
+{% block content %}
+<div class="container">
+	<div class="row __padding-top_xxl">
+		<div class="col s12">
+			<h3>Страница пользователя {{ user.username }}</h3>
+			{% for group in user.groups.all %}
+				<p>Группа: <b>{{ group.name }}</b></p>
+			{% endfor %}
+		</div>
+	</div>
+
+	{% if blogs %}
+		<div class="row">
+			<div class="__margin-top_xl ">
+				<h4 class="__margin-left_m">Добавленные записи</h4>
+				{% for blog in blogs %}
+					{% include "blog/blog_card.html" %}
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+
+	{% if bands %}
+		<div class="row">
+			<div class="__margin-top_xl ">
+				<h4 class="__margin-left_m">Добавленные коллективы</h4>
+				{% for band in bands %}
+					{% include "band/band_card.html" %}
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+
+	{% if events %}
+		<div class="row">
+			<div class="__margin-top_xl ">
+				<h4 class="__margin-left_m">Добавленные события</h4>
+				{% for event in events %}
+					{% include "event/event_card.html" %}
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+
+	{% if places %}
+	<div class="row">
+		<div class="__margin-top_xl ">
+			<h4 class="__margin-left_m">Добавленные места</h4>
+			{% for place in places %}
+				{% include "place/place_card.html" %}
+			{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+			
+	
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/initAdmin.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Страница пользователя {{ user.username }}</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="Страница настроек пользователя">
+{% endblock description %}

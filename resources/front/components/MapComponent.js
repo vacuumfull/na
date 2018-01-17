@@ -24,7 +24,7 @@ const MapComponent = Vue.extend({
         },
         showMap(val){
             let self = this;
-            if(val){
+            if (val){
                 GoogleMapsLoader.load((google) => {
 
                     let map = new google.maps.Map(document.getElementById('map'), {
