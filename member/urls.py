@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, logout
 
-from member.views import SignupUser, SettingsView, get_user_profile
+from member.views import SignupUser, SettingsView, UserView
 
 
 urlpatterns = [
@@ -9,5 +9,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', logout, name='logout', kwargs={'next_page': '/'}),
     path('signup/', SignupUser.as_view(), name='signup'),
-    path('member/<str:username>', get_user_profile, name='userpage')
+    path('member/<str:username>/', UserView.as_view(), name='userpage')
 ]

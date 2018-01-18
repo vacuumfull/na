@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import FormView
+from django import http
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import TemplateView
@@ -10,7 +11,6 @@ from event.models import Event
 from blog.models import Blog
 from band.models import Band
 from place.models import Place
-
 
 
 AUTH_GROUPS =  {"user": "Пользователи",
@@ -43,39 +43,25 @@ class SettingsView(LoginRequiredMixin, TemplateView):
 
     template_name = 'member/settings.html'
 
+class UserView(DetailView):
+    model = User
+    slug_url_kwarg = 'username'
+    template_name = 'member/userpage.html'
 
+    def get_object(self, queryset=None):
+        user =  get_object_or_404(User, username=self.kwargs['username'])
+        return user
 
-def get_user_profile(request, username):
-    try:
-        user = User.objects.get(username=username)
-
-        blogs = None
-        bands = None
-        events = None
-        places = None
-
-        if user.is_superuser:
-            return redirect('/')
-        if user.groups.all()[0].name == "Пользователи":
-            blogs = Blog.objects.filter(author=user)
-        if user.groups.all()[0].name == "Музыканты":
-            blogs = Blog.objects.filter(author=user)
-            bands = Band.objects.filter(owner=user)
-        if user.groups.all()[0].name == "Представители":
-            blogs = Blog.objects.filter(author=user)
-            places = Place.objects.filter(owner=user)
-            bands = Band.objects.filter(owner=user)
-        if user.groups.all()[0].name == "Организаторы":
-            blogs = Blog.objects.filter(author=user)
-            events = Event.objects.filter(owner=user)
-  
-        return render(request, 'member/userpage.html', 
-                    {"user":user, 
-                    "blogs": blogs, 
-                    "events": events, 
-                    "bands": bands, 
-                    "places": places })
-    except User.DoesNotExist:
-        return render(request, '404.html')
-  
-  
+    def get(self, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.is_superuser:
+            return http.HttpResponseRedirect('/')
+        return super(UserView, self).get(*args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserView, self).get_context_data(**kwargs)
+        context['blogs'] = Blog.objects.filter(author=context['object'])
+        context['events'] = Event.objects.filter(owner=context['object'])
+        context['bands'] = Band.objects.filter(owner=context['object'])
+        context['places'] = Place.objects.filter(owner=context['object'])
+        return context

@@ -2,7 +2,7 @@
 {% load under_filters %}
 
 {% block content %}
-<div class="container">
+<div class="container __padding-bottom_xl">
 	<div class="row __padding-top_xxl">
 		<div class="col s12">
 			<h3>Страница пользователя {{ user.username }}</h3>
@@ -14,8 +14,8 @@
 
 	{% if blogs %}
 		<div class="row">
-			<div class="__margin-top_xl ">
-				<h4 class="__margin-left_m">Добавленные записи</h4>
+			<div class="__margin-top_l ">
+				<h4 class="__margin-left_m __margin-bottom_l">Добавленные записи</h4>
 				{% for blog in blogs %}
 					{% include "blog/blog_card.html" %}
 				{% endfor %}
@@ -25,7 +25,7 @@
 
 	{% if bands %}
 		<div class="row">
-			<div class="__margin-top_xl ">
+			<div class="__margin-top_l ">
 				<h4 class="__margin-left_m">Добавленные коллективы</h4>
 				{% for band in bands %}
 					{% include "band/band_card.html" %}
@@ -46,12 +46,12 @@
 	{% endif %}
 
 	{% if places %}
-	<div class="row">
-		<div class="__margin-top_xl ">
-			<h4 class="__margin-left_m">Добавленные места</h4>
-			{% for place in places %}
-				{% include "place/place_card.html" %}
-			{% endfor %}
+		<div class="row">
+			<div class="__margin-top_l ">
+				<h4 class="__margin-left_m">Добавленные места</h4>
+				{% for place in places %}
+					{% include "place/place_card.html" %}
+				{% endfor %}
 			</div>
 		</div>
 	{% endif %}
