@@ -48,8 +48,9 @@
 				На основе твоих предпочтений, система будет подбирать для тебя события, места и не только.
 			</p>
 			<div class="music-field __margin-top_l __margin-bottom_l">
-				<div v-on:click="selectMusicStyle($event)" v-for="style in styles" class="chip">{{ style.tag }}</div>
-			
+				<template v-for="style in styles">
+					<div v-bind:class="{ ' teal lighten-2': style.selected }" v-on:click="style.selected = true" class="chip">{{ style.tag }}</div>
+				</template>
 			</div>
 			<div class="chips chips-placeholder"></div>
 		</div>

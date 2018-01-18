@@ -38546,9 +38546,7 @@ exports.default = UserMenu;
 module.exports = "\n<div>\n    <div id=\"menu-triggers\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnreadCount > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnreadCount }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
-/* 154 */,
-/* 155 */,
-/* 156 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root, factory) {
@@ -38777,6 +38775,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function(root
 
 
 /***/ }),
+/* 155 */,
+/* 156 */,
 /* 157 */,
 /* 158 */,
 /* 159 */,
@@ -38940,7 +38940,7 @@ var _CommentComponent = __webpack_require__(285);
 
 var _CommentComponent2 = _interopRequireDefault(_CommentComponent);
 
-var _PlaceMapComponent = __webpack_require__(323);
+var _PlaceMapComponent = __webpack_require__(287);
 
 var _PlaceMapComponent2 = _interopRequireDefault(_PlaceMapComponent);
 
@@ -39204,43 +39204,7 @@ exports.default = Comment;
 module.exports = "\n    <div id=\"comment-field\" class=\"row\">\n        <div class=\"col s12\">\n            <div class=\"__comment __margin-top_l\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <input v-on:keyup.enter=\"create\" type=\"text\" v-model=\"content\"  :disabled=\"isLogin === 'false'\" >\n                        <label v-if=\"isLogin === 'true'\" class=\"active\">Оставить комменатрий</label>\n                        <label v-if=\"isLogin === 'false'\" class=\"active\">Комментарии могут оставлять зарегистрированные пользователи</label>\n                    </div>\n\n                    <div v-if=\"isLogin === 'true'\" class=\"__padding-right_l \">\n                        <a class=\"right waves-effect waves-light btn-large\" v-on:click=\"create\">\n                            &nbsp;&nbsp;Добавить\n                            <i class=\"material-icons right dp48\">note_add</i>\n                        </a>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <div class=\"col s12\">\n            <h4 v-if=\"comments.length > 0\" class=\"__margin-top_xs __margin-bottom_xl\">Комментарии</h4>\n            <div v-for=\"item in comments\" class=\"__comment-each __margin-bottom_l __margin-top_m\">\n                <p class=\"__margin-bottom_xs\">\n                    <b v-if=\"isLogin === 'true'\" class=\"__pointer\"  v-on:click=\"setName(item.author)\">\n                        {{ item.user }}\n                    </b>\n                    <b  v-if=\"isLogin === 'false'\">\n                        {{ item.user }}\n                    </b>\n                    написал в <span class=\"__time_color\"><strong>{{  formatDate(item.datetime) }}</strong></span>:\n                </p>\n                <!--p v-if=\"item.getter != null\" class=\"__margin-bottom_xs\">\n                    <b  @if (Auth::user())  class=\"__pointer\" v-on:click=\"setName(item.author)\" @endif>@{{ item.author }}</b> ответил пользователю <b class=\" blue-grey-text text-darken-2\">@{{ item.getter }}</b> в <span class=\"__time_color\"><strong>@{{ item.date_formatted }}</strong></span>:\n                </p-->\n                <p class=\"__margin-top_xs __comment_font\">{{ item.content }}</p>\n            </div>\n        </div>\n    </div>\n"
 
 /***/ }),
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39254,11 +39218,11 @@ var _vue = __webpack_require__(4);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _googleMaps = __webpack_require__(156);
+var _googleMaps = __webpack_require__(154);
 
 var _googleMaps2 = _interopRequireDefault(_googleMaps);
 
-var _placeMap = __webpack_require__(324);
+var _placeMap = __webpack_require__(288);
 
 var _placeMap2 = _interopRequireDefault(_placeMap);
 
@@ -39308,7 +39272,7 @@ var PlaceMap = _vue2.default.extend({
 exports.default = PlaceMap;
 
 /***/ }),
-/* 324 */
+/* 288 */
 /***/ (function(module, exports) {
 
 module.exports = "\n<div id=\"place-map\" class=\"__margin-top_xxl\" style=\"height:300px;width: 500px;float:right;\"></div>"
