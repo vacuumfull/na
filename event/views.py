@@ -8,8 +8,11 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
+import json
+
 from event.models import Event
 from event.forms import EventModelForm
+from member.models import UserExtend
 
 
 class EventList(ListView):
@@ -18,6 +21,13 @@ class EventList(ListView):
     queryset = Event.objects.upcoming()
     context_object_name = 'events'
     paginate_by = 16
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
+            context['prefered'] = Event.objects.filter(tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+        return context
 
 
 class EventView(DetailView):

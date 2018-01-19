@@ -8,7 +8,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
-from itertools import chain
 import json
 
 from blog.forms import BlogModelForm
@@ -25,17 +24,16 @@ class IndexList(ListView):
     def get_queryset(self):
         """Filter queryset if choise one rubric."""
         query = super().get_queryset()
-        #if self.request.user.is_authenticated:
-            # Здесь нужно подумать над выводом того, что нравится пользователю
-           # stylesset = UserExtend.objects.filter(user_id=self.request.user.id).values('prefer_styles')
-           # styles = json.loads(stylesset[0]['prefer_styles'])
-           # query_styles = query.select_related().all()
-           # tags = Tag.objects.filter(name__in=styles).get()
-           # blogs = tags.blog_tags.all()
-        #else:
         if 'rubric' in self.kwargs:
             query = query.filter(rubric=self.kwargs['rubric'])
         return query.order_by('created_at').reverse()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
+            context['prefered'] = Blog.objects.filter(tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+        return context
 
 
 class BlogView(DetailView):

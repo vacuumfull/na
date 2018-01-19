@@ -38,6 +38,18 @@
             </div>
         </div>
     </div>
+    {% if prefered %}
+    <div class="row">
+        <h3 class="center __margin-top_xl __margin-bottom_l __uppercase">Рекомендуемые вам</h3>
+        <div class="col s12">
+            <div class="row">
+                {% for event in prefered %}
+                    {% include "event/event_card.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock content %}

@@ -8,8 +8,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
+import json
+
 from band.models import Band
 from band.forms import BandModelForm
+from member.models import UserExtend
 
 class BandList(ListView):
     """Index list bands."""
@@ -17,6 +20,13 @@ class BandList(ListView):
     model = Band
     context_object_name = 'bands'
     paginate_by = 16
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
+            context['prefered'] = Band.objects.filter(tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+        return context
 
 
 class BandDetail(DetailView):

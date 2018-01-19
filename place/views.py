@@ -8,8 +8,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
+import json
+
 from place.models import Place
 from place.forms import PlaceModelForm
+from member.models import UserExtend
 
 
 class PlaceList(ListView):
@@ -18,6 +21,13 @@ class PlaceList(ListView):
     queryset = Place.objects.published()
     context_object_name = 'places'
     paginate_by = 16
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
+            context['prefered'] = Place.objects.filter(tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+        return context
 
 
 class PlaceView(DetailView):
