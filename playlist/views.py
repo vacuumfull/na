@@ -26,7 +26,8 @@ class IndexList(ListView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
-            context['prefered'] = Playlist.objects.filter(published=True, tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+            if styles[0]['prefer_styles'] is not None:
+                context['prefered'] = Playlist.objects.filter(published=True, tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
         return context
 
 
