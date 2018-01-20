@@ -31,7 +31,7 @@ class BandManager(models.Manager):
 
     def published(self):
         """All published post."""
-        result = Band.objects.filter(published=True)
+        result = Band.objects.filter(published=True).order_by('created_at').reverse()
         result.order_by('created_at')
         return result
 

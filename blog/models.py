@@ -44,12 +44,12 @@ class BlogManager(models.Manager):
 
     def last_published(self):
         """Last published blog."""
-        result = Blog.objects.published()[:4]
+        result = Blog.objects.published()[:20]
         return result
 
     def published(self):
         """All published post."""
-        result = Blog.objects.filter(published=True)
+        result = Blog.objects.filter(published=True).order_by('created_at').reverse()
         result.order_by('rubric', 'created_at', 'title')
         return result
 

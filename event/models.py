@@ -44,8 +44,7 @@ class EventManager(models.Manager):
 
     def published(self):
         """All published post."""
-        result = Event.objects.filter(published=True)
-        result.order_by('date')
+        result = Event.objects.filter(published=True).order_by('date').reverse()[:20]
         return result
 
 

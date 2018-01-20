@@ -26,13 +26,13 @@ class IndexList(ListView):
         query = super().get_queryset()
         if 'rubric' in self.kwargs:
             query = query.filter(rubric=self.kwargs['rubric'])
-        return query.order_by('created_at').reverse()
+        return query
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             styles = UserExtend.objects.filter(user=self.request.user).values('prefer_styles')
-            context['prefered'] = Blog.objects.filter(tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
+            context['prefered'] = Blog.objects.filter(published=True, tags__name__in=json.loads(styles[0]['prefer_styles'])).distinct()
         return context
 
 

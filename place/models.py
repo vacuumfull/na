@@ -36,7 +36,7 @@ class PlaceManager(models.Manager):
         return result_list
 
     def published(self):
-        result = Place.objects.filter(published=True)
+        result = Place.objects.filter(published=True).order_by('created_at').reverse()[:20]
         return result
 
     def last_published(self):
