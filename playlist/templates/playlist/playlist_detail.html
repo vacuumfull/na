@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="inner">
+    <div class="container">
+        <div class="row">
+			{% if playlist.image.url is not null %}
+				<div class="col s12">
+					<div class="head_block __margin-top_xxl">
+						<img class="responsive-img " src="{{ playlist.image.url }}">
+					</div>
+				</div>
+			{% endif %}
+            <div class="col s12">
+                <div class="article">
+                    <h1>{{ playlist.name }}</h1>
+                    {% if playlist.owner is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Автор:</span>
+                            <strong id="getter-name">{{ playlist.creator.username }}</strong>
+                        </p>
+                    {% endif %}
+                    {% if playlist.tags.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in playlist.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+					<article class="__margin-top_xl __margin-bottom_xl">{{ playlist.annotation }}</article>
+					{% autoescape off %}
+						{{ playlist.content }}
+					{% endautoescape %}
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/inner.entry.js"></script>
+{% endblock js %}
+
+{% block title %}
+<title>NightAgenda | Meсто {{ playlist.title }} </title>
+{% endblock title %}
+
+{% block description %}
+<meta name="description" content="{{ playlist.title }} - {{ playlist.description }}">
+{% endblock description %}

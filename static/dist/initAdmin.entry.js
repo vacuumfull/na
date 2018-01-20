@@ -54821,6 +54821,8 @@ new _vue2.default({
             (0, _jquery2.default)('#id_annotation').addClass('materialize-textarea');
             (0, _jquery2.default)('#id_description').addClass('materialize-textarea');
             (0, _jquery2.default)('.__worktime textarea').addClass('materialize-textarea');
+            (0, _jquery2.default)('.__playlist_content textarea').addClass('materialize-textarea');
+            (0, _jquery2.default)('.__playlist_content label').text('Вставьте код с soundcloud или youtube');
             (0, _jquery2.default)('.__remove-field label').text('Удалить место');
             (0, _jquery2.default)('#modal-music').modal();
             if (currLocation.includes('/edit/')) {

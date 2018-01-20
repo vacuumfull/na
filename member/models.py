@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""User Extended settings and Common settings"""
 import os
 from uuid import uuid4
 

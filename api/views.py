@@ -18,8 +18,8 @@ import place.api
 import band.api
 import message.api
 import member.api
+import playlist.api
 import tag.api
-# import tag.api
 
 
 APPS_SET = set(['blog', 'band', 'place', 'event'])
@@ -116,12 +116,14 @@ def search_default(request, keyword:str):
     events_result = getattr(_load_module('tag'), 'search_in_events')(str(keyword))
     places_result = getattr(_load_module('tag'), 'search_in_places')(str(keyword))
     bands_result = getattr(_load_module('tag'), 'search_in_bands')(str(keyword))
+    playlists_result = getattr(_load_module('tag'), 'search_in_playlists')(str(keyword))
 
     result = {
         'blogs': blogs_result,
         'events': events_result,
         'places': places_result,
-        'bands': bands_result
+        'bands': bands_result,
+        'playlists': playlists_result,
     }
 
     return JsonResponse(result, safe=False)
@@ -403,6 +405,7 @@ def _load_module(module_name: str) -> object:
         'band': band.api,
         'message': message.api,
         'member': member.api,
+        'playlist': playlist.api,
         'tag': tag.api,
     }
 

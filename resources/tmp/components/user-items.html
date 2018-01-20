@@ -35,7 +35,7 @@
                     <template v-if="type === 'place' || type === 'event' || type === 'blog'">
                         <td class="__padding-left_m __padding-right_m">{{ item.title }}</td>
                     </template>
-                    <template v-if="type === 'band' ">
+                    <template v-if="type === 'band' || type === 'playlist'">
                         <td>{{ item.name }}</td>
                     </template>
                     <!--title end-->
@@ -44,7 +44,7 @@
                     <template v-if="type === 'place' || type === 'event' || type === 'band'">
                         <td>{{ item.description }}</td>
                     </template>
-                    <template v-if="type === 'blog' ">
+                    <template v-if="type === 'blog' || type === 'playlist'">
                         <td>{{ item.annotation }}</td>
                     </template>
                     <!--description end-->
@@ -130,6 +130,20 @@
                             </a>
                         </td>
                     </template>   
+                    <template v-if="type === 'playlist'">
+                        <td>
+                            <a v-if="item.published" :href="'/playlists/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/playlists/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>   
                     <!--operations end-->
                 </tr>
             </template>
@@ -140,6 +154,7 @@
             <template v-if="type === 'place'">Вы еще не добавили ни одного места!</template>
             <template v-if="type === 'event'">Вы еще не добавили ни одного события!</template>
             <template v-if="type === 'band'">Вы еще не добавили ни одного коллектива!</template>
+            <template v-if="type === 'playlist'">Вы еще не добавили ни одного плейлиста!</template>
         </p>
     </div>
 </div>

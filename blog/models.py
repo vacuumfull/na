@@ -4,15 +4,12 @@ from uuid import uuid4
 
 from ckeditor.fields import CKEditorWidget
 from ckeditor.fields import RichTextField
-from django.forms import ModelForm
-from django import forms
 from django.db import models
 from django.db.models import Avg
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from uuslug import uuslug
-from django.db.models.query import QuerySet
 from taggit.managers import TaggableManager
 
 from event.models import Event

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'bots',
     'telegram',
     'under',
+    'playlist',
     'tag'
 ]
 

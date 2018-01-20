@@ -53,6 +53,8 @@ new Vue({
             $('#id_annotation').addClass('materialize-textarea');
             $('#id_description').addClass('materialize-textarea');
             $('.__worktime textarea').addClass('materialize-textarea');
+            $('.__playlist_content textarea').addClass('materialize-textarea');
+            $('.__playlist_content label').text('Вставьте код с soundcloud или youtube');
             $('.__remove-field label').text('Удалить место');
             $('#modal-music').modal();
             if (currLocation.includes('/edit/')){

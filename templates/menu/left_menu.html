@@ -55,6 +55,15 @@
                 </a>
             </li>
         {% endif %}
+        {% if perms.playlist.add_playlist %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="playlists">
+                    <i class="material-icons">library_music</i>
+                    Плейлисты
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
 
         {% comment "" %}
         <li>

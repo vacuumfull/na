@@ -1,0 +1,18 @@
+<div class="col s12">
+	<div class="playlist-block">
+		{% if playlist.image.src is not null %}
+			<img class="responsive-img" src="{{ playlist.image.src }}">
+		{% endif %}
+		<h3>{{ playlist.name }}</h3>
+		{% if playlist.tags.exists %}
+			<p class="__margin-bottom_m __margin-top_m">
+				<span>Теги: </span>
+				{% for tag in playlist.tags.all %}
+					<a href='#'>#{{ tag.name }}</a>
+				{% endfor %}
+			</p>
+		{% endif %}
+		<p class="__margin-top_m __margin-bottom_m" >{{ playlist.annotation }}</p>
+		<a href="/playlists/{{ playlist.slug }}">Смотреть</a>
+	</div>
+</div>
