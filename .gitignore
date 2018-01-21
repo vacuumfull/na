@@ -12,6 +12,3 @@ __pycache__/
 
 # Upload content
 /upload/
-
-# WTF? O_o
-/under/settings.py

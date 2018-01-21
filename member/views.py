@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import FormView
 from django import http
+from django.core import mail
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import TemplateView
@@ -18,6 +19,16 @@ AUTH_GROUPS =  {"user": "Пользователи",
                 "deputy": "Представители",
                 "organizer": "Организаторы"}
 
+
+def mail_send():
+    connection = mail.get_connection()
+    connection.open()
+    email = mail.EmailMessage(
+        'Subject here', 'Here is the message.', 'nightagenda.fun@gmail.com', ['mr.willentretenmert@gmail.com'],
+        connection=connection,
+    )
+    email.send()
+    connection.close()
 
 
 class SignupUser(FormView):
@@ -42,6 +53,7 @@ class SignupUser(FormView):
 class SettingsView(LoginRequiredMixin, TemplateView):
 
     template_name = 'member/settings.html'
+
 
 class UserView(DetailView):
     model = User
