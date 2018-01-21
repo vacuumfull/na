@@ -22,14 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '^=rp1@ickz8$p$%ap&3_9gd=8dv0dyfmmdzu9hbcq_dq0x4$by'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '172.16.0.205']
-
+# Load base production config
+try:
+    from under.prod import DEBUG, ALLOWED_HOSTS
+except ImportError:
+    DEBUG = True
+    ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,18 +87,19 @@ WSGI_APPLICATION = 'under.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'under',
-        'USER': 'under',
-        'PASSWORD': 'under',
-        'HOST': 'localhost',
-        'PORT': '5432',
+try:
+    from under.prod import DATABASES
+except ImportError:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'under',
+            'USER': 'under',
+            'PASSWORD': 'under',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -149,33 +150,28 @@ USE_TZ = True
 
 LOGIN_URL = '/login/'
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
-#STATIC_ROOT = 'static'
-STATICFILES_DIRS = [
-    ('ckeditor', 'static/ckeditor'),
-    ('js', 'static/js'),
-    ('css', 'static/css'),
-    ('images', 'static/images'),
-    ('dist', 'static/dist'),
-]
-#STATICFILES_DIRS = (
-#   os.path.join(PROJECT_ROOT, 'dist'),
-#)
-
+try:
+    from under.prod import STATIC_ROOT
+except ImportError:
+    STATICFILES_DIRS = [
+        ('ckeditor', 'static/ckeditor'),
+        ('js', 'static/js'),
+        ('css', 'static/css'),
+        ('images', 'static/images'),
+        ('dist', 'static/dist'),
+    ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 MEDIA_URL = '/media/'
 
-# REDIS related settings 
+# REDIS related settings
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600} 
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 
 #Other options
