@@ -1,0 +1,61 @@
+<div class="row">	
+	<div class="col s6">
+		<table class="centered bordered __border __margin-bottom_xxl">
+			<thead>
+				<tr>
+					<th><h6>Ответ на ваш<br>коммент</h6></th>
+					<th><h6>Коммент на пост,<br>события, место</h6></th>
+					<th><h6>Оценка поста,<br>места, события</h6></th>
+				</tr>
+			</thead>
+			<tbody>
+				<template v-for="(item, key) in settings" >
+					<tr class="hovered-row">
+						<td v-if="!settings.alert_comment">
+							<span class="red-text">Не уведомлять</span>
+						</td>
+						<td v-if="settings.alert_comment">
+							<span class="green-text">Уведомлять</span>
+						</td>
+						<td v-if="!settings.alert_blog">
+							<span class="red-text">Не уведомлять</span>
+						</td>
+						<td v-if="settings.alert_blog">
+							<span class="green-text">Уведомлять</span>
+						</td>
+						<td v-if="!settings.alert_rating">
+							<span class="red-text">Не уведомлять</span>
+						</td>
+						<td v-if="settings.alert_rating">
+							<span class="green-text">Уведомлять</span>
+						</td>
+					</tr>
+				</template>
+			</tbody>
+		</table>		
+	</div>
+	<!-- Modal Structure -->
+	<div id="modal-music" class="modal modal-fixed-footer">
+		<div class="modal-content">
+			<h4 class="__margin-top_m __margin-bottom_m">Какую музыку ты слушаешь?</h4>
+			<p>
+				Просим выбрать хотя бы одно музыкальное направление, которое ты предпочитаешь. 
+				Если в списке нет того, что тебе нравится, то напиши в поле ниже и нажми <b>Enter</b>.
+				Если еще не определился с направлением или не знаешь, как оно называется, то 
+				укажи любимые музыкальные коллективы. 
+			</p>
+			<p>
+				На основе твоих предпочтений, система будет подбирать для тебя события, места и не только.
+			</p>
+			<div class="music-field __margin-top_l __margin-bottom_l">
+				<template v-for="style in styles">
+					<div v-bind:class="{ ' teal lighten-2': style.selected }" v-on:click="style.selected = true" class="chip">{{ style.tag }}</div>
+				</template>
+			</div>
+			<div class="chips chips-placeholder"></div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" v-on:click='addPreferMusic' class="modal-action modal-close waves-effect waves-green btn-flat ">OK!</a>
+		</div>
+	</div>
+</div>

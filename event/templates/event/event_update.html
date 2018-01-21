@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% load under_filters %}
+
+{% block content %}
+
+<div id="events_page" class="container">
+    <h4 class="center __margin-top_xxl __margin-bottom_xl">Редактирование события</h4>
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
+        <div class="col s12">
+            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
+                <div class="row">
+                    <div class="col s12">
+                            <div class="row">
+                                <div class="card-content black-text">
+                                    <div class="input-group">
+                                        <div class="input-field col s6">
+                                            {{ form.title.errors }}
+                                            {{ form.title }}
+                                            {{ form.title.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group input-daterange">
+                                        <div class="input-field col s3">
+                                                <datepicker placeholder="Дата события" language="ru"  v-model="date"  v-on:closed="setDate(date)"></datepicker>
+                                                {{ form.date.errors }}
+                                        </div>
+                                        <div class="input-field col s3 __hidden">
+                                            {{ form.date }}
+                                            {{ form.date.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s3">
+                                            {{ form.price.errors }}
+                                            {{ form.price }}
+                                            {{ form.price.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s4">
+                                        {{ form.locations.errors }}
+                                        {% if form.locations|length > 0 %}
+                                            <select name="locations" id="id_locations"  class="initialized">
+                                                <option value="" disabled>Выберите место</option>
+                                                {% for place in form.locations %}
+                                                    {{ place }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="locations" id="id_locations" class="initialized">
+                                                <option value="">Ничего нет</option>
+                                            </select>
+                                        {% endif %}
+                                        {{ form.locations.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s4">
+                                            {{ form.bands.errors }}
+                                            {% if form.bands|length > 0 %}
+                                                <select name="bands" id="id_bands" multiple class="initialized">
+                                                    <option value="" disabled>Выберите коллектив</option>
+                                                    {% for band in form.bands %}
+                                                        {{ band }}
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <select name="bands" id="id_bands" class="initialized">
+                                                    <option value="" disabled>Ничего нет</option>
+                                                </select>
+                                            {% endif %}
+                                            {{ form.bands.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s4">
+                                            {{ form.musicians.errors }}
+                                            {% if form.musicians|length > 0 %}
+                                                <select id="id_musicians" name="musicians" multiple class="initialized">
+                                                    <option value="" disabled>Выберите музыкантов</option>
+                                                    {% for musician in form.musicians %}
+                                                        {{ musician }}
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <select id="id_musicians" name="musicians" class="initialized">
+                                                    <option value="">Никого нет</option>
+                                                </select>
+                                            {% endif %}
+                                            {{ form.musicians.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s12">
+                                            <tags-component></tags-component>
+                                            {{ form.tags.errors }}
+                                            <div class="__tags-field __hidden">
+                                                {{ form.tags }}
+                                                {{ form.tags.label_tag }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-field col s12">
+                                            {{ form.description.errors }}
+                                            {{ form.description }}
+                                            {{ form.description.label_tag }}
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="file-field input-field col s5">
+                                            {{ form.image.errors }}
+                                            <div class="btn">
+                                                <span>{{ form.image.label }}</span>
+                                                {{ form.image }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col s3">
+                                <a class="left amber darken-3 __margin-left_s  btn-hovered waves-effect waves-light btn-large" href="{% url 'event:index' %}">
+                                    Отмена
+                                    <i class="material-icons right dp48">clear</i>
+                                </a>
+                            </div>
+                            <div class="col s3">
+                                {% if request.user.is_superuser %}
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large"  v-on:click="sendTelegramInfo()">
+                                    Отправить в телегу 
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s3">
+                                {% if request.user.is_superuser %}
+                                <a class="left  blue darken-4 __margin-left_s  btn-hovered waves-effect waves-light btn-large" v-on:click="sendTelegramLink()">
+                                    Ссылку в телегу 
+                                </a>
+                                {% endif %}
+                            </div>
+                            <div class="col s3">
+                                <div class="__padding-right_l">
+                                    <button type="submit" class="right waves-effect waves-light btn-large __margin-left_l">
+                                        Обновить
+                                        <i class="material-icons dp48 right">add</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/initAdmin.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Редактирование события</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="Редактирование события">
+{% endblock description %}

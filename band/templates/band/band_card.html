@@ -1,0 +1,33 @@
+
+<div class="col s12 m4 l3">
+    <div class="__event_block">
+        <div class="card">
+            <div class="card-image">
+                <div class="card-image __preview_img">
+                    <div class="__img_inner_place">
+                        <img src="{{ band.image.url }}">
+                    </div>
+                </div>
+            </div>
+            <div class="card-content __title_block __relative  activator">
+                <span class="card-title __font_exo">
+                    {{ band.name }}
+                    <i class="material-icons right __open_more_icon">gamepad</i>
+                </span>
+            </div>
+            <div class="card-reveal  __relative">
+                <span class="card-title __font_exo">
+                    {{ band.name }}
+                    <i class="material-icons right __close_more_icon">close</i>
+                </span>
+                <p>{{ band.description }}</p>
+            </div>
+            <div class="card-action">
+                <a title="Подробнее" class="__more_link __font_exo blue-grey-text text-darken-4" href="{% url 'band:view' band.slug %}">
+                    {% include "enter_arrow.html" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+                                                                    

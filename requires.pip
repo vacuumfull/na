@@ -1,0 +1,8 @@
+Django == 2.0.0
+django-uuslug
+django-ckeditor
+django-taggit
+
+psycopg2
+pillow
+pytelegrambotapi

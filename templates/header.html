@@ -1,14 +1,22 @@
 {% load staticfiles %}
 
 <header>
-    <nav class="grey darken-4">
+    <nav id="nav-menu">
         <div class="nav-wrapper container">
             <a href="/" class="brand-logo ">
                 <img src="{% static 'images/logo_white.jpg' %}" class="responsive-img">
             </a>
+            <a href="#" data-activates="mobile-menu" class="button-collapse right">
+                <i class="material-icons">menu</i>
+            </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                {% include "menu.html" %}
-                {% include "auth_menu.html" %}
+                {% include "menu/base.html" %}
+
+                {% if request.user.is_authenticated %}
+                    <div id="session_id" class="__hidden">{{ request.session.session_key }}</div>
+                {% else %}
+                    {% include "menu/auth.html" %}
+                {%endif %}
             </ul>
         </div>
     </nav>

@@ -1,0 +1,85 @@
+<div id="dialog_window" class="modal __modal __advanced">
+    <div class="modal-content">
+        <h4 v-if="!isSelected" class="black-text">Диалоговое окно</h4>
+        <h4 v-if="isSelected" class="black-text">Диалог c <span class="purple-text text-darken-4">{{ getter }}</span></h4>
+        <div class="dialog-field">
+            <div class="row">
+                <div class="col s5 __border_right">
+                    <div class="__filter __padding-right_l">
+                        <div class="input-group">
+                            <div class="input-field user-search">
+                                <input type="text" v-on:keyup="search($event)" >
+                                <label>кому написать</label>
+                            </div>
+                        </div>
+                        <!--select multiple>
+                            <option value="all" selected>Выбраны все</option>
+                            <option value="musician">Музыканты</option>
+                            <option value="user">Пользователи</option>
+                            <option value="deputy">Представители</option>
+                            <option value="organizer">Организаторы</option>   
+                        </select-->
+                    </div>
+                    <div class="senders __padding-right_l">
+                        <div class="collection">
+                            <template v-for="getter in users">
+                                <a v-on:click="openUserDialog(getter)" href="#!" class="collection-item">
+                                    <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
+                                    <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
+                                    <span class="__sender-name __margin-left_m">{{ getter.username }}</span>
+                                    <span v-if="getter.unread.length > 0" class="new badge">{{ getter.unread.length }}</span>
+                                </a>
+                            </template>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col s7">
+                    <div class="__messages-window">
+                        <div id="img-field"></div>
+                        <template v-if="openedDialog.open">
+                            <template v-if="openedDialog.messages.length > 0" v-for="message in openedDialog.messages">
+                                <div class="__message-item " >
+                                    <p v-bind:class="[message.from_user === username ? rightClass : leftClass]" class="__margin-top_xs __margin-bottom_xs ">
+                                        <span v-bind:class="{__bg_unread: message.read === false}" class="__margin-right_xs grey-text text-darken-2">{{ formatDate(message.created_at) }}:</span><br>
+                                        <span v-html="message.content"></span>
+                                    </p>
+                                </div><br>
+                            </template>
+                            <p v-if="openedDialog.messages.length >= 19" v-on:click="getHistory"  class="center __history_messages">
+                                <a>Смотреть предыдущие</a>
+                            </p>
+                          
+                            <div class="__padding-top_xxl" v-if="openedDialog.messages.length === 0">
+                                <p class="center">Вы еще ничего не писали этому пользователю.</p>
+                            </div>   
+                     </template>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <form class="__dialog-field col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea class="materialize-textarea black-text" v-model="message"></textarea>
+                        <label>Ваше сообщение</label>
+                    </div>
+                </div>
+            </form>
+            <a class="right waves-effect waves-light btn-large  __margin-left_l" v-on:click="sendMessage" v-bind="{ disabled: message.length < 2 }">
+                &nbsp;&nbsp;Отправить
+                <i class="material-icons right dp48">send</i>
+            </a>
+            <div class="file-field input-field right">
+                <div class="btn-large __download_btn">
+                    <span>Добавить изображение</span>
+                    <i class="material-icons right dp48">photo</i>
+                    <input type="file" v-on:change="encodeImageFileAsURL($event)">
+                </div>
+            </div>
+        </div>
+    </div>
+    <a v-on:click="closeModal" class="modal-action black-text __close-btn"><i class="material-icons right dp48">clear</i></a>
+</div>

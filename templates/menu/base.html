@@ -1,0 +1,39 @@
+<li>
+    <a class="__uppercase" href="{% url 'event:index' %}">
+        <i class="material-icons left">event</i>
+        События
+    </a>
+</li>
+<li>
+    <a class="__uppercase" href="{% url 'place:index' %}">
+        <i class="material-icons left">store_mall_directory</i>
+        Места
+    </a>
+</li>
+<li>
+    <a class="__uppercase" href="{% url 'blog:index' %}">
+        <i class="material-icons left">description</i>
+        Посты
+    </a>
+</li>
+<li>
+    <a class="__uppercase" href="{% url 'band:index' %}">
+        <i class="material-icons left">people</i>
+        Коллективы
+    </a>
+</li>
+
+<li class="__margin-right_xxl">
+    <a class="__uppercase" href="{% url 'playlist:index' %}">
+        <i class="material-icons left">music_note</i>
+        Плейлисты
+    </a>
+</li>
+{% comment "Music link" %}
+<li class="__margin-right_xxl">
+    <a class="__uppercase" href="#">
+        <i class="material-icons left">audiotrack</i>
+        Музыка
+    </a>
+</li>
+{% endcomment %}

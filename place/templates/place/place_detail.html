@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="inner">
+    <div class="container">
+        <div class="row">
+            <div class="col s6">
+                <div class="head_block __margin-top_xxl">
+                    <img class="responsive-img " src="{{ place.image.url }}">
+                </div>
+            </div>
+            <div class="col s6">
+                {% if place.coordinates %}
+                    <place-map title="{{ place.title }}" coordinates="{{ place.coordinates }}"></place-map>
+                {% endif %}
+            </div>
+            <div class="col s12">
+                <div class="article">
+
+                    <h1>{{ place.title }}</h1>
+
+                    {% if place.address is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Адрес:{{ place.address }}</span>
+                        </p>
+                    {% endif %}
+                    {% if place.worktime is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Время работы:{{ place.worktime }}</span>
+                        </p>
+                    {% endif %}
+
+                    {% comment "Social links dictiobary" %}
+                        <p><span>Cайт:</span><strong>https://vk.com/lesbar</strong></p>
+                    {% endcomment %}
+                    {% if place.owner is not null %}
+                        <p  class="__margin-bottom_xs __margin-top_xs">
+                            <span>Представитель:</span>
+                            <strong id="getter-name">{{ place.owner.username }}</strong>
+                        </p>
+                    {% endif %}
+                    {% if place.tags.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in place.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    <article class="__margin-top_xl">{{ place.description }}</article>
+                    <div class="__margin-top_xl">
+                        <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">
+                            &nbsp;&nbsp;Я хозяин этого места!
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
+    <div class="container">
+        <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/inner.entry.js"></script>
+{% endblock js %}
+
+{% block title %}
+<title>NightAgenda | Meсто {{ place.title }} </title>
+{% endblock title %}
+
+{% block description %}
+<meta name="description" content="{{ place.title }} - {{ place.description }}">
+{% endblock description %}

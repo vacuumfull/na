@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col s12">
+        <template v-if="type == 'event'">
+            <h4 class="center __margin-top_xxl">Список событий</h4>
+        </template>
+        <template v-if="type == 'post'">
+            <h4 class="center __margin-top_xxl">Список записей</h4>
+        </template>
+        <template v-if="type == 'collective'">
+            <h4 class="center __margin-top_xxl">Список коллективов</h4>
+        </template>
+        <template v-if="type == 'place'">
+            <h4 class="center __margin-top_xxl">Список мест</h4>
+        </template>
+        <table v-if="showTable" class="centered bordered __margin-top_xxl __border __margin-bottom_xxl">
+            <thead>
+                <tr>
+                    <th><h6>Название</h6></th>
+                    <th><h6>Автор</h6></th>
+                    <th><h6>Место</h6></th>
+                    <th><h6>Участники</h6></th>
+                    <th><h6>Тэги</h6></th>
+                    <th><h6>Опубликован</h6></th>
+                    <th><h6>Действия</h6></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="(item, key) in items" >
+                    <tr class="hovered-row"  :id="key + '_' + item.id">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.deputy }}</td>
+                        <td>{{ item.place }}</td>
+                        <td>
+                            <template v-for="artist in item.artists ">
+                                <span>{{ artist.text }}</span>&nbsp;<br>
+                            </template>
+                        </td>
+                        <td>
+                            <template v-for="tag in item.tags ">
+                                <span>#{{ tag }}</span>&nbsp;<br>
+                            </template>
+                        </td>
+                        <td>@{{ item.published }}</td>
+                        <td>
+                            <a v-if="item.published" :href="type + '/'+ item.id" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+                            <a :href="'/admin/' + type + '/' + item.id" title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="remove(item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <p v-if="!showTable" class="center __margin-top_xxl __margin-bottom_xxl">Ничего нет!</p>
+    </div>
+</div>

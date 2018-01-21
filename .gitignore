@@ -1,2 +1,14 @@
-# Ignore python cache
+# Ignore cache files
 __pycache__/
+*.pyc
+.gitignore
+
+# Vendor content
+/dist/
+/node_modules/
+/src/
+/.idea/
+/static/dist/
+
+# Upload content
+/upload/

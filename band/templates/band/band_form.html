@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="band_page" class="container">
+    <h4 class="center __margin-bottom_xxl __margin-top_xxl">
+        {% if create %}
+            Добавить коллектив, лэйбл, промо-группу
+        {% else %}
+            Редактировать {{ form.name.value }}
+        {% endif %}
+    </h4>
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
+        <div class="col s12">
+            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="card-content black-text">
+                                <div class="input-group">
+                                    <div class="input-field col s8">
+                                        {{ form.name.errors }}
+                                        {{ form.name }}
+                                        {{ form.name.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s4">
+                                        {{ form.members.errors }}
+                                        {% if form.members|length > 0 %}
+                                            <select id="id_members" name="members" multiple class="initialized">
+                                                <option value="" disabled>Выберите музыкантов</option>
+                                                {% for musician in form.members %}
+                                                    {{ musician }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select id="id_members" name="members" class="initialized">
+                                                <option value="">Никого нет</option>
+                                            </select>
+                                        {% endif %}
+                                        {{ form.members.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="file-field input-field col s12">
+                                        {{ form.image.errors }}
+                                        <div class="btn">
+                                            <span>{{ form.image.label }}</span>
+                                            {{ form.image }}
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        <tags-component></tags-component>
+                                        {{ form.tags.errors }}
+                                        <div class="__tags-field __hidden">
+                                            {{ form.tags }}
+                                            {{ form.tags.label_tag }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        {{ form.description.errors }}
+                                        {{ form.description }}
+                                        {{ form.description.label_tag }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <a class="left amber darken-3 __margin-left_m  btn-hovered waves-effect waves-light btn-large" href="{% url 'event:index' %}">
+                                    Отмена
+                                    <i class="material-icons right dp48">clear</i>
+                                </a>
+                            </div>
+                            <div class="col s6">
+                                <div class="__padding-right_l">
+                                    <input
+                                        type="submit"
+                                        class="right waves-effect waves-light btn-large __margin-left_l"
+                                        {% if create %}
+                                            value="Добавить"
+                                        {% else %}
+                                            value="Изменить"
+                                        {% endif %}
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/initAdmin.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Добавление коллектива</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="Добавление коллектива">
+{% endblock description %}

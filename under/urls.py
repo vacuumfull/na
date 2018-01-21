@@ -13,12 +13,41 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf import settings
 from django.contrib import admin
+from django.views.static import serve
+from django.urls import include, path, re_path
+from django.conf.urls import handler404, handler500
 
+import api.urls
+import band.urls
+import blog.urls
+import event.urls
+import flatten.urls
+import member.urls
+import place.urls
+import playlist.urls
 from under.views import IndexView
 
+handler404 = 'under.views.handler404'
+handler500 = 'under.views.handler404'
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^$', IndexView.as_view(), name='index'),
+    path('admin/', admin.site.urls),
+    path('api/', include(api.urls)),
+    path('bands/', include(band.urls)),
+    path('blogs/', include(blog.urls)),
+    path('events/', include(event.urls)),
+    path('places/', include(place.urls)),
+    path('page/', include(flatten.urls)),
+    path('playlists/', include(playlist.urls)),
+
+    re_path(r'^', include(member.urls)),
+    path('', IndexView.as_view(), name='index'),
+]
+
+# Add media path to media directory
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve,
+             {'document_root': settings.MEDIA_ROOT})
 ]

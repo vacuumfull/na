@@ -1,0 +1,26 @@
+
+<div>
+    <div id="menu-triggers" class="hide-on-med-and-down">
+        <div v-on:click="move" data-activates="slide-out"  class=" button-collapse __left-menu_btn" v-bind:style="{ left: left + 'px' }">
+            <a href="#" >
+                <i class="material-icons">menu</i>
+            </a>
+        </div>
+        <div class="__left-menu_key">
+            <a href="" v-on:click="move" data-activates="slide-out" class="button-collapse">Меню</a>
+        </div>
+    </div>
+    <div>
+        <div v-on:click="openDialog" class="__left-dialog_btn hide-on-med-and-down" v-bind:style="{ left: left + 'px' }">
+            <a href="#" >
+                <i class="material-icons">mail</i>
+            </a>
+            <span v-if="messagesUnreadCount > 0" class="__message-count">
+                <span>+{{ messagesUnreadCount }}</span>
+            </span>
+        </div>
+        <div class="__left-dialog_key hide-on-med-and-down">
+            <a v-on:click="openDialog">Диалог</a>
+        </div>
+    </div>
+</div>

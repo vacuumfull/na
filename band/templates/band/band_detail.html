@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="inner">
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="head_block __margin-top_xl">
+                    <img class="responsive-img" src="{{ band.image.url }}">
+                </div>
+                <div class="article __margin-bottom_l">
+                    <h1>{{ band.title }}</h1>
+                    {% if band.owner is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Представитель: </span>
+                            <strong id="getter-name">{{ band.owner.username }}</strong>
+                        </p>
+                    {% endif %}
+                    {% if band.musicians.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Музыканты: </span>
+                            {% for musician in band.musicians.all %}
+                                <a href='#'>#{{ musician.username }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    {% if band.tags.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in band.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    <article class="__margin-top_xl">
+                        {{ band.description }}
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
+    <div class="container">
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ band.id }}" type="band"></comment-component>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/inner.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Коллектив {{ band.title }}</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="{{ band.description }}">
+{% endblock description %}

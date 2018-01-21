@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <h3 class="left __margin-left_s __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Плейлисты и видео</h3>
+		{% if prefered %}
+			<h3 class="center __margin-top_xl __margin-bottom_l __uppercase">Рекомендуемые вам</h3>
+			<div class="col s12">
+				<div class="row">
+					{% for playlist in prefered %}
+						{% include "playlist/playlist_card.html" %}
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+
+		{% for playlist in playlists %}
+			{% include "playlist/playlist_card.html" %}
+		{% endfor %}
+  
+        <div class="col s12">
+            <div class="row">
+            {% if is_paginated %}
+                <div class="pagination center">
+                    <span class="page-links">
+                        {% if page_obj.has_previous %}
+                            <a class="btn" href="?page={{ page_obj.previous_page_number }}">
+                                <i class="material-icons dp48 left">arrow_back</i>
+                                назад
+                            </a>
+                        {% endif %}
+                        <span class="__margin-left_l __margin-right_l page-current">
+                            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                        </span>
+                        {% if page_obj.has_next %}
+                            <a class="btn" href="?page={{ page_obj.next_page_number }}">
+                                вперед
+                                <i class="material-icons dp48 right">arrow_forward</i>
+                            </a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+   
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/common.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>NightAgenda | Список актуальных событий</title>
+{% endblock title %}
+
+
+{% block description %}
+<mate name="description" content="NightAgenda | Список актуальных событий в Санкт-Петербурге">
+{% endblock description %}

@@ -22,14 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '^=rp1@ickz8$p$%ap&3_9gd=8dv0dyfmmdzu9hbcq_dq0x4$by'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# Load base production config
+try:
+    from under.prod import DEBUG, ALLOWED_HOSTS
+except ImportError:
+    DEBUG = True
+    ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
+    'taggit',
+    'api',
+    'member',
+    'band',
+    'place',
+    'event',
+    'flatten',
+    'blog',
+    'message',
+    'bots',
+    'telegram',
+    'under',
+    'playlist',
+    'tag'
 ]
 
 MIDDLEWARE = [
@@ -72,18 +87,19 @@ WSGI_APPLICATION = 'under.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'under',
-        'USER': 'unde',
-        'PASSWORD': 'under',
-        'HOST': 'localhost',
-        'PORT': '5432',
+try:
+    from under.prod import DATABASES
+except ImportError:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'under',
+            'USER': 'under',
+            'PASSWORD': 'under',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -108,6 +124,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'OPTIONS': {
+            'server_max_value_length': 1024 * 1024 * 2,
+        }
+    }
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -122,14 +148,39 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    ('css', 'static/css'),
-    ('js', 'static/js'),
-    ('images', 'static/images'),
-    ('fonts', 'static/fonts'),
-]
+try:
+    from under.prod import STATIC_ROOT
+except ImportError:
+    STATICFILES_DIRS = [
+        ('ckeditor', 'static/ckeditor'),
+        ('js', 'static/js'),
+        ('css', 'static/css'),
+        ('images', 'static/images'),
+        ('dist', 'static/dist'),
+    ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
+MEDIA_URL = '/media/'
+
+# REDIS related settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+#Other options
+TAGGIT_CASE_INSENSITIVE = True
+
+# Email settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nightagenda.fun@gmail.com'
+EMAIL_HOST_PASSWORD = 'Aa1123581321'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

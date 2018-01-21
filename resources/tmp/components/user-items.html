@@ -1,0 +1,160 @@
+<div class="row">
+    <div class="col s12">
+        <h3 class="__margin-top_xxl __margin-bottom_xxl">
+            <template v-if="type === 'blog'">Список ваших записей</template>
+            <template v-if="type === 'place'">Список добавленных вами мест</template>
+            <template v-if="type === 'event'">Список добавленных вами событий</template>
+            <template v-if="type === 'band'">Список добавленных вами коллективов</template>
+        </h3>
+        <table v-if="showTable" class="centered bordered __margin-top_xxl __border __margin-bottom_xxl">
+            <thead>
+                <tr>
+                    <th><h6>Название</h6></th>
+                    <th><h6>Описание</h6></th>
+                    <template v-if="type === 'blog'">
+                        <th><h6>Рубрика</h6></th>
+                    </template>
+                    <th><h6>Статус</h6></th>
+                    <template v-if="type === 'place'">
+                        <th><h6>Иконка</h6></th>
+                    </template>
+                    <template v-if="type === 'band' || type === 'event' || type === 'blog'">
+                        <th><h6>Постер</h6></th>
+                    </template>
+                    <th class="__padding-right_m __padding-left_m"><h6>Дата<br>создания</h6></th>
+                    <template v-if="type === 'event'">
+                        <th class="__padding-right_m __padding-left_m"><h6>Дата<br>мероприятия</h6></th>
+                    </template>
+                    <th><h6>Операции</h6></th>
+                </tr>
+            </thead>
+            <tbody>
+            <template v-for="(item, key) in items" >
+                <tr class="hovered-row"  :id="key + '_' + item.id">
+                    <!--title start-->
+                    <template v-if="type === 'place' || type === 'event' || type === 'blog'">
+                        <td class="__padding-left_m __padding-right_m">{{ item.title }}</td>
+                    </template>
+                    <template v-if="type === 'band' || type === 'playlist'">
+                        <td>{{ item.name }}</td>
+                    </template>
+                    <!--title end-->
+
+                     <!--description start-->
+                    <template v-if="type === 'place' || type === 'event' || type === 'band'">
+                        <td>{{ item.description }}</td>
+                    </template>
+                    <template v-if="type === 'blog' || type === 'playlist'">
+                        <td>{{ item.annotation }}</td>
+                    </template>
+                    <!--description end-->
+
+                    <template v-if="type === 'blog'">
+                        <td>{{ item.rubric }}</td>
+                    </template>
+    
+                    <!--description start-->
+                    <td v-if="item.published" class="green-text">Опубликован</td>
+                    <td v-if="!item.published" class="red-text">На модерации</td>
+                    <!--description end-->
+
+                     <!--image start-->
+                    <template v-if="type === 'place'">
+                        <td class="__item_img-width"><img :src="'/media/' + item.icon" class="responsive-img"></td>
+                    </template>
+                    <template v-if="type === 'band' || type === 'event' || type === 'blog'">
+                        <td class="__item_img-width"><img :src="'/media/' + item.image" class="responsive-img"></td>
+                    </template>
+                    <!--image end-->
+
+                    <td>{{ formatDate(item.created_at) }}</td>
+
+                    <template v-if="type === 'event' ">
+                        <td>{{ formatDate(item.date) }}</td>
+                    </template>
+
+                    <!--operations start-->
+                    <template v-if="type === 'place'">
+                        <td>
+                            <a v-if="item.published" :href="'/places/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/places/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>
+                    <template v-if="type === 'blog'">
+                        <td>
+                            <a v-if="item.published" :href="'/blogs/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/blogs/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>           
+                    <template v-if="type === 'event'">
+                        <td>
+                            <a v-if="item.published" :href="'/events/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/events/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>   
+                    <template v-if="type === 'band'">
+                        <td>
+                            <a v-if="item.published" :href="'/bands/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/bands/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>   
+                    <template v-if="type === 'playlist'">
+                        <td>
+                            <a v-if="item.published" :href="'/playlists/' + item.slug" title="Смотреть на сайте" target="_blank" class="btn-floating btn-large green">
+                                <i class="material-icons dp48">forward</i>
+                            </a>
+
+                            <a :href="'/playlists/' + item.slug + '/edit/'"  title="Редактировать" target="_blank" class="btn-floating btn-large orange">
+                                <i class="material-icons dp48">mode_edit</i>
+                            </a>
+                            <a v-on:click="removeItem(item.id, key + '_' + item.id)" title="Удалить" class="btn-floating btn-large red">
+                                <i class="material-icons dp48">clear</i>
+                            </a>
+                        </td>
+                    </template>   
+                    <!--operations end-->
+                </tr>
+            </template>
+            </tbody>
+        </table>
+        <p v-if="!showTable" class="__margin-left_s __margin-top_xxl __margin-bottom_xxl">
+            <template v-if="type === 'blog'">Вы еще не добавили ни одной записи!</template>
+            <template v-if="type === 'place'">Вы еще не добавили ни одного места!</template>
+            <template v-if="type === 'event'">Вы еще не добавили ни одного события!</template>
+            <template v-if="type === 'band'">Вы еще не добавили ни одного коллектива!</template>
+            <template v-if="type === 'playlist'">Вы еще не добавили ни одного плейлиста!</template>
+        </p>
+    </div>
+</div>

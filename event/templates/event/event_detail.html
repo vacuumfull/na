@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="inner">
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div class="head_block __margin-top_xxl">
+                    <img class="responsive-img" src="{{ event.image.url }}">
+                </div>
+                <div class="article">
+                    <h1 class="__margin-top_xl __margin-bottom_xl">{{ event.title }}</h1>
+                    <span id="hidden-id" class="__hidden">{{ event.id }}</span>
+                    {% if event.owner is not null %}
+                    <p>
+                        <span>Организатор: </span>
+                        <strong id="getter-name">{{ event.owner.username }}</strong>
+                    </p>
+                    {% endif %}
+                    
+                    {% if event.locations.exists %}
+                    <p  class="__margin-bottom_xs __margin-top_xs">
+                        <span>Место: </span>
+                        {% for location in event.locations.all %}
+                            <a href="{% url 'place:view' location.slug %}">
+                                <strong>{{ location.title }}</strong><br>
+                            </a>
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if event.price is not null %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Цена: </span>
+                            <strong>{{ event.price }} р.</strong>
+                        </p>
+                    {% endif %}
+
+                    <p class="__margin-bottom_xs __margin-top_xs">
+                        <span>Дата: </span>
+                        <strong>{{ event.date|date:'d.m.Y'}}</strong>
+                    </p>
+                    {% if event.tags.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Теги: </span>
+                            {% for tag in event.tags.all %}
+                                <a href='#'>#{{ tag.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    {% if event.bands.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span>Коллективы: &nbsp;</span>
+                            {% for band in event.bands.all %}
+                                <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    {% if event.musicians.exists %}
+                        <p class="__margin-bottom_xs __margin-top_xs">
+                            <span> Музыканты: &nbsp;</span>
+                            {% for musician in event.musicians.all %}
+                                <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    <article class="__margin-top_xl">
+                        {% autoescape off %}
+                            {{event.description }}
+                        {% endautoescape %}
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="__margin-top_xxl __margin-bottom_xxl">
+    <div class="container">
+        <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ event.id }}" type="event"></rate-component>
+        <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ event.id }}" type="event"></comment-component>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/inner.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Событие: {{ event.title }}</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="{{ event.description }}">
+{% endblock description %}

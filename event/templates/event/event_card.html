@@ -1,0 +1,51 @@
+{% load under_filters %}
+<div class="col s12 m4 l3">
+    <div class="__event_block">
+        <div class="card __border_subgray">
+            <div class="card-image __preview_img">
+                <div class="__img_inner">
+                    <img src="{{ event.image.url }}">
+                </div>
+            </div>
+            <div class="card-content __title_block __relative  activator ">
+                <span class="card-title __font_exo">
+                    {{ event.title }}
+                    <i class="material-icons right __open_more_icon">gamepad</i>
+                </span>
+            </div>
+            <div class="card-reveal  __relative">
+                <span class="card-title __font_exo">
+                    {{ event.title }}
+                    <i class="material-icons right __close_more_icon">close</i>
+                </span>
+                <p>{{ event.description }}</p>
+            </div>
+            <div class="__block_more_info">
+                <div class="__font_exo __semi_bold">
+                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                        <span class="red-text text-darken-4">
+                            <i class="material-icons">location_on</i>
+                        </span>
+                        {% if event.locations.exists %}
+                            <a href="{% url 'place:view' event.locations.all.0.slug %}">
+                                <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                        <span class="red-text text-darken-4">
+                            <i class="material-icons">alarm</i>
+                        </span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="grey-text text-darken-3 right">{{ event.date|date:'d.m.Y' }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                <a title="Узнать больше о событии" href="{% url 'event:view' event.slug %}" class="__more_link __font_exo red-text text-accent-4">
+                    {% include "enter_arrow.html" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

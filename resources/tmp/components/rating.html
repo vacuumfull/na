@@ -1,0 +1,18 @@
+<div v-if="type !== 'collective' && type !== 'album'" id="rate">
+    <div class="all_rate right __padding-top_m">
+        {{ allRate }} / 10
+    </div>
+    <div class="rating">
+        <a v-if="isLogin === 'true'" v-for="item in rate"
+           v-on:click="setStars(item.mark)" v-on:mouseleave="unsetStars" v-on:mouseenter="colorStars(item.mark)"
+           :id="item.mark">
+            <span class="__rate_icons"><i class="material-icons">{{ item.name }}</i></span>
+        </a>
+
+        <a v-if="isLogin === 'false'" v-for="item in rate"
+           v-on:click="successAction('Необходима регистрация!')"
+           :id="item.mark">
+            <span class="__rate_icons"><i class="material-icons">{{ item.name }}</i></span>
+        </a>
+    </div>
+</div>

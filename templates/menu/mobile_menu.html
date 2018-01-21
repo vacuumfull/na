@@ -1,0 +1,58 @@
+<ul class="side-nav" id="mobile-menu">
+	<li class="__margin-top_xxl">
+		<a class="__uppercase" href="{% url 'event:index' %}">
+			<i class="material-icons left">event</i>
+			События
+		</a>
+	</li>
+	<li>
+		<a class="__uppercase" href="{% url 'place:index' %}">
+			<i class="material-icons left">store_mall_directory</i>
+			Места
+		</a>
+	</li>
+	<li>
+		<a class="__uppercase" href="{% url 'blog:index' %}">
+			<i class="material-icons left">description</i>
+			Посты
+		</a>
+	</li>
+	<li>
+		<a class="__uppercase" href="{% url 'band:index' %}">
+			<i class="material-icons left">people</i>
+			Коллективы
+		</a>
+	</li>
+	<li class="__margin-right_xxl">
+		<a class="__uppercase" href="{% url 'playlist:index' %}">
+			<i class="material-icons left">music_note</i>
+			Плейлисты
+		</a>
+	</li> 
+	<li><div class="divider"></div></li>
+	{% if request.user.is_authenticated %}
+		<li>
+			<a href="{% url 'settings' %}" class="__uppercase" title="Мои настройки"> 
+				<i class="material-icons">perm_data_setting</i> Настройки
+			</a>
+		</li>
+		<li>
+			<a title="Выход" class="__uppercase" href="{% url 'logout' %}">
+				<i class="material-icons">exit_to_app</i>Выход
+			</a>
+		</li>
+	{% else %}
+		<li>
+			<a class="__uppercase" href="{% url 'login' %}" title="Войти">
+				<i class="material-icons">vpn_key</i>
+				Войти    
+			</a>
+		</li>
+		<li>
+			<a class="__uppercase" href="{% url 'signup' %}" title="Зарегистрироваться">
+				<i class="material-icons">assignment_ind</i>
+				Зарегистрироваться
+			</a>
+		</li>  
+	{% endif %}
+</ul>

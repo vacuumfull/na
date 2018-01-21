@@ -1,0 +1,82 @@
+{% load staticfiles %}
+{% load under_filters %}
+<!--left menu-->
+
+<div id="left-menu">
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="userView">
+                <div class="background">
+                    <img class="responsive-img" src="{% static 'images/logo_inner.jpg' %}">
+                </div>
+                <a href="#!user">
+                    <img  class="circle" src="{% static 'images/fresh_no_avatar.png' %}">
+                </a>
+                <a href="#!name"><span class="white-text name" id="username">{{ user.username }}</span></a>
+                <a href="#!email"><span class="white-text email">{{ email }}</span></a>
+            </div>
+        </li>
+
+        <!--left-messages user-role="3" v-on:open-modal="openModal"></left-messages-->
+
+        {% if user.is_authenticated %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="posts">
+                    <i class="material-icons">description</i>
+                    Записи
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
+        {% if perms.event.add_event %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="events">
+                    <i class="material-icons">event</i>
+                    События
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
+        {% if perms.place.add_place %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="places">
+                    <i class="material-icons">store_mall_directory</i>
+                    Места
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
+        {% if perms.band.add_band %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="collectives">
+                    <i class="material-icons">people</i>
+                    Коллективы
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
+        {% if perms.playlist.add_playlist %}
+            <li>
+                <a class="dropdown-button waves-effect" href="#!" data-activates="playlists">
+                    <i class="material-icons">library_music </i>
+                    Плейлисты
+                    <i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        {% endif %}
+
+        <!--li>
+            <a href="">
+                <i class="material-icons">question_answer</i>
+                Комментарии
+            </a>
+        </li-->
+        <li><div class="divider"></div></li>
+        <li><a href="{% url 'settings' %}" title="Мои настройки"> <i class="material-icons">perm_data_setting</i> Настройки</a></li>
+        <li>
+            <a title="Выход" href="{% url 'logout' %}">
+                <i class="material-icons">exit_to_app</i>Выход
+            </a>
+        </li>
+    </ul>
+</div>

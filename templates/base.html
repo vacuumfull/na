@@ -5,26 +5,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css?family=Exo+2:400,600&amp;subset=cyrillic" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dist/css/all.min.css' %}">
 
-    <link rel="stylesheet" href="{% static 'css/materialize_0.100.2.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <!-- CkEditor -->
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    
+    {% include "favicon.html" %}
 
-    <title>Under</title>
+    {% block title %}
+    {% endblock title %}
+
+    {% block description %}
+    {% endblock description %}
+
 </head>
-
 <body class="grey lighten-3">
-    <!--Import jQuery before materialize.js-->
-    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'js/materialize_0.100.2.min.js' %}"></script>
-    <script src="{% static 'js/scripts.js' %}"></script>
-
-    {% include "header.html" %}
-    <div class="wrapper">
-        <div class="container">
+    <div id="index">
+        {% include "header.html" %}
+        {% if request.user.is_authenticated %}
+            {% include "menu/user_menu.html" %}
+        {% endif %}
+        {% include "menu/mobile_menu.html" %}
+        <div class="wrapper">
             {% block content %}
             {% endblock content %}
         </div>
+        
+        {% if user.is_authenticated  %}
+            {% include "menu/left_menu.html" %}
+            {% include "menu/left_function.html" %}
+            <left-modal v-bind:user-info="userInfo"></left-modal>
+        {% endif %}
     </div>
-    {% include "footer.html" %}
+
+    {% include "footer.html" %}    
+    
+    {% block js %}
+    {% endblock js %}
+
+    {% include "metrika.html" %}
 </body>
+</html>

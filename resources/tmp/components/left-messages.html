@@ -1,0 +1,19 @@
+<div>
+    <li>
+        <a v-on:click="openField" class="waves-effect" href="#!"><i class="material-icons">chat</i>Cообщение</a>
+    </li>
+    <li v-if="showField" class="__padding-left_xl __padding-right_xl">
+        <div class="input-group">
+            <div class="input-field user-search">
+                <input type="text" v-on:keyup="search($event)"  autofocus>
+                <label>кому</label>
+            </div>
+        </div>
+        <ul class="__select_users" >
+            <li v-for="user in users">
+                <a href="#!" v-on:click="selectGetter($event)">{{ user.name }}</a>
+            </li>
+        </ul>
+    </li>
+    <li v-if="showField"><div class="divider"></div></li>
+</div>

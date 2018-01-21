@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row __padding-top_xxl __padding-bottom_xxl">
+    <div class="col s12 m8 l8 offset-m2 offset-l2 ">
+        <div class="panel panel-default">
+            <div class="panel-heading __margin-bottom_xxl __margin-top_xxl">
+                <h3>Форма входа</h3>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="col s12">
+                    <p class="errornote">
+                        Вы уже авторизованы как {{ request.user.username }}.
+                    </p>
+                </div>
+            {% endif %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <p class="errornote">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            {% endif %}
+
+            <div class="panel-body  __padding-bottom_m">
+                <form id="login-form" action="" method="POST" class="form-horizontal" role="form">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col s12">
+                            {{ form.username.errors }}
+                            {{ form.username.label_tag }}        
+                            {{ form.username }}
+                        </div>
+                        <div class="col s12">
+                            {{ form.password.errors }}
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="__margin-top_xxl">
+                        <div class="row">
+                            <div class="col s12">
+                                <input name="next" value="/" type="hidden">
+                                <button type="submit" class="btn-large __margin-right_m" >
+                                    <i class="material-icons right">forward</i>
+                                    Войти
+                                </button>
+                                <a class="btn btn-large btn-link" href="#">
+                                    <i class="material-icons right">warning</i>
+                                    Забыли пароль?
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

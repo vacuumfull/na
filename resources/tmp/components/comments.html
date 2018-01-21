@@ -1,0 +1,40 @@
+
+    <div id="comment-field" class="row">
+        <div class="col s12">
+            <div class="__comment __margin-top_l">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input v-on:keyup.enter="create" type="text" v-model="content"  :disabled="isLogin === 'false'" >
+                        <label v-if="isLogin === 'true'" class="active">Оставить комменатрий</label>
+                        <label v-if="isLogin === 'false'" class="active">Комментарии могут оставлять зарегистрированные пользователи</label>
+                    </div>
+
+                    <div v-if="isLogin === 'true'" class="__padding-right_l ">
+                        <a class="right waves-effect waves-light btn-large" v-on:click="create">
+                            &nbsp;&nbsp;Добавить
+                            <i class="material-icons right dp48">note_add</i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col s12">
+            <h4 v-if="comments.length > 0" class="__margin-top_xs __margin-bottom_xl">Комментарии</h4>
+            <div v-for="item in comments" class="__comment-each __margin-bottom_l __margin-top_m">
+                <p class="__margin-bottom_xs">
+                    <b v-if="isLogin === 'true'" class="__pointer"  v-on:click="setName(item.author)">
+                        {{ item.user }}
+                    </b>
+                    <b  v-if="isLogin === 'false'">
+                        {{ item.user }}
+                    </b>
+                    написал в <span class="__time_color"><strong>{{  formatDate(item.datetime) }}</strong></span>:
+                </p>
+                <!--p v-if="item.getter != null" class="__margin-bottom_xs">
+                    <b  @if (Auth::user())  class="__pointer" v-on:click="setName(item.author)" @endif>@{{ item.author }}</b> ответил пользователю <b class=" blue-grey-text text-darken-2">@{{ item.getter }}</b> в <span class="__time_color"><strong>@{{ item.date_formatted }}</strong></span>:
+                </p-->
+                <p class="__margin-top_xs __comment_font">{{ item.content }}</p>
+            </div>
+        </div>
+    </div>

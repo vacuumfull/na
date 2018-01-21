@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="posts_page" class="container">
+    <h4 class="center __margin-top_xxl  __margin-bottom_xxl">Добавить пост</h4>
+    <form method="post" action="" enctype="multipart/form-data" class="row" >
+        {% csrf_token %}
+        <div class="col s12">
+            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="card-content black-text">
+                                <div class="input-group">
+                                    <div class="input-field col s7">
+                                        {{ form.title.errors }}
+                                        {{ form.title }}
+                                        {{ form.title.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s5">
+                                        {{ form.rubric.errors }}
+                                        {{ form.rubric }}
+                                        {{ form.rubric.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        <tags-component></tags-component>
+                                        {{ form.tags.errors }}
+                                        <div class="__tags-field __hidden">
+                                            {{ form.tags }}
+                                            {{ form.tags.label_tag }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s6">
+                                        {{ form.event.errors }}
+                                        {% if form.event|length > 0 %}
+                                            <select name="event" id="id_event" class="initialized">
+                                                <option value="">Выберите событие</option>
+                                                {% for event in form.event %}
+                                                    {{ event }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="event" id="id_event" class="initialized">
+                                                <option value="">Ничего нет</option>
+                                            </select>
+                                        {% endif %}
+                                        {{ form.event.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s6">
+                                        {{ form.place.errors }} 
+                                        {% if form.place|length > 0 %}
+                                            <select name="place" id="id_place" class="initialized">
+                                                <option value="">Выберите место</option>
+                                                {% for place in form.place %}
+                                                    {{ place }}
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            <select name="place" id="id_place" class="initialized">
+                                                <option value="">Ничего нет</option>
+                                            </select>
+                                        {% endif %}
+                                        {{ form.place.label_tag }}
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-field col s12">
+                                        {{ form.annotation.errors }}
+                                        {{ form.annotation.label_tag }}
+                                        {{ form.annotation }}                                        
+                                    </div>
+                                </div>
+                               
+                                <div class="input-group">
+                                    <div class="input-field col s7">
+                                        {{ form.content.errors }}
+                                        {{ form.content.label_tag }}
+                                        {{ form.content }}                                        
+                                    </div>
+                                    <div class="file-field input-field col s5">
+                                        {{ form.image.errors }}
+                                        <div class="__preview-image">
+                                            <div class="btn">
+                                                <span>{{ form.image.label }}</span>
+                                                {{ form.image }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <a class="left amber darken-3 __margin-left_s  btn-hovered waves-effect waves-light btn-large" href="{% url 'blog:index' %}">
+                                    Отмена
+                                    <i class="material-icons right dp48">clear</i>
+                                </a>
+                            </div>
+                            <div class="col s6">
+                                <div class="__padding-right_l">
+                                    <input type="submit" class="right waves-effect waves-light btn-large __margin-left_l" value="Добавить">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/initAdmin.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Создание записи</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="Создание записи">
+{% endblock description %}

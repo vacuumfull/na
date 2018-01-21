@@ -1,0 +1,51 @@
+{% load under_filters %}
+
+<div class="col s12 m4 l3">
+    <div class="__post_block">
+        <div class="card __border_subgray">
+            <div class="card-image">
+                <div class="card-image __preview_img">
+                    <div class="__img_inner">
+                        <img src="{{ blog.image.url }}">
+                    </div>
+                </div>
+            </div>
+            <div class="card-content __title_block __relative  activator ">
+                <span class="card-title __font_exo">
+                    {{ blog.title }}
+                    <i class="material-icons right __open_more_icon">gamepad</i>
+                </span>
+            </div>
+            <div class="card-reveal  __relative">
+                <span class="card-title __font_exo">
+                    {{ blog.title }}
+                    <i class="material-icons right __close_more_icon">close</i>
+                </span>
+                <p>{{ blog.annotation }}</p>
+            </div>
+            <div class="__block_more_info">
+                <div class="__font_exo __semi_bold">
+                    <div class="  __margin-top_xs __padding-left_8 __padding-right_s">
+                        <span title="Автор" class=" teal-text text-darken-4">
+                            <i class="material-icons __author_icon_size">account_circle</i>
+                        </span>
+                        <span class=" grey-text text-darken-3 right">{{ blog.author.username }}</span>
+                    </div>
+                    {% if blog.rating_set.exists %}
+                    <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
+                        <span class="yellow-text text-accent-2">
+                            <i class="material-icons __circle_border">star</i>
+                        </span>
+                        <span class="grey-text text-darken-3 right">{{ blog.rating_set|arg:blog.id|call:"rating" }}/10</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-action">
+                <a title="Читать полную новость" class="__more_link __font_exo  teal-text text-darken-4" href="{% url 'blog:view' blog.slug %}">
+                    {% include "enter_arrow.html" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

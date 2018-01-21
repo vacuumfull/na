@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h1 class="__margin-top_xxl __headname __margin-bottom_xxl">Благодартности за участие в проекте</h1>
+            <p class="__psize">Этот проект не запустился, если бы не альтруизм всех принимавших в нем участие.</p>
+            <p class="__psize">За разработку логотипа огромное спасибо Мухе.</p>
+            <p class="__psize">
+                За тестирование, выявление багов и критику спасибо Мише Фесенко, Руслану Ковалю.
+            </p>
+            <p class="__psize">
+                За помощь в переработке архитектуры и создании значительной части серверной составляющей бесконечная благодарность Павлу Косенкову. 
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="/static/dist/common.entry.js"></script>
+{% endblock js %}
+
+
+{% block title %}
+<title>Благодарности за учатие в проекте NightAgenda</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="NightAgenda - спасибо всем кто принмал участие!">
+{% endblock description %}
