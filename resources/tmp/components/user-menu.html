@@ -1,6 +1,6 @@
 
 <div>
-    <div id="menu-triggers">
+    <div id="menu-triggers" class="hide-on-med-and-down">
         <div v-on:click="move" data-activates="slide-out"  class=" button-collapse __left-menu_btn" v-bind:style="{ left: left + 'px' }">
             <a href="#" >
                 <i class="material-icons">menu</i>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div>
-        <div v-on:click="openDialog" class="__left-dialog_btn" v-bind:style="{ left: left + 'px' }">
+        <div v-on:click="openDialog" class="__left-dialog_btn hide-on-med-and-down" v-bind:style="{ left: left + 'px' }">
             <a href="#" >
                 <i class="material-icons">mail</i>
             </a>
@@ -19,7 +19,7 @@
                 <span>+{{ messagesUnreadCount }}</span>
             </span>
         </div>
-        <div class="__left-dialog_key">
+        <div class="__left-dialog_key hide-on-med-and-down">
             <a v-on:click="openDialog">Диалог</a>
         </div>
     </div>

@@ -27,8 +27,8 @@
         {% include "header.html" %}
         {% if request.user.is_authenticated %}
             {% include "menu/user_menu.html" %}
-        {%endif %}
-
+        {% endif %}
+        {% include "menu/mobile_menu.html" %}
         <div class="wrapper">
             {% block content %}
             {% endblock content %}

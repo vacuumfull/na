@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="row __padding-top_xxl __padding-bottom_l">
-    <div class="col s8 offset-s2">
+    <div class="col l8 s12 m8 offset-l2 offset-m2">
         <div class="panel panel-default">
             <div class="panel-heading __margin-bottom_xl ">
                 <h3>Регистрация пользователя</h3>
@@ -90,3 +90,18 @@
 </div>
 
 {% endblock content %}
+
+
+{% block title %}
+<title>NightAgenda - события, места, коллективы, музыканты в Санкт-Петербурге</title>
+{% endblock title %}
+
+
+{% block description %}
+<meta name="description" content="NightAgenda - площадка с самыми актуальнымми событиями и местами в Санкт-Петербурге и не только." >
+{% endblock description %}
+
+
+{% block js %}
+<script src="/static/dist/common.entry.js"></script>
+{% endblock js %}
