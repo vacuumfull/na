@@ -22,14 +22,15 @@
                     {{ place.description }}
                 </p>
             </div>
-            {% if place.rating_set.exists > 0 %}
+           
             <div class="__place-more-info __padding-left_s __padding-right_s">
-                <span class="yellow-text text-accent-2">
-                    <i class="material-icons __circle_border_darkblue">star</i>
-                </span>
-                <span class="blue-grey-text text-darken-4 right  __font_exo __semi_bold" style="font-size:17px;">{{ place.rating_set|arg:place.id|call:"rating" }}/10</span>
+                {% if place.rating_set.exists > 0 %}
+                    <span class="yellow-text text-accent-2">
+                        <i class="material-icons __circle_border_darkblue">star</i>
+                    </span>
+                    <span class="blue-grey-text text-darken-4 right  __font_exo __semi_bold" style="font-size:17px;">{{ place.rating_set|arg:place.id|call:"rating" }}/10</span>
+                {% endif %}
             </div>
-            {% endif %}
             <div class="card-action">
                 <a title="Читать о месте" href="{% url 'place:view' place.slug %}" class="__more_link __font_exo blue-grey-text text-darken-4">
                     {% include "enter_arrow.html" %}
