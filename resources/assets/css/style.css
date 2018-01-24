@@ -196,7 +196,11 @@ body nav .button-collapse{
 #main_page .card-action, #search-block .card-action{
     cursor:pointer;
 }
-
+.__place-more-info{
+    min-height: 60px;
+    padding-top: 5px;
+    font-size: 17px;
+}
 #place-map{
     max-height: 300px;
 }
@@ -658,8 +662,10 @@ i.material-icons.__icon-margin_xs{
     background-color: black;
 }
 .__img_inner{
-    max-height: 210px;
-    overflow: hidden;
+    height: 230px;
+    line-height: 230px;
+    text-align: center;
+    background-color: #1f1f1f;
 }
 .__img_inner_place{
     max-height: 210px;
@@ -720,6 +726,14 @@ div[data-field-id~='id_content']{
 .__preview-image{
     padding-top: 250px;
 }
+.__preview_img{
+    overflow: hidden;
+}
+.__img_inner-image{
+    max-width: 300px;
+    vertical-align: middle;    
+}
+
 .__tags-field{
     min-height: 80px;
     padding-top: 20px;

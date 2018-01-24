@@ -2,9 +2,9 @@
 <div class="col s12 m4 l3">
     <div class="__event_block">
         <div class="card __border_subgray">
-            <div class="card-image __preview_img">
+            <div class="__preview_img">
                 <div class="__img_inner">
-                    <img src="{{ event.image.url }}">
+                    <img class="__img_inner-image" src="{{ event.image.url }}">
                 </div>
             </div>
             <div class="card-content __title_block __relative  activator ">
@@ -23,14 +23,14 @@
             <div class="__block_more_info">
                 <div class="__font_exo __semi_bold">
                     <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                    {% if event.locations.exists %}
                         <span class="red-text text-darken-4">
                             <i class="material-icons">location_on</i>
                         </span>
-                        {% if event.locations.exists %}
-                            <a href="{% url 'place:view' event.locations.all.0.slug %}">
-                                <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
-                            </a>
-                        {% endif %}
+                        <a href="{% url 'place:view' event.locations.all.0.slug %}">
+                            <span class=" grey-text text-darken-3 right">{{ event.locations.all.0 }}</span>
+                        </a>
+                    {% endif %}
                     </div>
                     <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
                         <span class="red-text text-darken-4">

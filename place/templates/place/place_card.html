@@ -2,11 +2,9 @@
 <div class="col s12 m4 l3">
     <div class="__post_block">
         <div class="card __border_subgray">
-            <div class="card-image">
-                <div class="card-image __preview_img">
-                    <div class="__img_inner">
-                        <img src="{{ place.image.url }}">
-                    </div>
+            <div class=" __preview_img">
+                <div class="__img_inner">
+                    <img class="__img_inner-image" src="{{ place.image.url }}">
                 </div>
             </div>
             <div class="card-content __title_block __relative  activator ">
@@ -25,7 +23,7 @@
                 </p>
             </div>
             {% if place.rating_set.exists > 0 %}
-            <div class="__margin-bottom_xs __padding-left_s __padding-right_s">
+            <div class="__place-more-info __padding-left_s __padding-right_s">
                 <span class="yellow-text text-accent-2">
                     <i class="material-icons __circle_border_darkblue">star</i>
                 </span>
