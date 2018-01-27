@@ -33,13 +33,13 @@ class EventManager(models.Manager):
 
     def last_published(self):
         """Last published upcoming events."""
-        result = Event.objects.upcoming()[:4]
+        result = Event.objects.upcoming()[:16]
         return result
 
     def upcoming(self):
         """Upcoming events."""
         result = Event.objects.filter(
-            published=True, date__gte=timezone.now())
+            published=True, date__gte=timezone.now())[:16]
         return result
 
     def published(self):

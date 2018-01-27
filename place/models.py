@@ -41,7 +41,7 @@ class PlaceManager(models.Manager):
 
     def last_published(self):
         """Last published place."""
-        result = Place.objects.published()[:4]
+        result = Place.objects.published()[:16]
         return result
 
 
