@@ -16,13 +16,21 @@ app.conf.beat_schedule = {
         'task': 'bots.tasks.griboedov_task',
         'schedule': crontab(minute=0, hour=10)
     },
-    'twice-a-week-at-ten': {
+    'twice-third-week-at-ten': {
         'task': 'bots.tasks.psytribe_task',
-        'schedule': crontab(hour=10, minute=0, day_of_week=3,5)
+        'schedule': crontab(hour=10, minute=0, day_of_week=3)
     },
-    'twice-a-week-at-eleven': {
+    'twice-fifth-week-at-ten': {
+        'task': 'bots.tasks.psytribe_task',
+        'schedule': crontab(hour=10, minute=0, day_of_week=5)
+    },
+    'twice-first-week-at-eleven': {
         'task': 'bots.tasks.ponominaly_task',
-        'schedule': crontab(hour=11, minute=0, day_of_week=1,4)
+        'schedule': crontab(hour=11, minute=0, day_of_week=1)
+    },
+     'twice-fourth-week-at-eleven': {
+        'task': 'bots.tasks.ponominaly_task',
+        'schedule': crontab(hour=11, minute=0, day_of_week=4)
     },
 }
 
