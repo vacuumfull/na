@@ -14,5 +14,7 @@ app.conf.beat_schedule = {
     }
 }
 
+app.conf.timezone = 'Europe\Moscow'
+
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
