@@ -18,9 +18,11 @@
                     {{ place.title }}
                     <i class="material-icons right __close_more_icon">close</i>
                 </span>
-                <p>
+                {% autoescape off %}
+                <article>
                     {{ place.description }}
-                </p>
+                </article>
+                {% endautoescape %}
             </div>
            
             <div class="__place-more-info __padding-left_s __padding-right_s">

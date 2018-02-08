@@ -18,7 +18,9 @@
                     {{ event.title }}
                     <i class="material-icons right __close_more_icon">close</i>
                 </span>
-                <p>{{ event.description }}</p>
+                {% autoescape off %}
+                    <article>{{ event.description }}</article>
+                {% endautoescape %}
             </div>
             <div class="__block_more_info">
                 <div class="__font_exo __semi_bold">

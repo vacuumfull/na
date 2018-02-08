@@ -19,7 +19,9 @@
                     {{ blog.title }}
                     <i class="material-icons right __close_more_icon">close</i>
                 </span>
-                <p>{{ blog.annotation }}</p>
+                {% autoescape off %}
+                    <article>{{ blog.annotation }}</article>
+                {% endautoescape %}
             </div>
             <div class="__block_more_info">
                 <div class="__font_exo __semi_bold">

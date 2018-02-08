@@ -18,7 +18,8 @@
                     {{ band.name }}
                     <i class="material-icons right __close_more_icon">close</i>
                 </span>
-                <p>{{ band.description }}</p>
+                {% autoescape off %}
+                <article>{{ band.description }}</article>
             </div>
             <div class="card-action">
                 <a title="Подробнее" class="__more_link __font_exo blue-grey-text text-darken-4" href="{% url 'band:view' band.slug %}">
