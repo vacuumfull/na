@@ -48,9 +48,9 @@
 {% endblock js %}
 
 {% block title %}
-<title>NightAgenda | Meсто {{ playlist.title }} </title>
+<title>NightAgenda | {{ playlist.name }} </title>
 {% endblock title %}
 
 {% block description %}
-<meta name="description" content="{{ playlist.title }} - {{ playlist.description }}">
+<meta name="description" content="{{ playlist.name }} - {{ playlist.annotation }}">
 {% endblock description %}
