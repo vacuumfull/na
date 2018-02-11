@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
+import re
 import json
 
 from playlist.models import Playlist
@@ -47,10 +48,11 @@ class PlaylistCreate(LoginRequiredMixin, CreateView):
 		"""Add user info to form."""
 		instance = form.save(commit=False)
 		instance.creator = self.request.user
+		instance.content = re.sub("</?script[^>]*>", "", instance.content)
+		instance.content = re.sub("<\?php.*?\?>", "", instance.content)
 		instance.save()
 		form.save_m2m()
 		return super().form_valid(form)
-
 
 class PlaylistUpdate(LoginRequiredMixin, UpdateView):
     """Update blog post."""
@@ -70,6 +72,8 @@ class PlaylistUpdate(LoginRequiredMixin, UpdateView):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.creator = self.request.user
+        instance.content = re.sub("</?script[^>]*>", "", instance.content)
+        instance.content = re.sub("<\?php.*?\?>", "", instance.content)
         instance.save()
         form.save_m2m()
         return super().form_valid(form)

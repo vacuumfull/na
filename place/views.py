@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 import json
 
 from place.models import Place
+from event.models import Event
 from place.forms import PlaceModelForm
 from member.models import UserExtend
 
@@ -35,6 +36,7 @@ class PlaceView(DetailView):
     """Detail view places."""
 
     model = Place
+
 
 
 class PlacesUserView(LoginRequiredMixin, TemplateView):

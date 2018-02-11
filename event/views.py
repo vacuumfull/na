@@ -7,7 +7,10 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
+
 import json
+import re
+
 from event.models import Event
 from event.forms import EventModelForm
 from member.models import UserExtend
@@ -70,6 +73,9 @@ class EventUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.owner = self.request.user
+        instance.description = re.sub("</?script[^>]*>", "", instance.description)
+        instance.description = re.sub("</?iframe[^>]*>", "", instance.description)
+        instance.description = re.sub("<\?php.*?\?>", "", instance.description)
         instance.save()
         form.save_m2m()
         return super().form_valid(form)

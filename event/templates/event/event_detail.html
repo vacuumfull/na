@@ -15,7 +15,7 @@
                     {% if event.owner is not null %}
                     <p>
                         <span>Организатор: </span>
-                        <strong id="getter-name">{{ event.owner.username }}</strong>
+                        <a href="/members/{{ event.owner.username }}"><strong id="getter-name">{{ event.owner.username }}</strong></a>
                     </p>
                     {% endif %}
                     
@@ -50,17 +50,17 @@
                     {% endif %}
                     {% if event.bands.exists %}
                         <p class="__margin-bottom_xs __margin-top_xs">
-                            <span>Коллективы: &nbsp;</span>
+                            <span>Коллективы: </span>
                             {% for band in event.bands.all %}
-                                <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>
+                                <a href="{% url 'band:view' band.slug %}">{{ band.name }}</a>&nbsp;
                             {% endfor %}
                         </p>
                     {% endif %}
                     {% if event.musicians.exists %}
                         <p class="__margin-bottom_xs __margin-top_xs">
-                            <span> Музыканты: &nbsp;</span>
+                            <span> Музыканты: </span>
                             {% for musician in event.musicians.all %}
-                                <a href="#{{ musician.username }}">{{ musician.username }}</a><br>
+                                <a href="/member/{{ musician.username }}">{{ musician.username }}</a>&nbsp;
                             {% endfor %}
                         </p>
                     {% endif %}

@@ -37,7 +37,7 @@
                     {% if place.owner is not null %}
                         <p  class="__margin-bottom_xs __margin-top_xs">
                             <span>Представитель:</span>
-                            <strong id="getter-name">{{ place.owner.username }}</strong>
+                            <a href="/member/{{ place.owner.username }}"><strong id="getter-name">{{ place.owner.username }}</strong></a>
                         </p>
                     {% endif %}
                     {% if place.tags.exists %}
@@ -50,7 +50,7 @@
                     {% endif %}
                     <article class="__margin-top_xl">{{ place.description }}</article>
                     <div class="__margin-top_xl">
-                        <a class="left waves-effect waves-light btn-large " onclick="Materialize.toast('Если Вы действительно являетесь владелецем этого места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту  ', 10000);">
+                        <a href="/signup?isOwner=true" class="left waves-effect waves-light btn-large ">
                             &nbsp;&nbsp;Я хозяин этого места!
                         </a>
                     </div>
@@ -59,6 +59,10 @@
             </div>
         </div>
     </div>
+    {% for location in place.location.all %}
+        {{ location }}
+    
+    {% endfor %}
     <hr class="__margin-top_xxl __margin-bottom_xxl">
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>

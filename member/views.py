@@ -38,6 +38,7 @@ class SignupUser(FormView):
     template_name = 'registration/signup.html'
     success_url = '/settings'
 
+
     def form_valid(self, form):
         """Authenticate user after registration."""
         form.save()

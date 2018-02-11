@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import $ from 'jquery';
+import HelperMixin from './mixins/HelperMixin';
 import Dialog from './components/DialogComponent';
 import LeftMessages from './components/LeftMessagesComponent';
 import LeftModal from './components/LeftModalComponent';
@@ -21,6 +22,7 @@ new Vue({
         'user-items': UserItems,
         'search': Search
     },
+    mixins:[HelperMixin],
     data: {
         userInfo: {
             name: ""
@@ -29,8 +31,16 @@ new Vue({
     },
     mounted(){
         $(".button-collapse").sideNav();
+        this.initSignup()
     },
     methods: {
+        initSignup(){
+            if (window.location.search === "?isOwner=true"){
+                setTimeout(()=>{
+                    this.info('Если Вы действительно являетесь владелецем места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту')
+                }, 2000)  
+            }
+        },
         link(string){
             window.location = window.location.origin + string;
         },

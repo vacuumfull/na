@@ -38778,6 +38778,10 @@ var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
+var _HelperMixin = __webpack_require__(25);
+
+var _HelperMixin2 = _interopRequireDefault(_HelperMixin);
+
 var _DialogComponent = __webpack_require__(52);
 
 var _DialogComponent2 = _interopRequireDefault(_DialogComponent);
@@ -38820,6 +38824,7 @@ new _vue2.default({
         'user-items': _UserItemsComponent2.default,
         'search': _SearchComponent2.default
     },
+    mixins: [_HelperMixin2.default],
     data: {
         userInfo: {
             name: ""
@@ -38828,9 +38833,19 @@ new _vue2.default({
     },
     mounted: function mounted() {
         (0, _jquery2.default)(".button-collapse").sideNav();
+        this.initSignup();
     },
 
     methods: {
+        initSignup: function initSignup() {
+            var _this = this;
+
+            if (window.location.search === "?isOwner=true") {
+                setTimeout(function () {
+                    _this.info('Если Вы действительно являетесь владелецем места,<br> зарегистрируйтесь как Представитель и напишите админу,<br> либо напишите нам на почту');
+                }, 2000);
+            }
+        },
         link: function link(string) {
             window.location = window.location.origin + string;
         },

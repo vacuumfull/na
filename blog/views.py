@@ -9,6 +9,7 @@ from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 
 import json
+import re
 
 from blog.forms import BlogModelForm
 from blog.models import Blog
@@ -55,6 +56,8 @@ class BlogCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.author = self.request.user
+        instance.annotation = re.sub("</?script[^>]*>", "", instance.annotation)
+        instance.annotation = re.sub("<\?php.*?\?>", "", instance.annotation)
         instance.save()
         form.save_m2m()
         return super().form_valid(form)
@@ -78,6 +81,8 @@ class BlogUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.author = self.request.user
+        instance.annotation = re.sub("</?script[^>]*>", "", instance.annotation)
+        instance.annotation = re.sub("<\?php.*?\?>", "", instance.annotation)
         instance.save()
         form.save_m2m()
         return super().form_valid(form)

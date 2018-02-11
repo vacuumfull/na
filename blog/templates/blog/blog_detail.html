@@ -20,7 +20,7 @@
                     {% if blog.event is not null %}
                     <p class="__margin-bottom_xs __margin-top_xs">
                         Так или иначе посвящен событию 
-                        <a href="/events/{{blog.event.slug}}">{{ blog.event }}</a>
+                        <a href="/events/{{blog.event.slug}}">{{ blog.event.title }} - {{ blog.event.date|date:'d.m.Y'  }}</a>
                     </p>
                     {% endif %}
 
@@ -38,7 +38,7 @@
                     </p>
                     <p class="__margin-bottom_xs __margin-top_xs">
                         <span>Автор: </span>
-                        <a href="#">
+                        <a href="/member/{{ blog.author.username }}">
                             <strong id="getter-name">{{ blog.author.username }}</strong>
                         </a>
                     </p>
