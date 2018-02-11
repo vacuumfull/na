@@ -48,7 +48,11 @@
                             {% endfor %}
                         </p>
                     {% endif %}
-                    <article class="__margin-top_xl">{{ place.description }}</article>
+                    <article class="__margin-top_xl">
+                        {% autoescape off %}
+                            {{ place.description }}
+                        {% endautoescape %}
+                    </article>
                     <div class="__margin-top_xl">
                         <a href="/signup?isOwner=true" class="left waves-effect waves-light btn-large ">
                             &nbsp;&nbsp;Я хозяин этого места!
