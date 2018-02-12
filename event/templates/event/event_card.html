@@ -3,7 +3,7 @@
     <div class="__event_block">
         <div class="card __border_subgray">
             <div class="__preview_img">
-                <div class="__img_inner">
+                <div v-on:click="link('{% url 'event:view' event.slug %}')" class="__img_inner">
                     <img class="__img_inner-image" src="{{ event.image.url }}">
                 </div>
             </div>

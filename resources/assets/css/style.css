@@ -24,6 +24,8 @@ table.__left > thead> tr > th.__left{
     background-color:#EAEAEA;
 }
 
+
+
 .__left-dialog_btn{
     position: fixed;
     top: 222px;
@@ -662,6 +664,7 @@ i.material-icons.__icon-margin_xs{
     background-color: black;
 }
 .__img_inner{
+    cursor: pointer;
     height: 230px;
     line-height: 230px;
     text-align: center;
