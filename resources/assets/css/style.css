@@ -663,6 +663,9 @@ i.material-icons.__icon-margin_xs{
     display: table-cell;
     background-color: black;
 }
+.bbc_img{
+    max-width: 100%;
+}
 .__img_inner{
     cursor: pointer;
     height: 230px;

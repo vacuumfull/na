@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 .gitignore
-
+.vscode/
 # Vendor content
 /dist/
 /node_modules/
