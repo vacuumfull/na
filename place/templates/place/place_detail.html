@@ -63,11 +63,22 @@
             </div>
         </div>
     </div>
-    {% for location in place.location.all %}
-        {{ location }}
-    
-    {% endfor %}
-    <hr class="__margin-top_xxl __margin-bottom_xxl">
+    {% if events %}
+    <hr class="__margin-top_xxl __margin-bottom_xl">
+    <div class="container">
+        <div class="row">
+            <h3 class="center __margin-top_m __margin-bottom_m __uppercase">Текущие события</h3>
+            <div class="col s12">
+                <div class="row">
+                    {% for event in events %}
+                        {% include "event/event_card.html" %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <hr class="__margin-top_xl __margin-bottom_xxl">
     <div class="container">
         <rate-component is-login="{{user.is_authenticated|yesno:'true,false'}}" unique="{{ place.id }}"  type="place"></rate-component>
         <comment-component is-login="{{user.is_authenticated|yesno:'true,false'}}"  unique="{{ place.id }}"  type="place"></comment-component>
