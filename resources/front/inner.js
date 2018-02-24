@@ -37,6 +37,9 @@ new Vue({
         },
         transportMessagesCount(messagesCount){
             this.messagesUnreadCount = messagesCount;
-        }
+        },
+        link(string){
+            window.location = window.location.origin + string;
+        },
     }
 })
