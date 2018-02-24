@@ -14,7 +14,7 @@ class GriboedovSpider(Spider):
     base_url = "http://www.griboedovclub.ru"
     initial_urls = [base_url + "/board/"]
     upload_dir = "static/images/"
-    filters = ['techno']
+    filters = ['techno', 'trance']
 
 
     def task_initial(self, grab, task):  
