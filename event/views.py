@@ -50,6 +50,9 @@ class EventCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         """Add user info to form."""
         instance = form.save(commit=False)
         instance.owner = self.request.user
+        instance.description = re.sub("</?script[^>]*>", "", instance.description)
+        instance.description = re.sub("</?iframe[^>]*>", "", instance.description)
+        instance.description = re.sub("<\?php.*?\?>", "", instance.description)
         instance.save()
         form.save_m2m()
         return super().form_valid(form)

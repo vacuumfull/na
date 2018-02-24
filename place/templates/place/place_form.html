@@ -119,18 +119,6 @@
                                 </div-->
                                 <div class="col s12 __margin-top_xxl">
                                     <div class="input-group">
-                                        <div class="file-field input-field col s4">
-                                            {{ form.icon.errors }}
-                                            <div class="btn">
-                                                <span>{{ form.icon.label }}</span>
-                                                {{ form.icon }}
-                                            </div>
-                                            <div class="file-path-wrapper">
-                                                <input class="file-path validate" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="input-group">
                                         <div class="file-field input-field col s4 offset-s2">
                                             {{ form.image.errors }}
                                             <div class="btn">
@@ -142,6 +130,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="input-group __visibility_hidden">
+                                        <div class="file-field input-field col s4">
+                                            {{ form.icon.errors }}
+                                            <div class="btn">
+                                                <span>{{ form.icon.label }}</span>
+                                                {{ form.icon }}
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

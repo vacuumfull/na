@@ -55,6 +55,19 @@ class PonaminaluSpider(Spider):
 		check_with_cache.delay(task.info)
 
 
+	def format_date(self, datestring):
+		year = '2018'
+		splited = shorted.split(' ')
+		day = str(splited[0]) if int(splited[0]) > 9 else '0' + str(splited[0])
+		month = ""
+		for mon in self.monthes:
+			for item in mon.keys():
+				if splited[1].find(item.lower()) > -1:
+					month = mon[item]
+		date = str(day) + str(month) + str(year)
+		return datetime.datetime.strptime(date, '%d%m%Y').date().isoformat()
+
+
 if __name__ == "__main__":
 	# Создание бота на основе нашего Паука
 	BOT = PonaminaluSpider()
