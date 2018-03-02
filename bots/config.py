@@ -17,7 +17,7 @@ class Griboedov:
 class Allfest:
 	fest_path = "//div[@class='view-content']/table/tbody/tr/td"
 	header_path = "article/header/h2/a/@href"
-	pagers_path = "//ul[@class='pager']//li[@class='pager-item']//a"
+	
 	img_path = "//div[@class='field-name-field-image']//div[@class='field-items']//div[@class='field-item']"
 	content_path = "//div[@id='content']//article//div[@class='field field-name-body field-type-text-with-summary field-label-above']//div[@class='field-items']"
 	date_start = "//div[@class='field field-name-field-date field-type-datetime field-label-inline clearfix']//div[@class='field-items']//div[@class='field-item']//span[@class='date-display-range']//span[@class='date-display-start']/@content"
@@ -25,3 +25,5 @@ class Allfest:
 	address_path = "//div[@class='field-name-field-adress']//div[@class='field-items']//div[@class='field-item']"
 	contacts_path = "//div[@class='field-name-field-kontacts']//div[@class='field-items']//div[@class='field-item']"
 	site_path = "//div[@class='field-name-field-link']//div[@class='field-items']//div[@class='field-item']"
+
+	next_page = "//ul[@class='pager']//li[@class='pager-next']//a"
