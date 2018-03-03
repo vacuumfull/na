@@ -24,7 +24,7 @@
             </div>
             <div class="__block_more_info">
                 <div class="__font_exo __semi_bold">
-                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_xs __padding-right_xs">
                     {% if event.locations.exists %}
                         <span class="red-text text-darken-4">
                             <i class="material-icons">location_on</i>
@@ -34,15 +34,14 @@
                         </a>
                     {% endif %}
                     </div>
-                    <div class="__margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                    <div class="__margin-bottom_xs __margin-top_xs __padding-left_xs __padding-right_xs">
                         <span class="red-text text-darken-4">
                             <i class="material-icons">alarm</i>
                         </span>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="grey-text text-darken-3 right">{{ event.date|date:'d.m.Y' }}</span>
                     </div>
-
-                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_xs __padding-right_xs">
                     {% if event.tags.exists %}    
                         <span class="red-text text-darken-4">
                             <i class="material-icons">bookmark</i>
@@ -50,9 +49,6 @@
                         <span class="right">&nbsp;#{{ event.tags.all.0 }}</span>
                         {% if event.tags.all.1 %}
                             <span class="right" href='#'>&nbsp;#{{ event.tags.all.1 }}</span>
-                        {% endif %}
-                        {% if event.tags.all.2 %}
-                            <span class="right" href='#'>&nbsp;#{{ event.tags.all.2 }}</span>
                         {% endif %}
                     {% endif %}
                     </div>
