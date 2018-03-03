@@ -20,6 +20,7 @@
                 </span>
                 {% autoescape off %}
                 <article>{{ band.description }}</article>
+                {% endautoescape %}
             </div>
             <div class="card-action">
                 <a title="Подробнее" class="__more_link __font_exo blue-grey-text text-darken-4" href="{% url 'band:view' band.slug %}">

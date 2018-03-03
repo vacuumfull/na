@@ -41,6 +41,22 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <span class="grey-text text-darken-3 right">{{ event.date|date:'d.m.Y' }}</span>
                     </div>
+
+                    <div class=" __margin-bottom_xs __margin-top_xs __padding-left_s __padding-right_s">
+                    {% if event.tags.exists %}    
+                        <span class="red-text text-darken-4">
+                            <i class="material-icons">bookmark</i>
+                        </span>
+                        <span class="right">&nbsp;#{{ event.tags.all.0 }}</span>
+                        {% if event.tags.all.1 %}
+                            <span class="right" href='#'>&nbsp;#{{ event.tags.all.1 }}</span>
+                        {% endif %}
+                        {% if event.tags.all.2 %}
+                            <span class="right" href='#'>&nbsp;#{{ event.tags.all.2 }}</span>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                   
                 </div>
             </div>
             <div class="card-action">

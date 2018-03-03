@@ -198,6 +198,12 @@ body nav .button-collapse{
 #main_page .card-action, #search-block .card-action{
     cursor:pointer;
 }
+
+.__event_block .__block_more_info{
+    min-height: 120px;
+    padding-top: 5px;
+    font-size: 17px;
+}
 .__place-more-info{
     min-height: 50px;
     padding-top: 5px;
