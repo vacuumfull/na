@@ -49,6 +49,9 @@ new Vue({
         },
         transportMessagesCount(messagesCount){
             this.messagesUnreadCount = messagesCount;
+        },
+        showHelpText(){
+            
         }
         
     }
