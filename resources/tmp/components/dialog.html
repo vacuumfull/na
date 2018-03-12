@@ -27,7 +27,7 @@
                                     <span class="left" v-if="getter.avatar === null || getter.avatar === undefined"><img class="responsive-img __small-avatar circle" src='/static/images/fresh_no_avatar.png'></span>
                                     <span class="left" v-if="getter.avatar !== null && getter.avatar !== undefined"><img class="responsive-img __small-avatar circle" :src='getter.avatar'></span>
                                     <span class="__sender-name __margin-left_m">{{ getter.username }}</span>
-                                    <span v-if="getter.unread.length > 0" class="new badge">{{ getter.unread.length }}</span>
+                                    <span v-if="getter.unread !== undefined && getter.unread.length > 0" class="new badge">{{ getter.unread.length }}</span>
                                 </a>
                             </template>
                             

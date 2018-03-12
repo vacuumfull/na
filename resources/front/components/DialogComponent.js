@@ -31,8 +31,8 @@ const Dialog = Vue.extend({
         init() {
             $('select').material_select();
             $('#dialog_window').modal();
-            this.triggerGetUsers();
-            this.getUserDialogs();
+            this.getUsers();
+           
             this.username = document.getElementById('username').innerText;
         },
         openDialog() {
@@ -86,6 +86,7 @@ const Dialog = Vue.extend({
                     return console.error(data.error)
                 }
                 self.dialogs = data;
+                
                 _.each(self.users, item => {
                     self.setDialogsToUsers(item)
                 })
@@ -119,6 +120,7 @@ const Dialog = Vue.extend({
                     }
                     item.unread = _.uniqBy(item.unread, 'created_at')
                 }
+                console.log(item)
                 if (item.unread.length > 0)++countUnread;
             })
             if (countUnread > 0) self.$emit('transport-count', countUnread);
@@ -176,6 +178,8 @@ const Dialog = Vue.extend({
                         return console.error(data.error)
                     }
                     self.users = data;
+                   
+                    this.getUserDialogs();
                 })
                 .fail(error => {
                     console.error(error);

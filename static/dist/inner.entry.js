@@ -35030,8 +35030,8 @@ var Dialog = _vue2.default.extend({
         init: function init() {
             (0, _jquery2.default)('select').material_select();
             (0, _jquery2.default)('#dialog_window').modal();
-            this.triggerGetUsers();
-            this.getUserDialogs();
+            this.getUsers();
+
             this.username = document.getElementById('username').innerText;
         },
         openDialog: function openDialog() {
@@ -35084,6 +35084,7 @@ var Dialog = _vue2.default.extend({
                     return console.error(data.error);
                 }
                 self.dialogs = data;
+
                 (0, _each3.default)(self.users, function (item) {
                     self.setDialogsToUsers(item);
                 });
@@ -35119,6 +35120,7 @@ var Dialog = _vue2.default.extend({
                     }
                     item.unread = (0, _uniqBy3.default)(item.unread, 'created_at');
                 }
+                console.log(item);
                 if (item.unread.length > 0) ++countUnread;
             });
             if (countUnread > 0) self.$emit('transport-count', countUnread);
@@ -35169,6 +35171,8 @@ var Dialog = _vue2.default.extend({
             if (!this.users) this.getUsers();
         },
         getUsers: function getUsers() {
+            var _this2 = this;
+
             var self = this,
                 session = self.getSess(),
                 uri = '/api/1/users/' + session;
@@ -35177,6 +35181,8 @@ var Dialog = _vue2.default.extend({
                     return console.error(data.error);
                 }
                 self.users = data;
+
+                _this2.getUserDialogs();
             }).fail(function (error) {
                 console.error(error);
             });
@@ -35208,7 +35214,7 @@ var Dialog = _vue2.default.extend({
             return message;
         },
         sendMessage: function sendMessage() {
-            var _this2 = this;
+            var _this3 = this;
 
             var self = this,
                 message = void 0,
@@ -35240,7 +35246,7 @@ var Dialog = _vue2.default.extend({
                                 item.dialog_id = data.info.dialog_id;
                                 item.messages.push(message);
                                 item.open = true;
-                                _this2.openedDialog = item;
+                                _this3.openedDialog = item;
                             }
                         });
                     } else {
@@ -35250,7 +35256,7 @@ var Dialog = _vue2.default.extend({
                             if (item.username === self.getter) {
                                 item.messages.unshift(message);
                                 item.open = true;
-                                _this2.openedDialog = item;
+                                _this3.openedDialog = item;
                             }
                         });
                     }
@@ -38297,7 +38303,7 @@ module.exports = castFunction;
 /* 147 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"getter in users\">\n                                <a v-on:click=\"openUserDialog(getter)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                    <span v-if=\"getter.unread.length > 0\" class=\"new badge\">{{ getter.unread.length }}</span>\n                                </a>\n                            </template>\n                            \n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <template v-if=\"openedDialog.open\">\n                            <template v-if=\"openedDialog.messages.length > 0\" v-for=\"message in openedDialog.messages\">\n                                <div class=\"__message-item \" >\n                                    <p v-bind:class=\"[message.from_user === username ? rightClass : leftClass]\" class=\"__margin-top_xs __margin-bottom_xs \">\n                                        <span v-bind:class=\"{__bg_unread: message.read === false}\" class=\"__margin-right_xs grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span><br>\n                                        <span v-html=\"message.content\"></span>\n                                    </p>\n                                </div><br>\n                            </template>\n                            <p v-if=\"openedDialog.messages.length >= 19\" v-on:click=\"getHistory\"  class=\"center __history_messages\">\n                                <a>Смотреть предыдущие</a>\n                            </p>\n                          \n                            <div class=\"__padding-top_xxl\" v-if=\"openedDialog.messages.length === 0\">\n                                <p class=\"center\">Вы еще ничего не писали этому пользователю.</p>\n                            </div>   \n                     </template>\n                    \n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
+module.exports = "<div id=\"dialog_window\" class=\"modal __modal __advanced\">\n    <div class=\"modal-content\">\n        <h4 v-if=\"!isSelected\" class=\"black-text\">Диалоговое окно</h4>\n        <h4 v-if=\"isSelected\" class=\"black-text\">Диалог c <span class=\"purple-text text-darken-4\">{{ getter }}</span></h4>\n        <div class=\"dialog-field\">\n            <div class=\"row\">\n                <div class=\"col s5 __border_right\">\n                    <div class=\"__filter __padding-right_l\">\n                        <div class=\"input-group\">\n                            <div class=\"input-field user-search\">\n                                <input type=\"text\" v-on:keyup=\"search($event)\" >\n                                <label>кому написать</label>\n                            </div>\n                        </div>\n                        <!--select multiple>\n                            <option value=\"all\" selected>Выбраны все</option>\n                            <option value=\"musician\">Музыканты</option>\n                            <option value=\"user\">Пользователи</option>\n                            <option value=\"deputy\">Представители</option>\n                            <option value=\"organizer\">Организаторы</option>   \n                        </select-->\n                    </div>\n                    <div class=\"senders __padding-right_l\">\n                        <div class=\"collection\">\n                            <template v-for=\"getter in users\">\n                                <a v-on:click=\"openUserDialog(getter)\" href=\"#!\" class=\"collection-item\">\n                                    <span class=\"left\" v-if=\"getter.avatar === null || getter.avatar === undefined\"><img class=\"responsive-img __small-avatar circle\" src='/static/images/fresh_no_avatar.png'></span>\n                                    <span class=\"left\" v-if=\"getter.avatar !== null && getter.avatar !== undefined\"><img class=\"responsive-img __small-avatar circle\" :src='getter.avatar'></span>\n                                    <span class=\"__sender-name __margin-left_m\">{{ getter.username }}</span>\n                                    <span v-if=\"getter.unread !== undefined && getter.unread.length > 0\" class=\"new badge\">{{ getter.unread.length }}</span>\n                                </a>\n                            </template>\n                            \n                        </div>\n                    </div>\n                </div>\n                <div class=\"col s7\">\n                    <div class=\"__messages-window\">\n                        <div id=\"img-field\"></div>\n                        <template v-if=\"openedDialog.open\">\n                            <template v-if=\"openedDialog.messages.length > 0\" v-for=\"message in openedDialog.messages\">\n                                <div class=\"__message-item \" >\n                                    <p v-bind:class=\"[message.from_user === username ? rightClass : leftClass]\" class=\"__margin-top_xs __margin-bottom_xs \">\n                                        <span v-bind:class=\"{__bg_unread: message.read === false}\" class=\"__margin-right_xs grey-text text-darken-2\">{{ formatDate(message.created_at) }}:</span><br>\n                                        <span v-html=\"message.content\"></span>\n                                    </p>\n                                </div><br>\n                            </template>\n                            <p v-if=\"openedDialog.messages.length >= 19\" v-on:click=\"getHistory\"  class=\"center __history_messages\">\n                                <a>Смотреть предыдущие</a>\n                            </p>\n                          \n                            <div class=\"__padding-top_xxl\" v-if=\"openedDialog.messages.length === 0\">\n                                <p class=\"center\">Вы еще ничего не писали этому пользователю.</p>\n                            </div>   \n                     </template>\n                    \n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <form class=\"__dialog-field col s12\">\n                <div class=\"row\">\n                    <div class=\"input-field col s12\">\n                        <textarea class=\"materialize-textarea black-text\" v-model=\"message\"></textarea>\n                        <label>Ваше сообщение</label>\n                    </div>\n                </div>\n            </form>\n            <a class=\"right waves-effect waves-light btn-large  __margin-left_l\" v-on:click=\"sendMessage\" v-bind=\"{ disabled: message.length < 2 }\">\n                &nbsp;&nbsp;Отправить\n                <i class=\"material-icons right dp48\">send</i>\n            </a>\n            <div class=\"file-field input-field right\">\n                <div class=\"btn-large __download_btn\">\n                    <span>Добавить изображение</span>\n                    <i class=\"material-icons right dp48\">photo</i>\n                    <input type=\"file\" v-on:change=\"encodeImageFileAsURL($event)\">\n                </div>\n            </div>\n        </div>\n    </div>\n    <a v-on:click=\"closeModal\" class=\"modal-action black-text __close-btn\"><i class=\"material-icons right dp48\">clear</i></a>\n</div>\n"
 
 /***/ }),
 /* 148 */
@@ -38976,6 +38982,9 @@ new _vue2.default({
         },
         transportMessagesCount: function transportMessagesCount(messagesCount) {
             this.messagesUnreadCount = messagesCount;
+        },
+        link: function link(string) {
+            window.location = window.location.origin + string;
         }
     }
 });

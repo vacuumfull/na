@@ -9,6 +9,7 @@ __pycache__/
 /src/
 /.idea/
 /static/dist/
+static/dist/
 
 # Upload content
 /upload/
