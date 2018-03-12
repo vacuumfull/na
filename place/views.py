@@ -40,7 +40,7 @@ class PlaceView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
-		context['events'] = Event.objects.filter(locations=self.get_object().pk, published=True)
+		context['events'] = Event.objects.filter(locations=self.get_object().pk, date__gte=timezone.now(), published=True)
 		return context
 
 
