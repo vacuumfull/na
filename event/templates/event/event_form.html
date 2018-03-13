@@ -7,13 +7,13 @@
     <form method="post" action="" enctype="multipart/form-data" class="row" >
         {% csrf_token %}
         <div class="col s12">
-            <div class="card lime lighten-5 __margin-top_xl __margin-bottom_xl ">
+            <div class="card white __margin-top_xl __margin-bottom_xl ">
                 <div class="row">
                     <div class="col s12">
                         <div class="row">
                             <div class="card-content black-text">
-                                <div class="input-group">
-                                    <div class="input-field col s6">
+                                <div class=" input-group">
+                                    <div class=" input-field col s6">
                                         {{ form.title.errors }}
                                         {{ form.title }}
                                         {{ form.title.label_tag }}
@@ -117,6 +117,7 @@
                                         <div class="file-path-wrapper">
                                             <input class="file-path validate" type="text">
                                         </div>
+                                        <p class="__image-help">Не более 1 мегабайта</p>
                                     </div>
                                 </div>
                                 

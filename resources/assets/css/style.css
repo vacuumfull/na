@@ -212,7 +212,7 @@ body nav .button-collapse{
 #place-map{
     max-height: 300px;
 }
-.__reg-block{
+.__reg-block, .__input-block{
     position: relative;
 }
 
@@ -223,11 +223,15 @@ body nav .button-collapse{
     font-size: 14px;
     color: #fff;
     opacity: 0;
-    transition: 0.5s ease;
-    
+    transition: 0.5s ease; 
 }
 
 .__reg-block input:focus + div{
+    opacity: 1;
+    z-index: 9999;
+    transition: 0.35s ease;
+}
+.__input-block input:focus ~ div, .__input-block textarea:focus ~ div{
     opacity: 1;
     z-index: 9999;
     transition: 0.35s ease;
@@ -765,12 +769,35 @@ div[data-field-id~='id_content']{
     max-width: 300px;
     vertical-align: middle;    
 }
+.container .__preview-image .__image-help{
+    font-size: 12px;
+    margin-top: -14px;
+    margin-left: 3px;
+    color: #9e9e9e;
+}
 
+#cke_id_content{
+    width: 100%!important;
+}
 .__tags-field{
+    position: relative;
     min-height: 80px;
     padding-top: 20px;
     box-sizing: border-box;
 }
+.__tags-field .chips.focus::after{
+    content: 'Тэги вводятся без символов(#&?/) с маленькой буквы, слитно или через нижнее подчеркивание. Ввели тэг, нажали Enter. Не более пяти.';
+    position: absolute;
+    background-color: #323232;
+    padding: 10px 25px;
+    font-size: 14px;
+    color: #fff;
+    left: 0px;
+    z-index:999;
+    bottom: -45px;
+    transition: .5s ease;
+}
+
 .__location-field{
     min-height: 160px;
 }

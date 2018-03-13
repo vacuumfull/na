@@ -3,10 +3,10 @@
 {% block content %}
 
 <div class="row __padding-top_xxl __padding-bottom_xxl">
-    <div class="col s12 m8 l8 offset-m2 offset-l2 ">
+    <div class="col s12 m8 l6 offset-m2 offset-l3 ">
         <div class="card __padding-top_l __padding-left_xxl __padding-right_xxl __padding-bottom_l">
             <div class="panel panel-default">
-                <div class="panel-heading __margin-bottom_xl __margin-top_xl">
+                <div class="panel-heading __margin-bottom_xl __margin-top_l">
                     <h3>Форма входа</h3>
                 </div>
                 {% if user.is_authenticated %}
@@ -47,6 +47,10 @@
                                         <i class="material-icons right">forward</i>
                                         Войти
                                     </button>
+                                    <a href="{% url 'signup' %}" class="btn-large __margin-right_m" >
+                                        <i class="material-icons right">assignment_ind</i>
+                                        Зарегистрироваться
+                                    </a>
                                     <!--a class="btn btn-large btn-link" href="#">
                                         <i class="material-icons right">warning</i>
                                         Забыли пароль?
