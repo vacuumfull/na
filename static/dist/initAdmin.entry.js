@@ -43070,7 +43070,7 @@ exports.default = UserMenu;
 /* 153 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div>\n    <div id=\"menu-triggers\" class=\"hide-on-med-and-down\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <div v-on:click=\"openDialog\" class=\"__left-dialog_btn hide-on-med-and-down\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnreadCount > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnreadCount }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key hide-on-med-and-down\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div>\n    </div>\n</div>"
+module.exports = "\n<div>\n    <div id=\"menu-triggers\" class=\"hide-on-med-and-down\">\n        <div v-on:click=\"move\" data-activates=\"slide-out\"  class=\" button-collapse __left-menu_btn\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">menu</i>\n            </a>\n        </div>\n        <div class=\"__left-menu_key\">\n            <a href=\"\" v-on:click=\"move\" data-activates=\"slide-out\" class=\"button-collapse\">Меню</a>\n        </div>\n    </div>\n    <div>\n        <!--div v-on:click=\"openDialog\" class=\"__left-dialog_btn hide-on-med-and-down\" v-bind:style=\"{ left: left + 'px' }\">\n            <a href=\"#\" >\n                <i class=\"material-icons\">mail</i>\n            </a>\n            <span v-if=\"messagesUnreadCount > 0\" class=\"__message-count\">\n                <span>+{{ messagesUnreadCount }}</span>\n            </span>\n        </div>\n        <div class=\"__left-dialog_key hide-on-med-and-down\">\n            <a v-on:click=\"openDialog\">Диалог</a>\n        </div-->\n    </div>\n</div>"
 
 /***/ }),
 /* 154 */
@@ -55370,7 +55370,7 @@ exports.default = TagsComponent;
 /* 296 */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"__tags-field\">\n\t<span style=\"color: #9e9e9e;\">Тэги:</span>\n\t<div class=\"chips chips-placeholder\"></div>\n</div>"
+module.exports = "<div class=\"__tags-field\">\n\t<span style=\"color: #9e9e9e;\">Тэги:</span>\n\t<div class=\"chips chips-placeholder\">\n\t</div>\n</div>"
 
 /***/ }),
 /* 297 */

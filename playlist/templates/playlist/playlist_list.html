@@ -3,22 +3,10 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <h3 class="left __margin-left_s __margin-top_xxl __margin-bottom_xxl __padding-bottom_s  __uppercase">Плейлисты и видео</h3>
-		{% if prefered %}
-			<h3 class="center __margin-top_xl __margin-bottom_l __uppercase">Рекомендуемые вам</h3>
-			<div class="col s12">
-				<div class="row">
-					{% for playlist in prefered %}
-						{% include "playlist/playlist_card.html" %}
-					{% endfor %}
-				</div>
-			</div>
-		{% endif %}
-
+        <h3 class="left __margin-left_s __margin-top_xxl __padding-top_m __margin-bottom_l  __uppercase">Плейлисты и видео</h3>
 		{% for playlist in playlists %}
 			{% include "playlist/playlist_card.html" %}
 		{% endfor %}
-  
         <div class="col s12">
             <div class="row">
             {% if is_paginated %}
@@ -45,7 +33,18 @@
             </div>
         </div>
     </div>
-   
+    {% if prefered %}
+    <div class="row">
+        <h3 class="left  __margin-left_s  __margin-top_xl __margin-bottom_l __uppercase">Рекомендуемые вам</h3>
+        <div class="col s12">
+            <div class="row">
+                {% for playlist in prefered %}
+                    {% include "playlist/playlist_card.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}
 

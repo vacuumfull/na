@@ -15,7 +15,7 @@
             <div class="col s12">
                 <div class="article">
                     <h1>{{ playlist.name }}</h1>
-                    {% if playlist.owner is not null %}
+                    {% if playlist.creator is not null %}
                         <p  class="__margin-bottom_xs __margin-top_xs">
                             <span>Автор:</span>
                             <strong id="getter-name">{{ playlist.creator.username }}</strong>
