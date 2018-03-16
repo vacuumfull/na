@@ -725,7 +725,7 @@ i.material-icons.__icon-margin_xs{
 }
 
 .head_block{
-    max-height: 300px;
+    max-height: 450px;
     overflow: hidden;
 }
 .audio_file{
@@ -763,11 +763,13 @@ div[data-field-id~='id_content']{
     padding-top: 250px;
 }
 .__preview_img{
+    border: 2px solid black;
     overflow: hidden;
 }
 .__img_inner-image{
     max-width: 300px;
     vertical-align: middle;    
+    border: 2px solid black;
 }
 .container .__preview-image .__image-help{
     font-size: 12px;

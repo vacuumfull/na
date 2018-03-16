@@ -13,7 +13,7 @@
                     {% if band.owner is not null %}
                         <p class="__margin-bottom_xs __margin-top_xs">
                             <span>Представитель: </span>
-                            <strong id="getter-name">{{ band.owner.username }}</strong>
+                            <a href="/member/{{ band.owner.username }}"><strong id="getter-name">{{ band.owner.username }}</strong></a>
                         </p>
                     {% endif %}
                     {% if band.musicians.exists %}
