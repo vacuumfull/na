@@ -27,6 +27,7 @@ import flatten.urls
 import member.urls
 import place.urls
 import playlist.urls
+import oauth.urls
 from under.views import IndexView
 
 handler404 = 'under.views.handler404'
@@ -41,7 +42,8 @@ urlpatterns = [
 	path('places/', include(place.urls)),
 	path('page/', include(flatten.urls)),
 	path('playlists/', include(playlist.urls)),
-
+	path('auth/', include(oauth.urls)),
+	
 	re_path(r'^', include(member.urls)),
 	path('', IndexView.as_view(), name='index'),
 ]

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'telegram',
     'under',
     'playlist',
+    'oauth',
     'tag'
 ]
 
@@ -185,10 +186,5 @@ CELERY_TIMEZONE = 'Europe/Moscow'
 #Other options
 TAGGIT_CASE_INSENSITIVE = True
 
-# Email settings
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nightagenda.fun@gmail.com'
-EMAIL_HOST_PASSWORD = 'Aa1123581321'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+GOOGLE_OAUTH_ID = '600515790835-5cu98k5mvs61824dsmncrsbc5l4dvcbo.apps.googleusercontent.com'
+GOOGLE_OAUTH_SECRET = '7gsmn5NmF7CdiRrdSds6UW0_'
