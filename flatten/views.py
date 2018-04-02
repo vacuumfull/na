@@ -1,4 +1,10 @@
 from django.views.generic import TemplateView
+from django.http import HttpResponse
+from django.template import loader
+
+def get_sitemap(request):
+    xml_path = "flatten/templates/flatten/sitemap.xml"
+    return HttpResponse(open(xml_path).read(), content_type='text/xml')
 
 
 class ContactsView(TemplateView):

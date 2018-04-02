@@ -7,3 +7,5 @@ psycopg2
 pillow
 pytelegrambotapi
 django_celery_beat
+oauth2client
+google-api-python-client

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.views.static import serve
 from django.urls import include, path, re_path
 from django.conf.urls import handler404, handler500
+from flatten.views import get_sitemap
 
 import api.urls
 import band.urls
@@ -27,6 +28,7 @@ import flatten.urls
 import member.urls
 import place.urls
 import playlist.urls
+import oauth.urls
 from under.views import IndexView
 
 handler404 = 'under.views.handler404'
@@ -41,9 +43,11 @@ urlpatterns = [
 	path('places/', include(place.urls)),
 	path('page/', include(flatten.urls)),
 	path('playlists/', include(playlist.urls)),
-
+	path('auth/', include(oauth.urls)),
+	
 	re_path(r'^', include(member.urls)),
 	path('', IndexView.as_view(), name='index'),
+	path('sitemap.xml', get_sitemap)
 ]
 
 # Add media path to media directory
