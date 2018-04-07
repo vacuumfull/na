@@ -1,10 +1,8 @@
 from django.urls import path
-from oauth.views import autorize, callback, test
-
+from oauth.views import authorize, callback
 
 app_name = 'oauth'
 urlpatterns = [
-    path('google/auth', autorize, name='oauth-google'),
-	path('google/callback', callback),
-	path('google/test', test),
+	path('<str:app>/authorize', authorize),
+	path('<str:app>/callback', callback)
 ]

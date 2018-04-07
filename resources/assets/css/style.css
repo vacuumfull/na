@@ -24,8 +24,6 @@ table.__left > thead> tr > th.__left{
     background-color:#EAEAEA;
 }
 
-
-
 .__left-dialog_btn{
     position: fixed;
     top: 222px;
@@ -176,6 +174,7 @@ body nav .button-collapse{
 }
 #nav-menu{
     background-color:#1f1f1f;
+    z-index: 20;
 }
 .collection-item{
     position: relative;
@@ -225,7 +224,35 @@ body nav .button-collapse{
     opacity: 0;
     transition: 0.5s ease; 
 }
-
+.__enter_icons.__login:hover + .__enter_icons.__google{
+    transition: 0.5s ease; 
+    opacity: 1;
+    right: 52px;
+}
+.__enter_icons.__google{
+    position: absolute;
+    margin-top: 52px;
+    background-color: #1f1f1f;
+    right: -150px;
+    opacity: 0;
+    transition: 0.4s ease;
+}
+.__enter_icons.__google:hover{
+    right: 52px;
+    opacity: 1;
+}
+.__enter_icons.__google > a{
+    position: relative;
+    height: 58px;
+    width: 54px;
+    color: #ffffff;
+    fill: #ffffff;
+    display: block;
+}
+.__enter_icons.__google svg {
+    height: 125%;
+    width: 125%;
+}
 .__reg-block input:focus + div{
     opacity: 1;
     z-index: 9999;
