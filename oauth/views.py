@@ -1,36 +1,28 @@
 from django.http.response import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-from oauth2client.contrib import gce
-from oauth2client.client import flow_from_clientsecrets, OAuth2WebServerFlow
-from oauth2client.file import Storage
-from googleapiclient.discovery import build
 
 import requests
-import httplib2
-import pickle
-import json
+import oauth.google
+import oauth.vk
 
-storage = Storage('a_credentials_file')
-flow = flow_from_clientsecrets('oauth/secret.json',
-                               scope='https://www.googleapis.com/auth/plus.login',
-                               redirect_uri='http://localhost:8000/auth/google/callback')
 
-def test(request):
-	credentials = storage.get()
-	url = f'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={credentials.access_token}'
-	resp = requests.get(url, {})
+def authorize(request, app:str):
+	if request.user.is_authenticated:
+		raise PermissionDenied()
+	return getattr(__load_module(app), 'authorize')(request)
 
-	return JsonResponse({'response': json.loads(resp.text)}, safe=False)
+def callback(request, app:str):
+	if request.user.is_authenticated:
+		raise PermissionDenied()
+	getattr(__load_module(app), 'callback')(request)
 
-def autorize(request):
-	auth_uri = flow.step1_get_authorize_url()
-	return redirect(auth_uri)
-	
+	return redirect('/')
 
-def callback(request):
-	code = request.GET.get('code')
-	credentials = flow.step2_exchange(code)
-	
-	storage.put(credentials)
-	return JsonResponse({'response': 'success'})
-	
+
+def __load_module(module_name: str) -> object:
+	module = {
+		'vk': oauth.vk,
+		'google': oauth.google
+	}
+	return module[module_name]
