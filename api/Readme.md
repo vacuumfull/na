@@ -7,7 +7,7 @@ REQUEST:
 
 `GET /api/1/rating/{app}/{key}/{sessionid}/`
 * app - application name (blog, event etc.)
-* key - primary key fro app model (id)
+* key - primary key for app model (id)
 * sessionid - user session cookies from browser
 
 RESPONSE:
@@ -25,7 +25,7 @@ REQUEST:
 params:
 
 * app - application name (blog, event etc.)
-* key - primary key fro app model (id)
+* key - primary key for app model (id)
 * vote - integer vote number (0..10) if > 10 then vote set 0
 * sessionid - user session cookies from browser
 
@@ -46,7 +46,7 @@ REQUEST:
 
 `GET /api/1/comment/{app}/{key}/{sessionid}/{offset}/`
 * app - application name (blog, event etc.)
-* key - primary key fro app model (id)
+* key - primary key for app model (id)
 * sessionid - user session cookies from browser
 * offset = offset in query select on database
 
@@ -65,7 +65,7 @@ REQUEST:
 params:
 
 * app - application name (blog, event etc.)
-* key - primary key fro app model (id)
+* key - primary key for app model (id)
 * content - text content (must be not empty and less 250 chars)
 * sessionid - user session cookies from browser
 
